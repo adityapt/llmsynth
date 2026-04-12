@@ -9,7 +9,7 @@
 
 ## Abstract
 
-Synthetic data generation has emerged as a practical remedy for data scarcity, class imbalance, and privacy constraints in marketing and product data science. Yet the relative merit of LLM-based generators versus statistical and GAN-based alternatives remains poorly understood — particularly at extreme small-n regimes common in new campaign launches, cold-start lead attribution, and low-volume cohort modeling. This paper addresses that gap through a systematic empirical evaluation combining a literature synthesis with original experiments on five public datasets using three generator families: GaussianCopula, CTGAN, and GReaT (an LLM-based tabular synthesizer). Our key finding is that **LLM-based generation matches the real-data baseline at n ∈ {50, 100, 200} while GAN and statistical generators degrade by 4–10 AUC points** — confirming the hypothesis that LLMs compensate for data scarcity through implicit domain priors rather than learned distributions. This advantage narrows as n grows and CTGAN has sufficient data to learn. Beyond the LLM comparison, we evaluate augmentation across a range of marketing conditions: TSTR gaps of 4–27% confirm synthetic-only training is inadvisable; augmentation gains of up to 5.3% AUC are achievable in small-n classification settings; and the optimal synthetic-to-real mixing ratio α* ≈ 0.2–0.3 is stable across generators and datasets. We derive an updated practitioner decision framework that incorporates an explicit LLM branch: when n < 200 and domain-semantic features are present, LLM-based synthesis is the preferred augmentation strategy.
+Synthetic data generation has emerged as a practical remedy for data scarcity, class imbalance, and privacy constraints in marketing and product data science. Yet the relative merit of LLM-based generators versus statistical and GAN-based alternatives remains poorly understood — particularly at extreme small-n regimes common in new campaign launches, cold-start lead attribution, and low-volume cohort modeling. This paper addresses that gap through a systematic empirical evaluation combining a literature synthesis with original experiments on five public datasets using three generator families: GaussianCopula (Patki et al., 2016), CTGAN (Xu et al., 2019), and GReaT (Borisov et al., 2023), an LLM-based tabular synthesizer. Our key finding is that **LLM-based generation matches the real-data baseline at n ∈ {50, 100, 200} while GAN and statistical generators degrade by 4–10 AUC points** — confirming the hypothesis that LLMs compensate for data scarcity through implicit domain priors rather than learned distributions. This advantage narrows as n grows and CTGAN has sufficient data to learn. Beyond the LLM comparison, we evaluate augmentation across a range of marketing conditions: TSTR gaps of 4–27% confirm synthetic-only training is inadvisable; augmentation gains of up to 5.3% AUC are achievable in small-n classification settings; and the optimal synthetic-to-real mixing ratio α* ≈ 0.2–0.3 is stable across generators and datasets. We derive an updated practitioner decision framework that incorporates an explicit LLM branch: when n < 200 and domain-semantic features are present, LLM-based synthesis is the preferred augmentation strategy.
 
 ---
 
@@ -75,7 +75,7 @@ flowchart TD
 
 **Rule-based / statistical samplers (SMOTE family).** Synthetic Minority Oversampling Technique (Chawla et al., 2002) generates minority-class samples by interpolating between existing examples in feature space. Variants include ADASYN (adaptive density-aware), Borderline-SMOTE, and SVMSMOTE. These methods are fast, transparent, and widely deployed. Davila et al. (2025) found SMOTE to be the top performer on **ML utility** among all benchmarked methods when evaluated on prosumer hardware (Table 5), though it scored poorly on **privacy** metrics due to near-duplicate generation risk (Table 8). SMOTE is limited to oversampling existing distributions rather than learning a generative model of the full joint density, making it unsuitable for full data synthesis tasks.
 
-**Gaussian Copula (GC).** SDV's Gaussian Copula learns marginal distributions per column and couples them through a Gaussian copula. It is computationally lightweight, handles mixed types, and makes explicit modeling assumptions. It performs well on privacy metrics but tends to underperform on datasets with complex multimodal distributions.
+**Gaussian Copula (GC).** SDV's Gaussian Copula (Patki et al., 2016) learns marginal distributions per column and couples them through a Gaussian copula. It is computationally lightweight, handles mixed types, and makes explicit modeling assumptions. It performs well on privacy metrics but tends to underperform on datasets with complex multimodal distributions.
 
 **Conditional GAN (CTGAN).** Xu et al. (2019) introduced CTGAN to address two challenges unique to tabular data: non-Gaussian and multimodal distributions on continuous columns, and severe class imbalance on discrete columns. CTGAN uses mode-specific normalization and a conditional vector during training, enabling controlled generation by category. Fonseca & Bacao (2023) demonstrated the utility of WGAN-based oversampling on imbalanced tabular classification, confirming that GAN-based synthesis outperforms SMOTE on diversity while remaining competitive on utility. Davila et al. (2025) find CTGAN ranks highly on fidelity and utility but falls below TabDDPM on augmentation benchmarks (Table 6).
 
@@ -321,7 +321,7 @@ The experiments in Sections 6.1–6.5 use GaussianCopula and CTGAN — generator
 
 ### Setup
 
-**Generator:** GReaT (v0.0.13, `be-great` package) with `distilgpt2` as the base language model, fine-tuned for 50 epochs on the training set. GReaT serializes each row as natural language and generates new rows by continuation — drawing on the LLM's pretraining knowledge about feature relationships.
+**Generator:** GReaT (Borisov et al., 2023; v0.0.13, `be-great` package) with `distilgpt2` as the base language model, fine-tuned for 50 epochs on the training set. GReaT serializes each row as natural language and generates new rows by continuation — drawing on the LLM's pretraining knowledge about feature relationships.
 
 **Dataset:** German Credit (OpenML id=31, n=1,000, 30% positive). The most challenging dataset from Section 6.1 — smallest n, highest sensitivity to data scarcity.
 
@@ -563,6 +563,12 @@ The field is developing rapidly. Causal generative models, LLM-backed synthesis 
     *(Reports utility–efficiency tradeoff across DP synthesis algorithms: statistical methods score higher on utility, deep learning methods are faster.)*
 
 16. **Chawla, N. V., Bowyer, K. W., Hall, L. O., & Kegelmeyer, W. P.** (2002). SMOTE: Synthetic Minority Over-sampling Technique. *Journal of Artificial Intelligence Research*, 16, 321–357.
+
+17. **Borisov, V., Seßler, K., Leemann, T., Pawelczyk, M., & Kasneci, G.** (2023). Language Models are Realistic Tabular Data Generators. *Proceedings of ICLR 2023*. arXiv:2210.06280. https://arxiv.org/abs/2210.06280
+    *(Introduces GReaT: row serialization as natural language + GPT-2 fine-tuning for tabular synthesis. The method evaluated in Section 6.6 of this paper.)*
+
+18. **Patki, N., Wedge, R., & Veeramachaneni, K.** (2016). The Synthetic Data Vault. *IEEE International Conference on Data Science and Advanced Analytics (DSAA)*. https://dai.lids.mit.edu/wp-content/uploads/2018/03/SDV.pdf
+    *(Introduces SDV and the GaussianCopula synthesizer used throughout this paper's experiments.)*
 
 ---
 
