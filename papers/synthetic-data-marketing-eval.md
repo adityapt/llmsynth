@@ -211,13 +211,13 @@ We examine four canonical task types and map the evidence to practical recommend
 
 | Method | Fidelity | Utility (Imbalanced) | Utility (Augmentation) | Privacy | Speed | Best used for |
 |---|---|---|---|---|---|---|
-| TabDDPM / TabSyn | ★★★★★ | ★★★★ | ★★★★★ | ★★★★ | ★★★ | Best overall; worth the compute cost |
-| Hybrid SMOTE+GAN | ★★★ | ★★★★★ | ★★★★ | ★★★ | ★★★★ | Imbalanced classification; churn, conversion |
-| CTGAN | ★★★★ | ★★★★ | ★★★★ | ★★★ | ★★★★ | Class imbalance, categorical-heavy data |
-| TVAE | ★★★ | ★★★★ | ★★★ | ★★★ | ★★★★★ | Small datasets, fast iteration |
-| Gaussian Copula | ★★★ | ★★★ | ★★★ | ★★★★ | ★★★★★ | Privacy proxies, LTV tails, segmentation |
-| SMOTE | ★★ | ★★★★★ | ★★★ | ★★ | ★★★★★ | Imbalanced binary classification only |
-| LLM-based | ★★★ | ★★★ | ★★★ | ★★ | ★ | Small datasets; experimental |
+| TabDDPM / TabSyn | 5/5 | 4/5 | 5/5 | 4/5 | 3/5 | Best overall; worth the compute cost |
+| Hybrid SMOTE+GAN | 3/5 | 5/5 | 4/5 | 3/5 | 4/5 | Imbalanced classification; churn, conversion |
+| CTGAN | 4/5 | 4/5 | 4/5 | 3/5 | 4/5 | Class imbalance, categorical-heavy data |
+| TVAE | 3/5 | 4/5 | 3/5 | 3/5 | 5/5 | Small datasets, fast iteration |
+| Gaussian Copula | 3/5 | 3/5 | 3/5 | 4/5 | 5/5 | Privacy proxies, LTV tails, segmentation |
+| SMOTE | 2/5 | 5/5 | 3/5 | 2/5 | 5/5 | Imbalanced binary classification only |
+| LLM-based | 3/5 | 3/5 | 3/5 | 2/5 | 1/5 | Small datasets; experimental |
 
 *Ratings are relative within class, based on aggregated benchmark evidence from Davila et al. (2025), Kotelnikov et al. (2023), and Won et al. (2026). SMOTE privacy ratings reflect near-duplicate risk from interpolation; they do not imply DP-grade guarantees for any method. "Utility (Imbalanced)" refers to performance on imbalanced classification benchmarks; "Utility (Augmentation)" refers to the mixed real+synthetic augmentation regime.*
 
