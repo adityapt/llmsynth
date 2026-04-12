@@ -401,19 +401,67 @@ This mechanism is directly relevant to marketing lead attribution:
 - **CRM data quality issues** — partial records, missing firmographic fields
 - **Multi-touch attribution** where early funnel stages have sparse signal
 
+---
+
+## 6.7 Real Marketing Datasets: Hillstrom Email and Criteo Display Advertising
+
+The experiments above used UCI/OpenML benchmarks that are commonly used in the tabular ML literature but not marketing-native. We now evaluate on two datasets from real marketing operations.
+
+### Datasets
+
+**Hillstrom Email Marketing (Hillstrom, 2008).** Kevin Hillstrom's MineThatData Email Analytics Challenge — the most widely cited real marketing dataset in causal and response modeling literature. 64,000 customers, email A/B holdout design, target = purchase conversion. Positive rate: **0.9%** (severe imbalance). Features: recency, purchase history, product category flags (mens/womens), zip type, channel, newbie flag. We cap to n=10,000 for tractable CTGAN fitting.
+
+**Criteo Uplift Dataset (Diemert et al., 2018).** Real display advertising campaign data from Criteo, 13.9M rows. Target = conversion from ad exposure. Positive rate: **0.2%** (extreme imbalance). Features: 12 anonymized behavioral signals (f0–f11). Capped to n=10,000. This represents the most imbalanced real-world marketing dataset in this evaluation.
+
+### Setup
+
+Same protocol as Section 6.1: 80/20 train/test split, augmentation sweep at α ∈ {0.1, 0.2, 0.3, 0.5, 1.0}, GaussianCopula, CTGAN, and SMOTE generators.
+
+### Results
+
+**Hillstrom Email Marketing**
+
+| Method | TSTR AUC | Best Aug AUC | Best α | Gain vs Baseline |
+|---|---|---|---|---|
+| Baseline (real only) | — | 0.619 | — | — |
+| GaussianCopula | 0.391 | 0.581 | 0.1 | −3.8 pts |
+| **CTGAN** | **0.637** | **0.702** | **0.3** | **+8.3 pts** |
+| SMOTE | — | 0.683 | 0.3 | +6.5 pts |
+
+**Criteo Display Advertising**
+
+| Method | TSTR AUC | Best Aug AUC | Best α | Gain vs Baseline |
+|---|---|---|---|---|
+| Baseline (real only) | — | 0.748 | — | — |
+| GaussianCopula | 0.860 | 0.882 | 0.2 | +13.5 pts |
+| **CTGAN** | **0.917** | **0.943** | **0.5** | **+19.6 pts** |
+| SMOTE | — | 0.934 | 0.3 | +18.6 pts |
+
+### Discussion
+
+Both datasets confirm and amplify the pattern from Section 6.1: **severe class imbalance is the strongest predictor of synthetic augmentation value.**
+
+The Hillstrom results are particularly notable because this is textbook marketing data — a clean, well-structured email campaign dataset with 9 features and 64,000 rows. Despite the large n, the 0.9% positive rate means the minority class has only ~576 real purchase events in the training split. All three generators materially outperform the real-only baseline. CTGAN's +8.3 AUC point gain at α=0.3 is the largest single augmentation gain observed on a complete, large dataset in this evaluation.
+
+Criteo's extreme 0.2% positive rate produces the largest gains of any experiment: +19.6 AUC points for CTGAN. Notably, TSTR also performs well here (GC: 0.860, CTGAN: 0.917 vs real baseline 0.748) — suggesting that when real minority signal is this scarce, even synthetic-only training can outperform a classifier trained on predominantly-negative real data. This is the one scenario where TSTR may be a viable production strategy, though it requires careful validation on real holdout data.
+
+GaussianCopula underperforms CTGAN on both datasets, consistent with the literature finding that GC struggles when the target class is highly imbalanced (it cannot model the conditional distribution as effectively as CTGAN's explicit class-conditional generation).
+
 ### Synthesis: When Does Synthetic Data Help?
 
-Combining all four experiments, a clear pattern emerges:
+Combining all experiments, a clear pattern emerges:
 
-| Setting | n | Feature Quality | Augmentation Gain | Verdict |
+| Setting | n | Positive Rate | Augmentation Gain | Verdict |
 |---|---|---|---|---|
-| Nomao (full) | 10,000 | Complete, 118 features | −0.02% to +0.03% | Skip it |
-| Telco Churn | 7,032 | Complete, 19 features | +0.3% | Marginal |
-| Bank Marketing | 15,000 | Complete, 16 features | +0.2% | Skip it |
-| German Credit | 1,000 | Complete, 20 features | +5.3% | Worth it |
-| **Nomao (sparse)** | **500** | **70% missing** | **+2.5 pts (138% recovery)** | **Strong yes** |
+| Nomao (full) | 10,000 | 28.3% | < 0.1 pts | Skip it |
+| Telco Churn | 7,032 | 26.6% | +0.3 pts | Marginal |
+| Bank Marketing | 15,000 | 11.7% | +0.2 pts | Skip it |
+| German Credit | 1,000 | 30.0% | +5.3 pts | Worth it (small n) |
+| Nomao (sparse) | 500 | 28.3% | +2.5 pts (138% recovery) | Strong yes (sparsity) |
+| **Hillstrom Email** | **10,000** | **0.9%** | **+8.3 pts (CTGAN)** | **Strong yes (imbalance)** |
+| **Criteo Display** | **10,000** | **0.2%** | **+19.6 pts (CTGAN)** | **Strong yes (extreme imbalance)** |
 
-The decision rule that emerges: synthetic augmentation earns its overhead when **at least one** of the following holds — (a) n < 2,000, (b) severe class imbalance (< 10% positive), or (c) meaningful feature sparsity (> 30% missing). When none apply, real data is sufficient.
+The decision rule: synthetic augmentation earns its overhead when **at least one** of the following holds — (a) n < 2,000, (b) severe class imbalance (positive rate < 5%), or (c) meaningful feature sparsity (> 30% missing). The imbalance condition is the most impactful: Hillstrom and Criteo show that even with large n, extreme rarity of the positive class creates the same distributional learning failure that small n does at the class level.
 
 ---
 
@@ -569,6 +617,12 @@ The field is developing rapidly. Causal generative models, LLM-backed synthesis 
 
 18. **Patki, N., Wedge, R., & Veeramachaneni, K.** (2016). The Synthetic Data Vault. *IEEE International Conference on Data Science and Advanced Analytics (DSAA)*. https://dai.lids.mit.edu/wp-content/uploads/2018/03/SDV.pdf
     *(Introduces SDV and the GaussianCopula synthesizer used throughout this paper's experiments.)*
+
+19. **Hillstrom, K.** (2008). MineThatData E-Mail Analytics And Data Mining Challenge. *MineThatData Blog*. https://blog.minethatdata.com/2008/03/minethatdata-e-mail-analytics-and-data.html
+    *(Original dataset and challenge description. The most widely cited "real" marketing dataset for email response and conversion modeling.)*
+
+20. **Diemert, E., Betlei, A., Dieudonne-Boucher, C., & Amini, M.-R.** (2018). A Large Scale Benchmark for Uplift Modeling. *AdKDD & TargetAd Workshop, KDD 2018*. https://ailab.criteo.com/criteo-uplift-modeling-dataset/
+    *(Introduces the Criteo Uplift dataset: 13.9M rows, real display advertising campaign data with treatment/control and conversion outcomes.)*
 
 ---
 

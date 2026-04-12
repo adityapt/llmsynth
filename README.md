@@ -13,6 +13,8 @@ Empirical evaluation of synthetic data generation methods for marketing and prod
 - `run_nomao.py` — Nomao lead dataset (full, n=10K)
 - `run_nomao_sparse.py` — Nomao with 70% simulated missingness + small n=500
 - `run_kdd_appetency.py` — KDD Cup 2009 Appetency (natural CRM sparsity, 70% missing)
+- `run_hillstrom.py` — Hillstrom Email Marketing (real campaign data, 0.9% conversion)
+- `run_criteo.py` — Criteo Uplift Display Advertising (real ad data, 0.2% conversion)
 
 **Results:** `results/`
 - `metrics_*.csv` — AUC/F1/AP per dataset × generator × condition
@@ -30,6 +32,8 @@ Empirical evaluation of synthetic data generation methods for marketing and prod
 | Online Retail CLV | 4,000 | Regression | — | UCI (fallback) |
 | Nomao Lead | 10,000 | Classification | 28.3% | OpenML id=1486 |
 | KDD Appetency | 5,000 | Classification | 6.7% | OpenML id=1112 |
+| Hillstrom Email | 64,000 | Classification | 0.9% | MineThatData (2008) |
+| Criteo Uplift | 13.9M (cap 10K) | Classification | 0.2% | Criteo AI Lab (2018) |
 
 ## Methods
 
@@ -41,10 +45,12 @@ Empirical evaluation of synthetic data generation methods for marketing and prod
 
 | Setting | Augmentation Gain | Verdict |
 |---|---|---|
-| Large dataset, complete features | < 0.3% | Skip it |
-| Small dataset (n≈1K), balanced | +5.3% AUC | Worth it |
+| Large dataset, complete features | < 0.3 pts | Skip it |
+| Small dataset (n≈1K), balanced | +5.3 pts AUC | Worth it |
 | Small dataset + simulated sparsity | +2.5 pts (138% recovery) | Strong yes |
 | Large dataset, naturally sparse + imbalanced | Marginal | Depends on imbalance |
+| Real email campaign, 0.9% conversion (Hillstrom) | +8.3 pts (CTGAN) | Strong yes |
+| Real display ads, 0.2% conversion (Criteo) | +19.6 pts (CTGAN) | Strong yes |
 
 ## Setup
 
