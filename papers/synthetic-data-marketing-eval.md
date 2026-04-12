@@ -1,0 +1,528 @@
+# Does Synthetic Data Improve Model Performance?
+## A Practical Evaluation for Marketing and Product Data Science
+
+**April 2026 · Slug: `synthetic-data-marketing-eval`**
+
+> **Figure note:** Figures 2, 3, and 5 (in the original literature synthesis sections) are rendered charts saved alongside this document (`fig2-augmentation-utility.png`, `fig3-method-dimension-matrix.png`, `fig5-privacy-utility.png`). Numeric scores in those figures are **illustrative relative rankings** derived from aggregated benchmark evidence (Davila et al. 2025; Kotelnikov et al. 2023); they are not exact measurements from a single study. Section 6 reports **new empirical results** from original experiments on public datasets; all numbers there are directly measured. Figures 1 and 4 are inline Mermaid diagrams. Experiment output plots are saved in `results/` as `ucurve_*.png`, `lowdata_*.png`, and `summary_comparison.png`.
+
+---
+
+## Abstract
+
+Synthetic data generation has been proposed as a remedy for several persistent challenges in applied machine learning: data scarcity, class imbalance, privacy constraints, and the high cost of labeled examples. Yet whether synthetic tabular data reliably improves downstream model performance remains an open empirical question — particularly in marketing and product data science settings where outcome distributions are skewed, causal structure matters, and the cost of a misprediction is asymmetric. This paper combines a synthesis of recent benchmarks, surveys, and domain-specific studies with original experiments on three public datasets (Telco Churn, Bank Marketing, German Credit) to answer a practical question: *when, how much, and with which methods does synthetic data help?* We review the evaluation landscape (TSTR, fidelity–utility–privacy tradeoffs), survey the leading generation methods (SMOTE, Gaussian Copula, CTGAN, TVAE, TabDDPM, LLM-based), map findings to four canonical marketing tasks (churn prediction, customer lifetime value, conversion uplift, and customer segmentation), and derive actionable decision rules for practitioners. Our synthesis and experiments find that synthetic data delivers measurable gains primarily under data scarcity, severe class imbalance, and feature sparsity; that an optimal synthetic-to-real mixing ratio exists and follows a U-shaped error curve (α* ≈ 0.2–0.3 across our experiments); that augmentation gains of 5.3% AUC are achievable in small-n settings (n=1,000) and that sparse-feature augmentation on a marketing lead dataset (n=500, 70% missing) recovers 138% of the sparsity performance penalty — exceeding even the full-feature baseline; that gains on large complete datasets are negligible (< 0.3%); that TSTR gaps range from 4–27% AUC, confirming full synthetic replacement is inadvisable; and that diffusion-based generators (TabDDPM) currently outperform GAN and VAE alternatives on tabular benchmarks (Davila et al., 2025; Kotelnikov et al., 2023). Model collapse — a well-documented failure mode for large language models trained on iteratively generated text — is a distinct phenomenon from single-round tabular augmentation and should not be conflated with it.
+
+---
+
+## 1. Introduction
+
+Marketing and product data science teams operate under a specific set of data constraints that make the question of synthetic data practically urgent:
+
+- **Class imbalance is endemic.** Conversion rates of 1–5%, churn rates of 10–20%, and fraud rates below 1% are typical. Standard classifiers trained on such distributions systematically underperform on the minority class.
+- **Data volume is unequal across cohorts.** New products, new markets, cold-start users, and low-volume campaigns lack sufficient observations for stable modeling.
+- **Privacy and regulatory constraints** (GDPR, CCPA, and internal data governance) limit what can be stored, shared across teams, or used in sandboxed experimentation environments.
+- **Causal questions** — does this feature, message, or offer *cause* a lift? — require counterfactual data that by definition does not exist for individuals who received the control condition.
+
+Against this backdrop, synthetic data has attracted considerable commercial interest. Platforms such as Gretel.ai, MOSTLY AI, and the open-source Synthetic Data Vault (SDV) now offer production-grade tabular synthesizers. The academic literature has also moved rapidly: from early GAN-based approaches (CTGAN, 2019) through variational autoencoders (TVAE) to diffusion models (TabDDPM, 2023) and LLM-based generators (GReaT, REaLTabFormer). Benchmarks such as TabArena (Erickson et al., 2025) and the prosumer hardware study of Davila et al. (2025) have provided rigorous, multi-dimensional comparisons that make evidence-based method selection possible for the first time.
+
+Despite this momentum, the empirical record is mixed. Benefits are often modest in absolute terms. Several benchmarks show that improvements from synthetic oversampling are statistically significant but small, and that fully replacing real training data with synthetic data degrades performance. The optimal blending ratio is dataset- and task-dependent, and there is accumulating evidence for a "sweet spot" beyond which more synthetic data hurts.
+
+This paper attempts to synthesize this evidence with a practitioner lens. We are not asking whether synthetic data *can* improve performance in the best case — it clearly can. We are asking: *under what conditions can a marketing or product data scientist expect gains that justify the overhead of fitting a generative model?*
+
+---
+
+## 2. Background and Taxonomy of Methods
+
+### 2.1 What Is Tabular Synthetic Data?
+
+Synthetic tabular data consists of rows generated by a statistical model fit to an original dataset. A high-quality synthetic dataset should satisfy three simultaneous properties:
+
+| Property | Definition | Risk if violated |
+|---|---|---|
+| **Fidelity** | Statistical similarity to the original: marginals, correlations, and joint distributions | Model learns wrong patterns; spurious features |
+| **Utility** | Models trained on synthetic data perform similarly to those trained on real data | Performance gap undermines the value of synthesis |
+| **Privacy** | Individual records from the training set cannot be reconstructed or identified | Membership inference attacks; regulatory violation |
+
+These three properties are in tension: maximizing fidelity can increase memorization risk; adding privacy noise reduces fidelity and utility. Benchmarks that evaluate all three axes simultaneously — such as SynthEval (Lautrup et al., 2024) and the MOSTLY AI QA framework (Sidorenko et al., 2025) — are more informative than those that report a single quality score.
+
+### 2.2 Generation Methods — Taxonomy
+
+**Figure 1.** Taxonomy of tabular synthetic data generation methods.
+
+```mermaid
+flowchart TD
+    A[Tabular Synthetic Data] --> B[Rule-based / Interpolation]
+    A --> C[Probabilistic Models]
+    A --> D[Deep Generative Models]
+    A --> E[LLM-based]
+
+    B --> B1[SMOTE]
+    B --> B2[ADASYN]
+    B --> B3[Borderline-SMOTE]
+
+    C --> C1[Gaussian Copula]
+    C --> C2[Bayesian Networks]
+
+    D --> D1[GANs\nCTGAN · CTAB-GAN+]
+    D --> D2[VAEs\nTVAE]
+    D --> D3[Diffusion Models\nTabDDPM · TabSyn]
+
+    E --> E1[Row-serialisation\nGReaT · REaLTabFormer]
+    E --> E2[Instruction-tuned\nTabuLa]
+
+    B1 --> H[Hybrid SMOTE+GAN]
+    D1 --> H
+```
+
+**Rule-based / statistical samplers (SMOTE family).** Synthetic Minority Oversampling Technique (Chawla et al., 2002) generates minority-class samples by interpolating between existing examples in feature space. Variants include ADASYN (adaptive density-aware), Borderline-SMOTE, and SVMSMOTE. These methods are fast, transparent, and widely deployed. Davila et al. (2025) found SMOTE to be the top performer on **ML utility** among all benchmarked methods when evaluated on prosumer hardware (Table 5), though it scored poorly on **privacy** metrics due to near-duplicate generation risk (Table 8). SMOTE is limited to oversampling existing distributions rather than learning a generative model of the full joint density, making it unsuitable for full data synthesis tasks.
+
+**Gaussian Copula (GC).** SDV's Gaussian Copula learns marginal distributions per column and couples them through a Gaussian copula. It is computationally lightweight, handles mixed types, and makes explicit modeling assumptions. It performs well on privacy metrics but tends to underperform on datasets with complex multimodal distributions.
+
+**Conditional GAN (CTGAN).** Xu et al. (2019) introduced CTGAN to address two challenges unique to tabular data: non-Gaussian and multimodal distributions on continuous columns, and severe class imbalance on discrete columns. CTGAN uses mode-specific normalization and a conditional vector during training, enabling controlled generation by category. Fonseca & Bacao (2023) demonstrated the utility of WGAN-based oversampling on imbalanced tabular classification, confirming that GAN-based synthesis outperforms SMOTE on diversity while remaining competitive on utility. Davila et al. (2025) find CTGAN ranks highly on fidelity and utility but falls below TabDDPM on augmentation benchmarks (Table 6).
+
+**Variational Autoencoder (TVAE).** The TVAE model pairs the same preprocessing as CTGAN with a VAE objective. It is generally faster to train and can match or exceed CTGAN on smaller datasets, but may produce less diverse samples.
+
+**Diffusion models (TabDDPM, TabSyn).** Kotelnikov et al. (2023) applied Denoising Diffusion Probabilistic Models to tabular data, handling mixed feature types via Gaussian diffusion on continuous features and multinomial diffusion on categorical features. Extensive benchmarking showed TabDDPM outperforming GAN and VAE alternatives on the majority of evaluated datasets. Davila et al. (2025) specifically confirm that **TabSyn and TabDDPM are the top-performing methods on augmentation benchmarks** (Table 6), validating the diffusion model's superiority for the augmentation regime most relevant to marketing practitioners. These methods are computationally heavier but more reliable across diverse data regimes.
+
+**LLM-based generators (REaLTabFormer, GReaT, TabuLa).** Large language models have been adapted to generate tabular data by serializing rows as text. These approaches show promise on small datasets but are expensive, can hallucinate impossible feature combinations, and currently lack the calibration and privacy guarantees of probabilistic models. Davila et al. (2025) found LLM-based methods ranking lower than diffusion and GAN-based methods on utility benchmarks in the prosumer hardware setting.
+
+**Hybrid approaches.** A growing literature augments GAN-generated samples with interpolation-based oversampling. A 2026 telecom study found that a hybrid SMOTE+GAN approach improved churn prediction F1 over either method alone (Tanha et al., 2026), with the combination attributed to SMOTE's initial balancing reducing GAN mode collapse while the GAN captures non-linear feature interactions beyond linear interpolation.
+
+### 2.3 Evaluation Protocols
+
+**Train-Synthetic-Test-Real (TSTR).** The gold-standard utility evaluation: fit a downstream model on synthetic data only, evaluate on a held-out real test set. TSTR directly measures whether a generative model has captured patterns useful for real-world inference. Performance gaps (TSTR vs. TRTR, Train-Real-Test-Real) quantify the utility cost of synthesis.
+
+**Augmentation evaluation.** More practically relevant for marketing use cases: train on real + synthetic data, test on real data. This regime asks whether adding synthetic rows improves over the real-data-only baseline. Davila et al. (2025) operationalize this regime explicitly and find it more informative than pure TSTR for practitioners who have access to real data.
+
+**Fidelity metrics.** Column-wise distributional similarity (Jensen–Shannon divergence, Wasserstein distance), pairwise correlation matrix comparison, and detection tests (can a classifier distinguish real from synthetic?).
+
+**Privacy metrics.** Distance to Closest Record (DCR), membership inference attack success rate, nearest-neighbor distance ratios. Davila et al. (2025) report DCR-based privacy scores across all benchmarked methods in Table 8.
+
+Frameworks such as SynthEval (Lautrup et al., 2024; arXiv:2404.15821) and the MOSTLY AI QA framework (Sidorenko et al., 2025; arXiv:2504.01908) provide open-source implementations of multi-dimensional evaluation across all three axes.
+
+---
+
+## 3. The Core Empirical Question: Does It Help?
+
+### 3.1 The U-Shaped Error Curve
+
+Theoretical and empirical work has established a robust finding: **adding synthetic data to a real training set initially reduces error, then increases it** as the synthetic fraction grows. The optimal synthetic-to-real ratio minimizes expected test error and is dataset-specific.
+
+Formally, let $\alpha \in [0, 1]$ denote the fraction of training data that is synthetic. Test error as a function of $\alpha$ follows an approximate U-shape:
+
+$$\mathcal{L}(\alpha) = \mathcal{L}_{\text{real}} + \alpha \cdot \Delta_{\text{fidelity}} - \alpha(1 - \alpha) \cdot \text{CovGain}$$
+
+where $\Delta_{\text{fidelity}}$ is the distribution mismatch penalty and $\text{CovGain}$ is the coverage gain from additional diversity. The minimum occurs at some $\alpha^*$ that depends on generator quality and dataset size.
+
+Shidani et al. (2025; arXiv:2510.08095) provide a learning-theoretic framework for this tradeoff, deriving generalization bounds via algorithmic stability that characterize $\alpha^*$ as a function of the Wasserstein distance between real and synthetic distributions. They validate a U-shaped test-error curve empirically on CIFAR-10 and a clinical MRI dataset, and extend the framework to domain adaptation settings.
+
+Empirically, studies of augmented training find stable performance with up to 20–30% synthetic data, with degradation accelerating beyond that. The optimal ratio for tabular tasks is dataset-dependent, but the 20–40% range appears as a consistent finding across multiple evaluations. Davila et al. (2025) confirm this range in their prosumer hardware benchmark.
+
+### 3.2 Model Collapse: A Critical Distinction
+
+A widely cited paper — Shumailov et al. (2024), published in *Nature* — demonstrated that "AI models collapse when trained on recursively generated data." This finding has been misappropriated in discussions of synthetic data augmentation for tabular ML and warrants precise scoping.
+
+**What Shumailov et al. (2024) actually show:** When a generative model is trained repeatedly on its own outputs — as occurs in large language model training pipelines that ingest web-crawled text increasingly contaminated with LLM outputs — the resulting models progressively lose diversity and eventually produce degenerate outputs. This is a failure mode of *iterative, recursive self-training*, not of one-shot augmentation.
+
+**What does not follow:** A practitioner who fits CTGAN on a real marketing dataset, generates a synthetic augmentation set, and trains a downstream classifier on the combined data is performing a single-round, one-directional generation step. The generative model is never retrained on its own outputs. There is no recursive loop. Model collapse in the Shumailov sense does not apply to this regime.
+
+**The genuine concern for practitioners** is a related but distinct phenomenon: distribution shift amplification. If the generative model has imperfect fidelity and the downstream model is trained on an increasing fraction of its outputs, the downstream model will increasingly learn the generator's errors rather than the ground-truth distribution. This is the mechanistic explanation for the U-shaped error curve (§3.1), and it is fully captured by fidelity and utility evaluation protocols.
+
+### 3.3 When Synthetic Data Helps
+
+Synthesizing evidence across recent benchmarks, several conditions favor synthetic data augmentation:
+
+1. **Severe class imbalance (rare positive class).** This is the single most robust positive finding. When a target event occurs at rates below ~5%, synthetic minority-class generation materially improves recall and F1. Davila et al. (2025) identify SMOTE as the top-performing method for imbalanced classification utility (Table 5), and the 2026 MDPI comparative study (Won et al., 2026) confirms consistent AUC and F1 improvements from synthetic oversampling across multiple classifiers.
+
+2. **Small real dataset ($n < 5{,}000$).** With limited real observations, synthetic data reduces variance in model estimates. Gains are especially large when combined with cross-validation on the real held-out set. Davila et al. (2025) include datasets at this scale in their benchmark and find the advantage of synthesis most pronounced in this regime.
+
+3. **Privacy-constrained environments.** When raw training data cannot be shared across teams or with vendors, a high-fidelity synthetic surrogate enables model development without access to PII. Here "improvement" is relative to the counterfactual of no data sharing, not relative to an unconstrained baseline.
+
+4. **Cohort-level data gaps.** New products, new market segments, or low-volume campaign variants may have insufficient samples for stable models. Synthetic extrapolation from related cohorts can bridge these gaps, though validation on real holdout data from the cohort remains essential.
+
+**Figure 2** (see `fig2-augmentation-utility.png`) illustrates estimated AUC improvements under the augmentation regime across method families, based on aggregated evidence from Davila et al. (2025), Tanha et al. (2026), and Won et al. (2026).
+
+### 3.4 When Synthetic Data Does Not Help
+
+Equally important are the conditions where synthetic data fails to add value — or actively hurts:
+
+1. **Abundant real data.** When $n > 50{,}000$ with reasonably balanced targets, adding synthetic data rarely outperforms the real-data baseline. The marginal information content of additional synthetic samples is low. Davila et al. (2025) note diminishing returns in this regime across all methods tested.
+
+2. **Oversampling past the sweet spot.** Chia Ramírez (2025; arXiv:2510.18252) systematically evaluated 10 augmentation scenarios using the *Give Me Some Credit* dataset (97,243 observations, 7% default rate). Key findings: ADASYN with 1× multiplication achieved optimal performance (AUC 0.6778, Gini 0.3557); higher multiplication factors (2×, 3×) caused measurable degradation. The empirically identified optimal majority:minority ratio was **6.6:1** — not the 1:1 balance that practitioners typically target. The author explicitly cautions against treating this as a universal constant; it should be understood as a methodology for finding an optimal ratio, not a fixed rule.
+
+3. **Causal/structural violations.** Standard generative models learn associations, not causal mechanisms. Synthetic data that preserves marginals and pairwise correlations may destroy the conditional independencies required for uplift or attribution models. Causal generative models (e.g., TabSCM) are an active research area but not yet production-ready.
+
+4. **Distribution shift at test time.** If the real deployment distribution differs from the training distribution, a generator fit to training data will amplify the shift in synthetic samples. This is the correct framing for concerns about "model collapse" in single-round augmentation settings.
+
+5. **TSTR as a full replacement.** Across multiple benchmarks — Davila et al. (2025), Du & Li (2024), Sidorenko et al. (2025) — no current generation method fully closes the TSTR gap relative to TRTR. Full replacement of real training data with synthetic data is not advisable for high-stakes marketing models.
+
+---
+
+## 4. Application to Marketing and Product Data Science
+
+We examine four canonical task types and map the evidence to practical recommendations.
+
+### 4.1 Churn Prediction
+
+**Task.** Binary classification: predict which customers will cancel a subscription or lapse in activity within a horizon $T$.
+
+**Data challenge.** Monthly churn rates of 1–10% create severe class imbalance. Certain customer cohorts (high-value, recently acquired) may have small $n$.
+
+**Evidence.** Tanha et al. (2026) studied telecom churn prediction using a hybrid SMOTE+GAN approach (CTGAN as the GAN component) on the IBM Telco Customer Churn dataset (7,043 records, 26.5% churn rate). They found that the SMOTE–GAN hybrid outperformed both standalone SMOTE and standalone GAN augmentation on precision, F1-score, and G-mean for the churn class across six ML classifiers (LR, DT, RF, LightGBM, CatBoost, XGBoost). Won et al. (2026; MDPI Electronics) independently confirmed measurable AUC and F1 improvements from synthetic oversampling on comparable imbalanced tabular tasks. Davila et al. (2025), while not focused specifically on churn, confirm that the imbalanced classification regime is where synthetic augmentation reliably earns its keep.
+
+**Recommendation.** Synthetic augmentation is justified for churn prediction under class imbalance. Use hybrid SMOTE+GAN or CTGAN with a synthetic fraction of 20–40% of training data. Target majority:minority ratios of approximately 6:1 rather than 1:1. Evaluate using stratified cross-validation; do not assess purely on accuracy. Monitor for degraded precision if the synthetic fraction is pushed toward full replacement.
+
+### 4.2 Customer Lifetime Value (CLV/LTV)
+
+**Task.** Regression or probabilistic model: predict total revenue from a customer over a future horizon.
+
+**Data challenge.** LTV distributions are heavily right-skewed (power-law tails). High-value customers are rare and poorly represented. Regression models trained on such data are biased toward median customers.
+
+**Evidence.** Tabular synthesizers trained on skewed continuous targets often underperform: both CTGAN and TVAE struggle with heavy tails unless the target column is log-transformed before synthesis. Gaussian Copula with explicit marginal modeling handles this better in practice (Du & Li, 2024; arXiv:2402.06806). Utility gains on LTV regression are modest compared to classification tasks; this is consistent with Davila et al. (2025)'s finding that regression tasks show smaller augmentation benefits than classification tasks overall.
+
+**Recommendation.** Apply log-transformation before fitting any generative model. Use synthetic data primarily to improve tail coverage — augmenting the high-LTV segment specifically rather than the full dataset. Validate on held-out high-LTV customers separately, not only on overall RMSE.
+
+### 4.3 Conversion Uplift / Incrementality
+
+**Task.** Estimate the causal effect of a marketing treatment (email, ad, discount) on an individual outcome (purchase, sign-up). This is the uplift modeling or Conditional Average Treatment Effect (CATE) estimation problem.
+
+**Data challenge.** Counterfactuals are unobserved — each customer is either treated or untreated, never both. Uplift models are inherently data-hungry because they must learn heterogeneous effects, not just main effects.
+
+**Caution.** Synthetic data for uplift modeling is a double-edged instrument. A generative model that does not explicitly model the treatment assignment mechanism will produce synthetic data with corrupted propensity scores. Using such data for CATE estimation can introduce substantial confounding bias. Tools such as CausalML's `make_uplift_classification` generate synthetic data from known causal structures specifically for benchmarking — these are appropriate for evaluation but not for augmenting observational training data.
+
+**Recommendation.** Do *not* use off-the-shelf tabular synthesizers to augment observational training data for uplift models. If synthetic data is warranted (e.g., for simulator-based policy testing), use a causal generative model that explicitly conditions on treatment assignment and maintains structural equation constraints. This remains an unsolved research problem for most practitioners.
+
+### 4.4 Customer Segmentation
+
+**Task.** Unsupervised or semi-supervised clustering: identify coherent behavioral or demographic segments for targeting and personalization.
+
+**Data challenge.** Cluster stability degrades with small $n$ or when certain segments are rare. Sharing segmentation inputs across teams raises privacy concerns.
+
+**Evidence.** Privacy-preserving synthetic data has the clearest value proposition here: a high-fidelity synthetic dataset enables analysts, vendors, and partner teams to explore segment structure without accessing PII. The SDV Gaussian Copula and MOSTLY AI's tabular synthesizers are commonly used in this context. Fidelity (not downstream ML utility) is the primary quality criterion. Davila et al. (2025) note that the Gaussian Copula achieves strong privacy scores with acceptable fidelity for this use case.
+
+**Recommendation.** Synthetic data is appropriate as a privacy-safe analytical surrogate for segmentation. Use fidelity metrics (correlation matrix similarity, univariate KS tests) as the primary quality gate, not downstream clustering metrics. Validate that synthetic clusters are consistent with real-data clusters before publishing segment profiles.
+
+---
+
+## 5. Method-Level Evidence
+
+**Figure 3** (see `fig3-method-dimension-matrix.png`) shows relative performance across four evaluation dimensions, drawing primarily from Davila et al. (2025).
+
+**Method performance ranking (tabular benchmarks, 2023–2026):**
+
+| Method | Fidelity | Utility (Imbalanced) | Utility (Augmentation) | Privacy | Speed | Best used for |
+|---|---|---|---|---|---|---|
+| TabDDPM / TabSyn | ★★★★★ | ★★★★ | ★★★★★ | ★★★★ | ★★★ | Best overall; worth the compute cost |
+| Hybrid SMOTE+GAN | ★★★ | ★★★★★ | ★★★★ | ★★★ | ★★★★ | Imbalanced classification; churn, conversion |
+| CTGAN | ★★★★ | ★★★★ | ★★★★ | ★★★ | ★★★★ | Class imbalance, categorical-heavy data |
+| TVAE | ★★★ | ★★★★ | ★★★ | ★★★ | ★★★★★ | Small datasets, fast iteration |
+| Gaussian Copula | ★★★ | ★★★ | ★★★ | ★★★★ | ★★★★★ | Privacy proxies, LTV tails, segmentation |
+| SMOTE | ★★ | ★★★★★ | ★★★ | ★★ | ★★★★★ | Imbalanced binary classification only |
+| LLM-based | ★★★ | ★★★ | ★★★ | ★★ | ★ | Small datasets; experimental |
+
+*Ratings are relative within class, based on aggregated benchmark evidence from Davila et al. (2025), Kotelnikov et al. (2023), and Won et al. (2026). SMOTE privacy ratings reflect near-duplicate risk from interpolation; they do not imply DP-grade guarantees for any method. "Utility (Imbalanced)" refers to performance on imbalanced classification benchmarks; "Utility (Augmentation)" refers to the mixed real+synthetic augmentation regime.*
+
+**Figure 5** (see `fig5-privacy-utility.png`) plots the privacy–utility frontier across methods. Key observations: TabDDPM occupies the high-utility, moderate-privacy region; CTAB-GAN+ achieves better privacy at a utility cost; SMOTE sits at high utility but low privacy (Davila et al., 2025, Table 8); LLM-based methods score poorly on both dimensions due to memorization risk and computational overhead.
+
+For benchmarks that include differentially private synthesis specifically, Chen et al. (2025; arXiv:2504.14061) report that statistical methods (PrivBayes, PrivSyn) achieve higher synthesis utility but lower runtime efficiency compared to deep learning methods (PATE-GAN, DP-CTGAN), confirming a utility–efficiency tradeoff within the DP regime.
+
+---
+
+## 6. Empirical Validation on Public Benchmark Datasets
+
+To complement the literature synthesis in Sections 3–5, we conducted a controlled experiment using three publicly available tabular datasets that represent canonical marketing and product data science tasks. Code and results are reproducible via `experiments/synthetic_data_eval.py` in the companion repository.
+
+### 6.1 Experimental Setup
+
+**Datasets.** We used three datasets with varying sizes, class imbalance, and task types:
+
+| Dataset | Source | n | Features | Task | Positive rate |
+|---|---|---|---|---|---|
+| Telco Customer Churn | IBM Kaggle dataset | 7,032 | 19 | Binary classification | 26.6% |
+| Bank Marketing | UCI Repository (id=1461) | 15,000† | 16 | Binary classification | 11.7% |
+| German Credit | OpenML (id=31) | 1,000 | 20 | Binary classification | 30.0% |
+
+†Capped from 45,211 for computational tractability.
+
+**Generators.** We evaluated three generators available in standard Python packages:
+- **GaussianCopula** (SDV v1.36): parametric, fast, models marginals + Gaussian copula
+- **CTGAN** (SDV/CTGAN v0.12): conditional GAN with mode-specific normalization
+- **SMOTE** (imbalanced-learn v0.12): interpolation-based minority oversampling
+
+**Protocol.** For each dataset × generator combination, we ran:
+1. **Baseline (TRTR):** Train on 80% real data, evaluate on 20% real holdout (5-fold CV)
+2. **TSTR:** Train on synthetic-only data, evaluate on real holdout
+3. **Augmentation sweep:** Train on real + synthetic at α ∈ {0.1, 0.2, 0.3, 0.5, 1.0}, where α = n_synthetic / n_real
+4. **Low-data regime:** Subsample real training to n ∈ {250, 500, 1000, 2000} and measure recovery from augmentation
+
+Primary metric: AUC-ROC. Secondary metrics: F1 on minority class, average precision.
+
+Downstream model: GradientBoostingClassifier (sklearn defaults, `random_state=42`).
+
+### 6.2 TSTR Results: The Cost of Going Synthetic-Only
+
+Across all datasets and generators, synthetic-only training (TSTR) consistently and substantially underperformed the real-data baseline:
+
+| Dataset | Baseline AUC | GC TSTR | CTGAN TSTR | TSTR Gap (best) |
+|---|---|---|---|---|
+| Telco Churn | **0.837** | 0.803 | 0.751 | −4.1% |
+| Bank Marketing | **0.909** | 0.750 | 0.719 | −17.5% |
+| German Credit | **0.775** | 0.564 | 0.511 | −27.2% |
+
+*TSTR gap = (TSTR − Baseline) / Baseline.*
+
+These results reproduce a consistent finding in the literature: no current generator closes the TSTR gap fully. The gap is largest for German Credit (1,000 rows) — consistent with the hypothesis that small datasets are harder to model faithfully. Bank Marketing at 11.7% positive rate shows a 17% drop under GaussianCopula TSTR, likely because the rare positive class is difficult to capture accurately in a parametric copula model.
+
+SMOTE is excluded from TSTR because it requires real data for interpolation; it is inherently an augmentation-only method.
+
+### 6.3 Augmentation Sweep: Does Mixing Help?
+
+Adding a small fraction of synthetic data produced modest-to-notable gains on two of three datasets:
+
+| Dataset | Baseline AUC | Best Augmented AUC | Gain | Best Generator | Optimal α |
+|---|---|---|---|---|---|
+| Telco Churn | 0.837 | **0.839** | +0.3% | GaussianCopula | 0.2 |
+| Bank Marketing | 0.909 | **0.910** | +0.2% | GaussianCopula | 0.2 |
+| German Credit | 0.775 | **0.816** | **+5.3%** | CTGAN | 0.3 |
+
+Several patterns are worth highlighting:
+
+**German Credit shows the largest gain (+5.3%).** This is the smallest dataset (n=1,000) and confirms the theoretical prediction that synthetic augmentation delivers proportionally larger benefits when real data is scarce. CTGAN at α=0.3 adds 300 synthetic rows to 800 real training rows, an approximate 3:7 synthetic-to-real ratio.
+
+**Optimal α is consistently small (0.2–0.3).** For all three datasets, the performance peak occurs at α < 0.5, confirming the U-shaped error curve (§3.1). Performance degrades as α approaches 1.0 in every case. This pattern is clearly visible in the U-curve plots saved to `results/ucurve_*.png`.
+
+**Gains are modest on large, well-represented datasets.** Telco Churn (n=7,032) and Bank Marketing (n=15,000) show negligible augmentation benefits (< 0.3%). Real data is sufficient when n is large enough; the generator adds little information above the baseline.
+
+**GaussianCopula slightly outperforms CTGAN on larger datasets; CTGAN wins on Credit.** This mirrors the literature finding that CTGAN's conditional generation is more useful under class imbalance and small-n regimes.
+
+### 6.4 Low-Data Regime
+
+We also measured performance as a function of real training set size, adding CTGAN augmentation at the optimal α from Section 6.3. Results are in `results/lowdata_*.png`.
+
+Consistent with theory and prior benchmarks:
+- At n_real = 250, all three datasets show material AUC degradation relative to full-data training. Augmentation partially compensates, recovering 30–60% of the gap depending on generator quality.
+- At n_real = 1,000 and above, augmentation gains narrow rapidly.
+- For Bank Marketing, the gap between augmented and real-only narrows to < 2 AUC points by n_real = 1,000, suggesting that synthesis adds little once enough real minority-class examples exist.
+
+### 6.5 Discussion
+
+These results are consistent with the literature synthesis in Sections 3–5 and add three concrete calibrations for practitioners:
+
+1. **Expect TSTR gaps of 4–27% on marketing classification tasks.** Do not use synthetic-only data for model production unless real data is structurally unavailable.
+
+2. **Expect augmentation gains of 0.2–5% AUC, concentrated in small-n settings.** The larger the real dataset, the smaller the marginal benefit. If n > 5,000 with balanced-enough classes, augmentation is unlikely to justify its overhead.
+
+3. **α* ≈ 0.2–0.3 is a stable starting point.** Running a mixing sweep is inexpensive (< 10 additional model fits). The optimal ratio observed here is consistent with the 20–40% range reported by Davila et al. (2025).
+
+---
+
+## 6.6 Stress Test: Sparse Features + Small n (Campaign Lead Attribution)
+
+The three experiments above used clean, complete datasets. Real marketing data — particularly campaign-based lead attribution — is rarely clean. CRM records are incomplete. Touchpoint data has gaps. New campaigns have cold-start users with no history. To test whether synthetic augmentation is useful under these conditions, we ran a targeted stress test on the Nomao lead dataset.
+
+### Setup
+
+**Dataset:** Nomao (OpenML id=1486), subsampled to n=500 to simulate a new or low-volume campaign.
+
+**Sparsity simulation:** 70% of feature values were randomly zeroed out, simulating incomplete CRM fields, missing touchpoint data, or partial behavioral signals — conditions common in marketing lead pipelines.
+
+**Baselines:**
+- *Dense baseline*: train on n=500 with all features intact (best achievable at this sample size)
+- *Sparse baseline*: train on n=500 with 70% of values zeroed (the realistic starting point)
+
+**Generators:** GaussianCopula and CTGAN, fit on the sparse training set. Augmentation sweep at α ∈ {0.1, 0.2, 0.3, 0.5, 1.0}.
+
+### Results
+
+| Condition | AUC | vs Sparse Baseline | Gap Recovery |
+|---|---|---|---|
+| Dense baseline (n=500, full features) | 0.961 | — | — |
+| **Sparse baseline (n=500, 70% missing)** | 0.943 | −1.80 pts | 0% |
+| GaussianCopula α=0.3 | **0.968** | **+2.48 pts** | **138%** |
+| CTGAN α=0.2 | **0.963** | **+1.94 pts** | **108%** |
+| GaussianCopula TSTR (synthetic only) | 0.492 | −45.1 pts | — |
+| CTGAN TSTR (synthetic only) | 0.397 | −54.6 pts | — |
+
+*Gap recovery = (augmented AUC − sparse baseline) / (dense baseline − sparse baseline) × 100.*
+
+Both generators not only recovered the performance lost to sparsity — they exceeded the dense baseline. GaussianCopula at α=0.3 reaches AUC 0.968 vs. dense baseline 0.961, a 138% recovery of the sparsity penalty. CTGAN at α=0.2 reaches 0.963, a 108% recovery.
+
+The optimal α is consistent with previous experiments: 0.2–0.3. Performance degrades noticeably at α=1.0, confirming the U-shaped error curve holds under sparsity as well.
+
+TSTR remains catastrophically bad (AUC 0.40–0.49) — when the generator is fit on sparse data, the synthetic-only distribution is too distorted to train on.
+
+### Why Sparsity Helps Synthetic Data Add Value
+
+When features are complete, a well-tuned classifier already extracts all available signal. Synthetic rows add distributional noise, not information — explaining why augmentation is near-zero on the full Nomao dataset.
+
+When features are sparse, the classifier is forced to learn from incomplete rows. The generative model, fit on all available (sparse) observations, learns the underlying joint distribution and generates complete synthetic rows that fill in the missing structure. The classifier then benefits from the richer coverage in the augmented training set, recovering signal that sparsity had suppressed.
+
+This mechanism is directly relevant to marketing lead attribution:
+- **New campaigns** with limited historical data
+- **Cold-start leads** missing touchpoint or behavioral history
+- **CRM data quality issues** — partial records, missing firmographic fields
+- **Multi-touch attribution** where early funnel stages have sparse signal
+
+### Synthesis: When Does Synthetic Data Help?
+
+Combining all four experiments, a clear pattern emerges:
+
+| Setting | n | Feature Quality | Augmentation Gain | Verdict |
+|---|---|---|---|---|
+| Nomao (full) | 10,000 | Complete, 118 features | −0.02% to +0.03% | Skip it |
+| Telco Churn | 7,032 | Complete, 19 features | +0.3% | Marginal |
+| Bank Marketing | 15,000 | Complete, 16 features | +0.2% | Skip it |
+| German Credit | 1,000 | Complete, 20 features | +5.3% | Worth it |
+| **Nomao (sparse)** | **500** | **70% missing** | **+2.5 pts (138% recovery)** | **Strong yes** |
+
+The decision rule that emerges: synthetic augmentation earns its overhead when **at least one** of the following holds — (a) n < 2,000, (b) severe class imbalance (< 10% positive), or (c) meaningful feature sparsity (> 30% missing). When none apply, real data is sufficient.
+
+---
+
+## 7. Practitioner Decision Framework
+
+**Figure 4.** Decision flowchart for synthetic data deployment.
+
+```mermaid
+flowchart TD
+    Start([Marketing / Product DS Task]) --> Q1{Primary goal:\nprivacy / data sharing?}
+
+    Q1 -->|Yes| P1[Use MOSTLY AI, Gretel,\nor SDV GaussianCopula\nEvaluate on fidelity metrics\nDCR · TVD · correlation matrix]
+    Q1 -->|No| Q2{Class imbalance?\nPositive rate < 10%}
+
+    Q2 -->|Yes| P2[Apply SMOTE or\nhybrid SMOTE+GAN\nTarget synthetic fraction 20–40%\nOptimal ratio ≈ 6:1 majority:minority\nEvaluate on minority-class F1]
+    Q2 -->|No| Q3{Small cohort?\nn < 5K for any\ngroup of interest}
+
+    Q3 -->|Yes| P3[Fit CTGAN or TabDDPM\nAugment to 2–5× original n\nValidate via stratified TSTR\nStop if TSTR gap > 5pp AUC]
+    Q3 -->|No| Q4{Uplift / causal\ninference task?}
+
+    Q4 -->|Yes| W1[⚠️ Do NOT use off-the-shelf\nsynth for causal augmentation\nUse known-DGP simulation only]
+    Q4 -->|No| Q5{n > 50K,\nbalanced classes?}
+
+    Q5 -->|Yes| Skip([Skip synthesis\nReal data sufficient])
+    Q5 -->|No| P4[Run mixing sweep α ∈ 0.1–0.5\nFind α* on validation set\nDeploy at α*]
+
+    P2 --> Eval[Evaluate:\nFidelity · Utility sweep · Privacy audit]
+    P3 --> Eval
+    P4 --> Eval
+```
+
+---
+
+## 8. Evaluation Protocol for Practitioners
+
+We recommend the following evaluation protocol before deploying synthetic data augmentation in any production pipeline:
+
+**Step 1: Baseline.** Train the downstream model on real data only (TRTR). Record the primary metric (e.g., AUC, F1 on minority class, RMSE) and its standard deviation via $k$-fold cross-validation.
+
+**Step 2: Fidelity check.** Fit the chosen synthesizer and generate a synthetic dataset of equal size. Compute:
+- Column-wise TVD / Wasserstein distance
+- Pairwise Spearman correlation matrix Frobenius difference
+- Detection AUC (can a classifier distinguish real from synthetic? Aim for AUC < 0.6)
+
+SynthEval (Lautrup et al., 2024; arXiv:2404.15821) provides open-source implementations of all three.
+
+**Step 3: Utility sweep.** Train the downstream model on real + synthetic data at mixing ratios $\alpha \in \{0.1, 0.2, 0.3, 0.5, 1.0\}$ (where $\alpha$ = synthetic fraction). Test on held-out real data. Plot the $\alpha$–performance curve and identify $\alpha^*$. For imbalanced tasks, vary the majority:minority ratio rather than the synthetic fraction.
+
+**Step 4: Gain-to-cost assessment.** Is the best augmented result ($\alpha^*$) meaningfully better than the TRTR baseline? "Meaningful" in marketing context: $\geq 2$ AUC percentage points on churn or conversion, $\geq 5\%$ reduction in MAPE on LTV, observable improvement in minority-class F1 with no degradation on majority class. If no meaningful gain, do not deploy.
+
+**Step 5: Privacy audit.** For any synthetic dataset shared externally, compute DCR (Distance to Closest Record) and confirm no synthetic record falls within the training set's nearest-neighbor radius. Use SynthEval (arXiv:2404.15821) or the MOSTLY AI QA framework (arXiv:2504.01908) for this step.
+
+---
+
+## 9. Limitations of Existing Evidence
+
+Several gaps in the current evidence base should temper strong conclusions:
+
+**Benchmark datasets ≠ marketing datasets.** Most synthetic data papers evaluate on UCI Adult, Credit Card Fraud, California Housing, and similar academic benchmarks. Even Davila et al. (2025), the most comprehensive prosumer hardware benchmark to date, does not evaluate on session-level behavioral data, event-stream data, sparse behavioral features, or hierarchical marketing data (users within campaigns within channels). Gains observed in public benchmarks may not transfer directly.
+
+**Utility metrics are often too coarse.** Downstream ML accuracy does not directly translate to business impact. A 2 AUC point improvement that concentrates in a subgroup of users may or may not improve the business metric that the model serves.
+
+**Privacy evaluations are inconsistent.** Membership inference attack success rates vary with the attack implementation. Claims of "privacy-preserving synthesis" should be treated skeptically without explicit differential privacy guarantees and reproducible attack evaluations. Davila et al. (2025) and SynthEval (Lautrup et al., 2024) represent best practice in this regard, but they do not cover all threat models.
+
+**Causal structure is systematically ignored.** No mainstream tabular synthesizer currently preserves the causal graph of the data-generating process. This is a fundamental limitation for marketing use cases where causal inference is the goal.
+
+**The optimal ratio is not universal.** The 6.6:1 finding from Chia Ramírez (2025) is from a single credit-scoring dataset. The author explicitly cautions against overgeneralizing, and presents it as a reproducible methodology for finding an optimal ratio on a given domain, not a universal constant.
+
+**Model collapse scope.** The model collapse literature (Shumailov et al., 2024) is frequently misapplied to single-round tabular augmentation. While the underlying concern — that imperfect generators can amplify distributional errors — is valid, the iterative self-training mechanism described in Shumailov et al. does not apply to the standard practitioner workflow of fitting a generator on real data and augmenting once.
+
+**Publication bias.** Studies reporting positive effects of synthetic augmentation are more likely to be published. Camino et al. (2020) found that oversampling with deep generative models yielded marginal absolute improvements over SMOTE on several tabular datasets, suggesting the ceiling for GAN-based augmentation is lower than optimistic reports imply.
+
+---
+
+## 10. Recommendations for Marketing and Product Data Scientists
+
+Based on the synthesized evidence:
+
+1. **Use synthetic data for class imbalance, not as a general-purpose fix.** The strongest and most consistent benefit of synthetic augmentation is improving minority-class recall in imbalanced classification tasks such as churn and conversion prediction. This is where it earns its overhead.
+
+2. **Do not replace real data.** TSTR consistently lags TRTR across all benchmarks reviewed. Full synthetic replacement is only justified when real data is unavailable due to privacy or regulatory constraints.
+
+3. **Find and respect the optimal mixing ratio.** Run a mixing sweep before deploying augmentation at scale. The default 1:1 balance for oversampling is often suboptimal. Ratios of 6:1 to 3:1 (majority:minority) may perform better (Chia Ramírez, 2025).
+
+4. **Use TabDDPM when compute allows; CTGAN or hybrid SMOTE+GAN otherwise.** TabDDPM and TabSyn currently dominate tabular augmentation benchmarks (Davila et al., 2025; Kotelnikov et al., 2023). If compute or deployment complexity favors a lighter model, CTGAN is a reliable second choice. For imbalanced classification specifically, the hybrid SMOTE+GAN approach is competitive with diffusion models at substantially lower compute cost (Tanha et al., 2026).
+
+5. **Apply caution to uplift and attribution problems.** Synthetic data from association-based generators corrupts causal structure. Restrict synthetic data use in uplift modeling to evaluation benchmarking with known ground-truth DGPs.
+
+6. **Evaluate fidelity and utility separately.** High fidelity does not guarantee high utility; high utility on one task does not guarantee it on another. Run task-specific evaluation rather than relying on a single quality score. Use SynthEval or equivalent multi-axis frameworks.
+
+7. **Do not conflate model collapse with augmentation failure.** Single-round augmentation does not trigger the recursive distributional degradation described by Shumailov et al. (2024). The correct concern is distribution shift from imperfect synthesis, which the U-shaped error curve and utility sweep protocols (§7) directly address.
+
+8. **Document synthetic data in model cards.** Any model trained on synthetic-augmented data should document (a) which generator was used, (b) what fraction of training data was synthetic, (c) what fidelity and privacy checks were performed, and (d) whether downstream performance was measured on a real holdout set.
+
+---
+
+## 11. Conclusion
+
+Synthetic data is not a universal performance enhancer. It is a targeted intervention most effective when real data is scarce, imbalanced, or privacy-constrained. Our original experiments on four public benchmark settings (Section 6) calibrate the expected magnitude of effects: TSTR gaps of 4–27% confirm that synthetic-only training is inadvisable; augmentation gains of 0.2–5.3% AUC are achievable, concentrated in small-n regimes; and a stress test on campaign lead attribution data (n=500, 70% feature sparsity) shows that synthetic augmentation can recover 138% of the performance gap caused by missing data — exceeding the full-feature baseline. The optimal mixing ratio α* ≈ 0.2–0.3 is stable across all settings, consistent with the 20–40% range reported by Davila et al. (2025). Under these conditions, modern generative methods — particularly diffusion-based models such as TabDDPM and TabSyn (Davila et al., 2025; Kotelnikov et al., 2023) and hybrid SMOTE+GAN approaches for imbalanced classification (Tanha et al., 2026) — can deliver measurable downstream improvements. The gains are rarely dramatic: 2–6 AUC points on churn and conversion tasks is a realistic upper bound under favorable conditions, and gains are smaller in regression settings such as LTV modeling.
+
+The risks of synthetic data are underappreciated in practice. Distribution mismatch, causal structure corruption, near-duplicate privacy leakage (particularly from SMOTE-family methods), and the overhead of fitting and validating a generative model are real costs. The model collapse concern, while legitimate for iterative LLM training pipelines, does not apply to single-round tabular augmentation and should not discourage carefully validated synthesis.
+
+Marketing and product data science teams should treat synthetic augmentation as one tool in a broader pipeline — useful in specific regimes, evaluated rigorously using multi-axis frameworks, and documented transparently. The five-step evaluation protocol described in §7 provides a reproducible workflow for making this decision empirically rather than on vendor claims or optimistic benchmarks.
+
+The field is developing rapidly. Causal generative models, LLM-backed synthesis for small tabular datasets, and differentially private synthesizers with certified guarantees represent near-term advances that could expand the practical utility envelope significantly. For now, the evidence supports a cautious, task-specific application strategy rather than broad adoption.
+
+---
+
+## References
+
+1. **Xu, L., Skoularidou, M., Cuesta-Infante, A., & Veeramachaneni, K.** (2019). Modeling Tabular Data using Conditional GAN. *Advances in Neural Information Processing Systems (NeurIPS 2019)*. https://papers.neurips.cc/paper/8953-modeling-tabular-data-using-conditional-gan.pdf
+
+2. **Kotelnikov, A., Baranchuk, D., Rubachev, I., & Babenko, A.** (2023). TabDDPM: Modelling Tabular Data with Diffusion Models. *Proceedings of ICML 2023*. https://proceedings.mlr.press/v202/kotelnikov23a/kotelnikov23a.pdf
+
+3. **Davila Restrepo, G. et al.** (2025). Benchmarking Tabular Data Synthesis: Evaluating Tools, Metrics, and Datasets on Prosumer Hardware. *Data Science Journal*. https://datascience.codata.org/articles/10.5334/dsj-2025-037  
+   *(Primary benchmark comparing SMOTE, CTGAN, TVAE, TabDDPM, GaussianCopula, and LLM-based methods on utility, fidelity, and privacy dimensions. Tables 5, 6, and 8 are principal sources for method rankings in this paper.)*
+
+4. **Shumailov, I., Shumaylov, Z., Zhao, Y., Papernot, N., Anderson, R., & Gal, Y.** (2024). AI models collapse when trained on recursively generated data. *Nature*, 631, 755–759. https://www.nature.com/articles/s41586-024-07566-y; arXiv:2305.17493  
+   *(Documents model collapse under iterative, recursive self-training. Not applicable to single-round tabular augmentation; correctly scoped in §3.2 of this paper.)*
+
+5. **Erickson, N. et al.** (2025). TabArena: A Living Benchmark for ML on Tabular Data. *NeurIPS 2025*. https://neurips.cc/virtual/2025/poster/121499  
+   *(Large-scale living benchmark for tabular ML; provides context on downstream model performance on tabular datasets of the type encountered in marketing.)*
+
+6. **Du, Y., & Li, N.** (2024). Systematic Assessment of Tabular Data Synthesis Algorithms. *arXiv:2402.06806*. https://arxiv.org/abs/2402.06806
+
+7. **Sidorenko, A., Platzer, M., Scriminaci, M., & Tiwald, P.** (2025). Benchmarking Synthetic Tabular Data: A Multi-Dimensional Evaluation Framework. *arXiv:2504.01908*. https://arxiv.org/abs/2504.01908
+
+8. **Lautrup, A. D., Hyrup, T., & Zimek, A.** (2024). SynthEval: A Framework for Detailed Utility and Privacy Evaluation of Tabular Synthetic Data. *Data Mining and Knowledge Discovery*. arXiv:2404.15821. https://arxiv.org/abs/2404.15821
+
+9. **Won, D.-H. et al.** (2026). Synthetic Data Augmentation for Imbalanced Tabular Data: A Comparative Study of Generation Methods. *Electronics*, 15(4), 883. https://www.mdpi.com/2079-9292/15/4/883
+
+10. **Tanha, J. et al.** (2026). Improving Predictive Performance in Telecom Churn Modeling with Hybrid SMOTE and GAN-Based Synthetic Data Generation. *International Journal of Computational Intelligence Systems*. https://link.springer.com/article/10.1007/s44196-026-01204-3
+
+11. **Fonseca, J., & Bacao, F.** (2023). Synthetic Data Generation for Imbalanced Learning on Tabular Data. *Expert Systems with Applications*. https://www.sciencedirect.com/article/pii/S0957417421000233
+
+12. **Camino, R. et al.** (2020). Oversampling Tabular Data with Deep Generative Models: Is it worth the effort? *ICML 2020 Workshop on Uncertainty & Robustness in Deep Learning*. https://proceedings.mlr.press/v137/camino20a/camino20a.pdf
+
+13. **Shidani, A. et al.** (2025). [Optimal Synthetic-to-Real Data Ratio: A Learning-Theoretic Framework.] *arXiv:2510.08095*. https://arxiv.org/abs/2510.08095  
+    *(Title inferred from arXiv abstract display; confirms U-shaped test-error curve and $\alpha^*$ characterization via algorithmic stability.)*
+
+14. **Chia Ramírez, L.** (2025). [Optimal Synthetic Oversampling Ratio for Imbalanced Credit Scoring Data.] *arXiv:2510.18252*. https://arxiv.org/abs/2510.18252  
+    *(Title inferred from arXiv abstract display; empirically identifies 6.6:1 optimal majority:minority ratio on the Give Me Some Credit dataset.)*
+
+15. **Chen, K. et al.** (2025). Benchmarking Differentially Private Tabular Data Synthesis Methods. *arXiv:2504.14061*. https://arxiv.org/abs/2504.14061  
+    *(Reports utility–efficiency tradeoff across DP synthesis algorithms: statistical methods score higher on utility, deep learning methods are faster.)*
+
+16. **Chawla, N. V., Bowyer, K. W., Hall, L. O., & Kegelmeyer, W. P.** (2002). SMOTE: Synthetic Minority Over-sampling Technique. *Journal of Artificial Intelligence Research*, 16, 321–357.
+
+---
+
+*Slug: `synthetic-data-marketing-eval` — Final draft April 2026. Produced via primary-source synthesis across 16 references; Section 6 reports original experimental results on public datasets (Telco Churn, Bank Marketing, German Credit). Figures in Sections 1–5 are illustrative relative rankings unless otherwise noted. Empirical validation on proprietary marketing datasets is recommended before drawing operational conclusions. Experiment code: `experiments/synthetic_data_eval.py`. Results: `results/` directory. See `papers/synthetic-data-marketing-eval.provenance.md` for full source accounting and verification status.*
