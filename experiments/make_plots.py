@@ -240,13 +240,54 @@ if gain_data:
 # 4. GReaT small-n comparison
 # ─────────────────────────────────────────────────────────────────────────────
 
-great_path = RESULTS / "metrics_great_german_credit.csv"
-if great_path.exists():
+ci_great_path = RESULTS / "ci_great_german.csv"
+great_path    = RESULTS / "metrics_great_german_credit.csv"
+
+if ci_great_path.exists():
+    from scipy import stats as sc
+    df_gr = pd.read_csv(ci_great_path)
+    ns = sorted(df_gr["n"].unique())
+
+    fig, ax = plt.subplots(figsize=(8, 5.5))
+
+    for gen in ["Baseline", "GaussianCopula", "CTGAN", "GReaT"]:
+        sub = df_gr[df_gr["method"] == gen]
+        if sub.empty:
+            continue
+        means, lows, highs, ns_plot = [], [], [], []
+        for n in ns:
+            vals = sub[sub["n"] == n]["auc"].values
+            if len(vals) == 0:
+                continue
+            m = np.mean(vals)
+            h = sc.sem(vals) * sc.t.ppf(0.975, df=len(vals)-1) if len(vals) > 1 else 0
+            means.append(m); lows.append(m-h); highs.append(m+h); ns_plot.append(n)
+
+        ls = "--" if gen == "Baseline" else "-"
+        marker = None if gen == "Baseline" else "o"
+        ax.plot(ns_plot, means, linestyle=ls, marker=marker,
+                label=gen, color=COLORS.get(gen, "#888"), **STYLE)
+        if gen != "Baseline":
+            ax.fill_between(ns_plot, lows, highs,
+                            color=COLORS.get(gen, "#888"), alpha=0.12)
+
+    ax.set_xlabel("Training set size n", fontsize=12)
+    ax.set_ylabel("AUC-ROC", fontsize=12)
+    ax.set_title("LLM vs Statistical Generators at Extreme Small-n\n"
+                 "(German Credit, fixed 300-row holdout, 5 seeds, shaded = 95% CI)",
+                 fontsize=12, fontweight="bold")
+    ax.legend(fontsize=10)
+    ax.grid(alpha=0.3)
+    ax.set_xticks(ns)
+    plt.tight_layout()
+    plt.savefig(PLOTS / "plot_great_smalln.png", dpi=160, bbox_inches="tight")
+    plt.close()
+    print("Saved: plot_great_smalln.png")
+
+elif great_path.exists():
     df_gr = pd.read_csv(great_path)
-    # Expect columns: n, method/generator, auc_roc (or auc)
     auc_col = "auc_roc" if "auc_roc" in df_gr.columns else "auc"
     gen_col  = "method"  if "method"  in df_gr.columns else "generator"
-
     ns = sorted(df_gr["n"].unique()) if "n" in df_gr.columns else []
     if ns:
         fig, ax = plt.subplots(figsize=(8, 5))
@@ -258,7 +299,6 @@ if great_path.exists():
             marker = None if gen == "Baseline" else "o"
             ax.plot(sub["n"], sub[auc_col], linestyle=ls, marker=marker,
                     label=gen, color=COLORS.get(gen, "#888"), **STYLE)
-
         ax.set_xlabel("Training set size n", fontsize=12)
         ax.set_ylabel("AUC-ROC", fontsize=12)
         ax.set_title("LLM vs Statistical Generators at Extreme Small-n\n"
