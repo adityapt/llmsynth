@@ -260,6 +260,8 @@ Downstream model: GradientBoostingClassifier (sklearn defaults, `random_state=42
 
 ### 6.2 TSTR Results: The Cost of Going Synthetic-Only
 
+![TSTR Performance Gap](../results/plots/plot_tstr_gap.png)
+
 Across all datasets and generators, synthetic-only training (TSTR) consistently and substantially underperformed the real-data baseline:
 
 | Dataset | Baseline AUC | GC TSTR | CTGAN TSTR | TSTR Gap (best) |
@@ -275,6 +277,8 @@ These results reproduce a consistent finding in the literature: no current gener
 SMOTE is excluded from TSTR because it requires real data for interpolation; it is inherently an augmentation-only method.
 
 ### 6.3 Augmentation Sweep: Does Mixing Help?
+
+![Augmentation U-Curves](../results/plots/plot_ucurves_grid.png)
 
 Adding a small fraction of synthetic data produced modest-to-notable gains on two of three datasets:
 
@@ -328,6 +332,8 @@ The experiments in Sections 6.1–6.5 use GaussianCopula and CTGAN — generator
 **Protocol:** Fixed holdout of 300 rows. Training set subsampled to n ∈ {50, 100, 200, 500}. For each n, three generators augment the training set at α=1.0 (double the training data). Evaluated on the fixed real holdout.
 
 ### Results
+
+![GReaT vs Statistical Generators at Small-n](../results/plots/plot_great_smalln.png)
 
 | n (train) | Baseline | GaussianCopula | CTGAN | **GReaT** |
 |---|---|---|---|---|
@@ -419,6 +425,8 @@ Same protocol as Section 6.1: 80/20 train/test split, augmentation sweep at α �
 
 ### Results
 
+![Hillstrom CI](../results/plots/plot_ci_hillstrom.png)
+
 **Hillstrom Email Marketing** (5 seeds, mean ± 95% CI)
 
 | Method | Best α | AUC (mean ± 95% CI) | Gain vs Baseline |
@@ -429,6 +437,8 @@ Same protocol as Section 6.1: 80/20 train/test split, augmentation sweep at α �
 | **SMOTE** | **0.1** | **0.606 ± 0.087** | **+5.8 pts** |
 
 *Note: The wide baseline CI (±9.2 pts) reflects the inherent instability of learning from ~72 real positive examples per split at 0.9% conversion rate. This instability is itself a motivation for augmentation.*
+
+![Criteo CI](../results/plots/plot_ci_criteo.png)
 
 **Criteo Display Advertising** (5 seeds, mean ± 95% CI)
 
@@ -466,6 +476,10 @@ Combining all experiments, a clear pattern emerges:
 | Nomao (sparse) | 500 | 28.3% | +2.5 pts (138% recovery) | Strong yes (sparsity) |
 | **Hillstrom Email** | **10,000** | **0.9%** | **+5.8 pts (CTGAN, mean ± 95% CI)** | **Strong yes (imbalance)** |
 | **Criteo Display** | **10,000** | **0.2%** | **+12.9 pts (CTGAN, mean ± 95% CI)** | **Strong yes (extreme imbalance)** |
+
+![Augmentation Gain vs Class Imbalance](../results/plots/plot_imbalance_vs_gain.png)
+
+![Best Gain by Dataset](../results/plots/plot_best_gain_by_dataset.png)
 
 The decision rule: synthetic augmentation earns its overhead when **at least one** of the following holds — (a) n < 2,000, (b) severe class imbalance (positive rate < 5%), or (c) meaningful feature sparsity (> 30% missing). The imbalance condition is the most impactful: Hillstrom and Criteo show that even with large n, extreme rarity of the positive class creates the same distributional learning failure that small n does at the class level.
 
