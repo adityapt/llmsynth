@@ -52,8 +52,8 @@ datasets_meta = {
     "bank_marketing":  {"label": "Bank Marketing",  "pos_rate": 11.7, "n": 15000},
     "credit_default":  {"label": "German Credit",   "pos_rate": 30.0, "n": 1000},
     "hillstrom":       {"label": "Hillstrom Email", "pos_rate": 0.9,  "n": 10000},
-    "criteo_uplift":   {"label": "Criteo Display",  "pos_rate": 0.2,  "n": 10000},
-    "kdd_appetency":   {"label": "KDD Appetency",   "pos_rate": 6.7,  "n": 5000},
+    "criteo":          {"label": "Criteo Display",  "pos_rate": 0.2,  "n": 10000},
+    "nomao_lead":      {"label": "Nomao Lead",       "pos_rate": 28.3, "n": 10000},
 }
 
 frames = {k: load(k) for k, _ in datasets_meta.items()}
@@ -350,8 +350,8 @@ plot_ci(
 
 if gain_data:
     df_gain_full = pd.DataFrame(gain_data)
-    dataset_order = ["Telco Churn", "Bank Marketing", "German Credit",
-                     "KDD Appetency", "Hillstrom Email", "Criteo Display"]
+    dataset_order = ["Telco Churn", "Bank Marketing", "Nomao Lead", "German Credit",
+                     "Hillstrom Email", "Criteo Display"]
     dataset_order = [d for d in dataset_order if d in df_gain_full["dataset"].values]
 
     fig, ax = plt.subplots(figsize=(12, 5.5))
@@ -374,9 +374,10 @@ if gain_data:
     ax.axhline(0, color="#555", linewidth=0.8)
     ax.set_xticks(x + width)
     ax.set_xticklabels(dataset_order, rotation=15, ha="right", fontsize=10)
-    ax.set_ylabel("Best AUC gain over baseline (pts)", fontsize=11)
+    ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda v, _: f"{v*100:+.1f}"))
+    ax.set_ylabel("Best AUC gain over baseline (pts × 100)", fontsize=11)
     ax.set_title("Best Augmentation Gain per Generator per Dataset\n"
-                 "(Sorted by ascending positive rate → severity of imbalance increases right)",
+                 "(Sorted by descending positive rate — most imbalanced datasets on right)",
                  fontsize=12, fontweight="bold")
     ax.legend(fontsize=10)
     ax.grid(axis="y", alpha=0.3)
