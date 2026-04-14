@@ -262,7 +262,11 @@ except ImportError:
         great_available = False
         print("  GReaT not available — skipping LLM column in CI table")
 
-df_credit = pd.read_csv(DATA_DIR / "credit_default.csv")
+credit_path = DATA_DIR / "credit_default.csv"
+if not credit_path.exists():
+    # data lives in feynman-test repo
+    credit_path = Path("/Users/adityapu/Documents/GitHub/feynman-test/data/credit_default.csv")
+df_credit = pd.read_csv(credit_path)
 credit_target = "target"
 credit_task   = "classification"
 

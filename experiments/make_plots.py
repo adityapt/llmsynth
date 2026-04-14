@@ -279,7 +279,7 @@ if great_path.exists():
 
 def plot_ci(ci_csv, raw_csv, dataset_label, out_name, headline_alpha):
     """Plot augmentation curves with 95% CI error bands."""
-    if not Path(ci_csv).exists() or not Path(raw_csv).exists():
+    if not Path(raw_csv).exists():
         print(f"  Skipping {out_name} — CI results not yet available")
         return
 
