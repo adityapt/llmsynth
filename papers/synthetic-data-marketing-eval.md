@@ -434,7 +434,7 @@ Same protocol as Section 6.1: 80/20 train/test split, augmentation sweep at α �
 |---|---|---|---|
 | Baseline (real only) | — | 0.548 ± 0.092 | — |
 | GaussianCopula | 0.1 | 0.552 ± 0.107 | +0.4 pts |
-| **CTGAN** | **1.0** | **0.605 ± 0.073** | **+5.8 pts** |
+| **CTGAN** | **1.0** | **0.605 ± 0.073** | **+5.7 pts** |
 | **SMOTE** | **0.1** | **0.606 ± 0.087** | **+5.8 pts** |
 
 *Note: The wide baseline CI (±9.2 pts) reflects the inherent instability of learning from ~72 real positive examples per split at 0.9% conversion rate. This instability is itself a motivation for augmentation.*
@@ -458,7 +458,7 @@ Both datasets confirm and amplify the pattern from Section 6.1: **severe class i
 
 **On variance and the meaning of wide CIs.** The baseline CIs are wide — ±9.2 pts for Hillstrom, ±22.8 pts for Criteo. This is not a measurement artifact; it reflects the genuine instability of learning from extremely rare events. With 0.9% positive rate and n=8,000 training rows, a training split contains roughly 72 real purchase events. Different random splits yield 55–90 positives — a 60% swing in minority-class signal — producing large cross-split variance in model performance. This instability is itself the core problem that augmentation addresses. Crucially, augmented models show substantially narrower CIs (CTGAN ±7.3 pts on Hillstrom, ±3.6 pts on Criteo) — synthetic data not only improves mean performance but stabilises it across splits.
 
-**Hillstrom.** CTGAN and SMOTE both deliver +5.8 AUC pts on average. This is notable because Hillstrom is clean, complete, and large — conditions where augmentation typically adds little. The gains are driven entirely by the conversion rate being 0.9%, leaving the classifier with too few positive examples to learn a stable boundary.
+**Hillstrom.** CTGAN delivers +5.7 AUC pts and SMOTE +5.8 AUC pts on average. This is notable because Hillstrom is clean, complete, and large — conditions where augmentation typically adds little. The gains are driven entirely by the conversion rate being 0.9%, leaving the classifier with too few positive examples to learn a stable boundary.
 
 **Criteo.** CTGAN averages +12.9 AUC pts, SMOTE +12.0 pts. The single-run numbers (+19.6, +18.6) were real but represent the best-case seed; the 5-seed mean is the more reliable estimate. Even at mean performance, these are the largest gains in this evaluation. Notably, TSTR also performs well (GC: 0.860, CTGAN: 0.917 vs real baseline 0.748) — at 0.2% positive rate, synthetic-only training can outperform a classifier trained on predominantly-negative real data. This is the one scenario where TSTR warrants consideration, though real-holdout validation remains essential.
 
@@ -475,7 +475,7 @@ Combining all experiments, a clear pattern emerges:
 | Bank Marketing | 15,000 | 11.7% | +0.2 pts | Skip it |
 | German Credit | 1,000 | 30.0% | +5.3 pts | Worth it (small n) |
 | Nomao (sparse) | 500 | 28.3% | +2.5 pts (138% recovery) | Strong yes (sparsity) |
-| **Hillstrom Email** | **10,000** | **0.9%** | **+5.8 pts (CTGAN, mean ± 95% CI)** | **Strong yes (imbalance)** |
+| **Hillstrom Email** | **10,000** | **0.9%** | **+5.8 pts (SMOTE, mean ± 95% CI)** | **Strong yes (imbalance)** |
 | **Criteo Display** | **10,000** | **0.2%** | **+12.9 pts (CTGAN, mean ± 95% CI)** | **Strong yes (extreme imbalance)** |
 
 ![Augmentation Gain vs Class Imbalance](../results/plots/plot_imbalance_vs_gain.png)
