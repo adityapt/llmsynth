@@ -373,34 +373,31 @@ The three experiments above used clean, complete datasets. Real marketing data �
 
 ### Results
 
-| Condition | AUC | vs Sparse Baseline | Gap Recovery |
+| Condition | AUC (mean ± 95% CI) | vs Sparse Baseline | Gap Recovery |
 |---|---|---|---|
-| Dense baseline (n=500, full features) | 0.961 | — | — |
-| **Sparse baseline (n=500, 70% missing)** | 0.943 | −1.80 pts | 0% |
-| GaussianCopula α=0.3 | **0.968** | **+2.48 pts** | **138%** |
-| CTGAN α=0.2 | **0.963** | **+1.94 pts** | **108%** |
-| GaussianCopula TSTR (synthetic only) | 0.492 | −45.1 pts | — |
-| CTGAN TSTR (synthetic only) | 0.397 | −54.6 pts | — |
+| Dense baseline (n=500, full features) | 0.972 ± 0.010 | — | — |
+| **Sparse baseline (n=500, 70% missing)** | **0.897 ± 0.062** | −7.5 pts | 0% |
+| GaussianCopula best (α=0.1) | 0.899 ± 0.060 | +0.1 pts | 2% |
+| CTGAN best (α=0.1) | 0.902 ± 0.072 | +0.5 pts | 7% |
 
-*Gap recovery = (augmented AUC − sparse baseline) / (dense baseline − sparse baseline) × 100.*
+*Mean ± 95% CI across 5 independent seeds. Gap recovery = (augmented AUC − sparse baseline) / (dense baseline − sparse baseline) × 100.*
 
-Both generators not only recovered the performance lost to sparsity — they exceeded the dense baseline. GaussianCopula at α=0.3 reaches AUC 0.968 vs. dense baseline 0.961, a 138% recovery of the sparsity penalty. CTGAN at α=0.2 reaches 0.963, a 108% recovery.
+**Augmentation provides negligible gain under combined sparsity and small-n stress.** Neither GaussianCopula nor CTGAN achieves meaningful recovery of the sparsity gap: +0.1 pts and +0.5 pts respectively, both well within the ±0.06 CI of the sparse baseline itself. The single-seed result (seed=42) had previously shown +2.5 pts and 138% recovery — this was a statistical outlier, not a reliable effect.
 
-The optimal α is consistent with previous experiments: 0.2–0.3. Performance degrades noticeably at α=1.0, confirming the U-shaped error curve holds under sparsity as well.
+The wide CI on the sparse baseline (±6.2 pts) reveals the underlying instability: at n=500 with 70% sparsity and 28% positive rate, the 5 random train/test splits produce sparse baselines ranging from ~0.82 to ~0.96. In this regime, variance swamps any signal from augmentation. The generators cannot learn a stable joint distribution from 400 sparse training rows, and any apparent gains are noise.
 
-TSTR remains catastrophically bad (AUC 0.40–0.49) — when the generator is fit on sparse data, the synthetic-only distribution is too distorted to train on.
+Performance degrades at α=1.0 for both generators, consistent with the U-shaped error curve observed elsewhere.
 
-### Why Sparsity Helps Synthetic Data Add Value
+### Interpretation
 
-When features are complete, a well-tuned classifier already extracts all available signal. Synthetic rows add distributional noise, not information — explaining why augmentation is near-zero on the full Nomao dataset.
+The experiment finds that stacking two difficult conditions simultaneously — extreme feature sparsity (70%) and very small n (500) — produces a regime where augmentation does not reliably help. The generative models themselves are fit on the same sparse, limited data, so their learned distributions inherit the same noise. Adding more samples from a poorly-learned distribution does not recover lost signal.
 
-When features are sparse, the classifier is forced to learn from incomplete rows. The generative model, fit on all available (sparse) observations, learns the underlying joint distribution and generates complete synthetic rows that fill in the missing structure. The classifier then benefits from the richer coverage in the augmented training set, recovering signal that sparsity had suppressed.
+This is a useful practical finding: augmentation helps when the *training data is limited but the generator can still learn a useful distribution*. When sparsity is so severe that the generator itself is misspecified, augmentation adds noise rather than signal. The instability is visible in the wide CI on the sparse baseline (±6.2 pts) — the regime itself is too unstable for augmentation to stabilize.
 
-This mechanism is directly relevant to marketing lead attribution:
-- **New campaigns** with limited historical data
-- **Cold-start leads** missing touchpoint or behavioral history
-- **CRM data quality issues** — partial records, missing firmographic fields
-- **Multi-touch attribution** where early funnel stages have sparse signal
+For practitioners facing sparse marketing data:
+- **Impute before generating:** Run an imputation step on CRM fields before fitting the generative model, rather than fitting on raw sparse data
+- **Reduce sparsity first:** Even simple mean/mode imputation of missing fields may give the generator enough signal to learn useful structure
+- **Check generator fit quality:** If the generative model has few training rows and high feature missingness, validate synthetic sample quality before deploying augmentation
 
 ---
 
@@ -468,7 +465,7 @@ Combining all experiments, a clear pattern emerges:
 | Telco Churn | 7,032 | 26.6% | +0.3 pts | Marginal |
 | Bank Marketing | 15,000 | 11.7% | +0.2 pts | Skip it |
 | German Credit | 1,000 | 30.0% | +5.3 pts | Worth it (small n) |
-| Nomao (sparse) | 500 | 28.3% | +2.5 pts (single seed — CI pending) | Strong yes (sparsity) |
+| Nomao (sparse) | 500 | 28.3% | +0.5 pts (5-seed CI, within noise) | No — sparsity swamps signal |
 | **Hillstrom Email** | **10,000** | **0.9%** | **+5.8 pts (SMOTE, mean ± 95% CI)** | **Strong yes (imbalance)** |
 | **Criteo Display** | **10,000** | **0.2%** | **+12.9 pts (CTGAN, mean ± 95% CI)** | **Strong yes (extreme imbalance)** |
 
