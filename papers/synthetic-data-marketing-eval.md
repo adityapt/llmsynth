@@ -319,45 +319,39 @@ These results are consistent with the literature synthesis in Sections 3–5 and
 
 ---
 
-## 6.6 LLM-Based Generation at Extreme Small-n: Domain Priors vs. Learned Distributions
+## 6.6 LLM-Based Generation at Extreme Small-n: A Negative Result
 
-The experiments in Sections 6.1–6.5 use GaussianCopula and CTGAN — generators that learn exclusively from observed training data. At very small n (< 200), these generators have too few rows to reliably learn joint distributions, and augmented performance degrades relative to the real-data baseline. We test whether LLM-based generators, which carry implicit domain priors from pretraining, can compensate for this data scarcity.
+The experiments in Sections 6.1–6.5 use GaussianCopula and CTGAN. At very small n, these generators have too few rows to reliably learn joint distributions and augmented performance degrades relative to baseline. We attempted to evaluate GReaT (Borisov et al., 2023), an LLM-based tabular synthesizer that leverages pretraining priors, to test whether it could compensate for this scarcity.
 
 ### Setup
 
-**Generator:** GReaT (Borisov et al., 2023; v0.0.13, `be-great` package) with `distilgpt2` as the base language model, fine-tuned for 50 epochs on the training set. GReaT serializes each row as natural language and generates new rows by continuation — drawing on the LLM's pretraining knowledge about feature relationships.
+**Generator:** GReaT (v0.0.13, `be-great` package) with `distilgpt2` as the base language model, fine-tuned for 50 epochs on the training set.
 
-**Dataset:** German Credit (OpenML id=31, n=1,000, 30% positive). The most challenging dataset from Section 6.1 — smallest n, highest sensitivity to data scarcity.
+**Dataset:** German Credit (n=1,000, 30% positive). Fixed 300-row holdout; training set subsampled to n ∈ {50, 100, 200, 500, 700} across 5 independent seeds.
 
-**Protocol:** Fixed holdout of 300 rows. Training set subsampled to n ∈ {50, 100, 200, 500}. For each n, three generators augment the training set at α=1.0 (double the training data). Evaluated on the fixed real holdout.
+### Finding: GReaT Sampling Failed to Produce Valid Rows
 
-### Results
+In every experiment, `model.sample(n)` returned an **empty DataFrame** (0 rows). Inspection confirmed that `be-great` v0.0.13 with `distilgpt2` fails at the post-generation parsing step: the LLM generates text continuations that cannot be parsed back into structured tabular rows, silently returning zero samples.
 
-![GReaT vs Statistical Generators at Small-n](../results/plots/plot_great_smalln.png)
+As a result, the augmented training set was identical to the original training set in every run, and the downstream classifier was unchanged. The "0.000 gain" observed across all seeds and n values is an artifact of this failure, not a meaningful result.
 
-| n (train) | Baseline (mean ± CI) | GaussianCopula | CTGAN | **GReaT** |
-|---|---|---|---|---|
-| 50 | 0.656 ± 0.066 | 0.646 ± 0.039 (−1.0%) | 0.663 ± 0.046 (+0.7%) | **0.656 ± 0.066 (0.0%)** |
-| 100 | 0.687 ± 0.020 | 0.648 ± 0.057 (−3.9%) | 0.700 ± 0.030 (+1.3%) | **0.687 ± 0.020 (0.0%)** |
-| 200 | 0.727 ± 0.036 | 0.688 ± 0.024 (−3.9%) | 0.685 ± 0.050 (−4.2%) | **0.727 ± 0.036 (0.0%)** |
-| 500 | 0.773 ± 0.009 | 0.757 ± 0.032 (−1.6%) | 0.736 ± 0.049 (−3.7%) | **0.773 ± 0.009 (0.0%)** |
-| 700 | 0.775 ± 0.001 | 0.770 ± 0.024 (−0.5%) | 0.759 ± 0.025 (−1.5%) | **0.775 ± 0.001 (0.0%)** |
+The GC/CTGAN comparison from this experiment remains valid and is shown below:
 
-*Mean ± 95% CI across 5 independent seeds. n=700 is the maximum feasible training size (1,000 total rows minus 300-row holdout). GReaT matches the baseline exactly at every n — gain = 0.000 in all cases. GC and CTGAN gaps narrow as n grows (converging toward baseline at large n) but never eliminate the degradation.*
+| n (train) | Baseline (mean ± CI) | GaussianCopula | CTGAN |
+|---|---|---|---|
+| 50 | 0.656 ± 0.066 | 0.646 ± 0.039 (−1.0%) | 0.663 ± 0.046 (+0.7%) |
+| 100 | 0.687 ± 0.020 | 0.648 ± 0.057 (−3.9%) | 0.700 ± 0.030 (+1.3%) |
+| 200 | 0.727 ± 0.036 | 0.688 ± 0.024 (−3.9%) | 0.685 ± 0.050 (−4.2%) |
+| 500 | 0.773 ± 0.009 | 0.757 ± 0.032 (−1.6%) | 0.736 ± 0.049 (−3.7%) |
+| 700 | 0.775 ± 0.001 | 0.770 ± 0.024 (−0.5%) | 0.759 ± 0.025 (−1.5%) |
 
-**GReaT matches the real-data baseline exactly across the full range n∈{50,100,200,500,700}.** Statistical synthesizers (GC, CTGAN) degrade at all five settings, though the gap narrows at large n: GC drops from −3.9% at n=100 to −0.5% at n=700, and CTGAN from −4.2% to −1.5%. This convergence confirms that statistical generators become adequate substitutes as n grows — but GReaT achieves zero degradation at all sample sizes.
+*Mean ± 95% CI across 5 independent seeds. GC and CTGAN gaps narrow as n grows — both degrade at all n tested, with the gap shrinking from ~4 pts at n=200 to <1.5 pts at n=700.*
 
-### Why GReaT Doesn't Degrade
+### Implications for LLM-Based Generators
 
-Statistical generators (GaussianCopula, CTGAN) learn solely from the training rows. At n=50, a 20-feature dataset has 1,000 total observations across all columns — not enough to reliably estimate joint distributions. The generator approximates the distribution poorly and synthetic rows introduce errors rather than signal.
+The theoretical motivation for LLM-based generation at small n is sound: a pre-trained model encodes distributional priors that pure data-driven generators cannot recover from a handful of rows. However, practical deployment of `be-great` in this evaluation revealed a hard dependency on successful text-to-row parsing, which is fragile with weaker base models (distilgpt2) and structured numeric features.
 
-GReaT fine-tunes a language model that already encodes knowledge about credit risk, financial features, and their relationships from pretraining. At n=50, the fine-tuning adjusts this prior toward the specific dataset; the generation draws primarily on the prior. The result is synthetic rows that are plausible by the model's pretraining knowledge — not distorted by an underfit learned distribution.
-
-This is not to say GReaT is "better" in general. At n=500, GaussianCopula and CTGAN have sufficient data to learn useful distributions and likely converge with or surpass GReaT. The advantage is specifically in the **extreme small-n regime where pretraining priors dominate over learned distributions.**
-
-### Decision Boundary
-
-Based on these results, we propose a provisional threshold: **use LLM-based generation when n < 200.** Above n=200, statistical and GAN-based generators are preferable due to lower computational cost and comparable or better utility. This threshold is dataset-dependent and should be validated on holdout data in practice.
+Stronger base models (e.g., GPT-2 large, LLaMA-family) may resolve this; the original GReaT paper reports results with larger models. Practitioners considering LLM-based tabular generation should validate that `model.sample()` is returning non-empty output before interpreting any downstream results.
 
 ---
 
@@ -474,7 +468,7 @@ Combining all experiments, a clear pattern emerges:
 | Telco Churn | 7,032 | 26.6% | +0.3 pts | Marginal |
 | Bank Marketing | 15,000 | 11.7% | +0.2 pts | Skip it |
 | German Credit | 1,000 | 30.0% | +5.3 pts | Worth it (small n) |
-| Nomao (sparse) | 500 | 28.3% | +2.5 pts (138% recovery) | Strong yes (sparsity) |
+| Nomao (sparse) | 500 | 28.3% | +2.5 pts (single seed — CI pending) | Strong yes (sparsity) |
 | **Hillstrom Email** | **10,000** | **0.9%** | **+5.8 pts (SMOTE, mean ± 95% CI)** | **Strong yes (imbalance)** |
 | **Criteo Display** | **10,000** | **0.2%** | **+12.9 pts (CTGAN, mean ± 95% CI)** | **Strong yes (extreme imbalance)** |
 
