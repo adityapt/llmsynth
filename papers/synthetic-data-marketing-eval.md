@@ -9,7 +9,7 @@
 
 ## Abstract
 
-Synthetic data generation has emerged as a practical remedy for data scarcity, class imbalance, and privacy constraints in marketing and product data science. Yet the relative merit of LLM-based generators versus statistical and GAN-based alternatives remains poorly understood — particularly at extreme small-n regimes common in new campaign launches, cold-start lead attribution, and low-volume cohort modeling. This paper addresses that gap through a systematic empirical evaluation combining a literature synthesis with original experiments on five public datasets using three generator families: GaussianCopula (Patki et al., 2016), CTGAN (Xu et al., 2019), and GReaT (Borisov et al., 2023), an LLM-based tabular synthesizer. Our key finding is that **LLM-based generation matches the real-data baseline at n ∈ {50, 100, 200} while GAN and statistical generators degrade by 4–10 AUC points** — confirming the hypothesis that LLMs compensate for data scarcity through implicit domain priors rather than learned distributions. This advantage narrows as n grows and CTGAN has sufficient data to learn. Beyond the LLM comparison, we evaluate augmentation across a range of marketing conditions: TSTR gaps of 4–27% confirm synthetic-only training is inadvisable; augmentation gains of up to 5.3% AUC are achievable in small-n classification settings; and the optimal synthetic-to-real mixing ratio α* ≈ 0.2–0.3 is stable across generators and datasets. We derive an updated practitioner decision framework that incorporates an explicit LLM branch: when n < 200 and domain-semantic features are present, LLM-based synthesis is the preferred augmentation strategy.
+Synthetic data generation has emerged as a practical remedy for data scarcity, class imbalance, and privacy constraints in marketing and product data science. This paper presents a systematic empirical evaluation combining a literature synthesis with original experiments on six public datasets using two generator families: GaussianCopula (Patki et al., 2016) and CTGAN (Xu et al., 2019). We additionally attempted to evaluate GReaT (Borisov et al., 2023), an LLM-based tabular synthesizer, but the `be-great` v0.0.13 implementation with `distilgpt2` failed to produce valid samples — a negative result we document explicitly. Our principal empirical findings are: (1) TSTR gaps of 4–27% confirm synthetic-only training is inadvisable in all tested settings; (2) augmentation gains of up to +4.1 AUC pts are achievable in small-n settings (German Credit, n=1,000), though these are single-seed estimates; (3) extreme class imbalance is the strongest driver of augmentation value — CTGAN and SMOTE deliver +5.7–12.9 AUC pts on Hillstrom (0.9% positive rate) and Criteo (0.2% positive rate) as confirmed by 5-seed CI; (4) combined feature sparsity and small-n does not reliably produce gains — a single-seed result suggesting 138% recovery was overturned by 5-seed CI (+0.5 pts, within noise); and (5) the optimal synthetic-to-real mixing ratio α* ≈ 0.2–0.3 is stable across generators and datasets. We derive a practitioner decision framework grounded in these findings.
 
 ---
 
@@ -217,7 +217,7 @@ We examine four canonical task types and map the evidence to practical recommend
 | TVAE | 3/5 | 4/5 | 3/5 | 3/5 | 5/5 | Small datasets, fast iteration |
 | Gaussian Copula | 3/5 | 3/5 | 3/5 | 4/5 | 5/5 | Privacy proxies, LTV tails, segmentation |
 | SMOTE | 2/5 | 5/5 | 3/5 | 2/5 | 5/5 | Imbalanced binary classification only |
-| GReaT / LLM-based | 3/5 | 3/5 | 3/5 | 2/5 | 1/5 | **Extreme small-n (< 200 rows); cold-start campaigns** |
+| GReaT / LLM-based | 3/5 | 3/5 | 3/5 | 2/5 | 1/5 | Extreme small-n (< 200 rows) — *theoretically motivated; unvalidated in this study (sampling failure with distilgpt2)* |
 
 *Ratings are relative within class, based on aggregated benchmark evidence from Davila et al. (2025), Kotelnikov et al. (2023), and Won et al. (2026). SMOTE privacy ratings reflect near-duplicate risk from interpolation; they do not imply DP-grade guarantees for any method. "Utility (Imbalanced)" refers to performance on imbalanced classification benchmarks; "Utility (Augmentation)" refers to the mixed real+synthetic augmentation regime.*
 
@@ -257,6 +257,8 @@ To complement the literature synthesis in Sections 3–5, we conducted a control
 Primary metric: AUC-ROC. Secondary metrics: F1 on minority class, average precision.
 
 Downstream model: GradientBoostingClassifier (sklearn defaults, `random_state=42`).
+
+**Note on replication.** The main experiments in Sections 6.1–6.3 use a single random seed. Results for Hillstrom and Criteo (Section 6.7) are reported as 5-seed mean ± 95% CI. Single-seed results should be treated as point estimates; where effect sizes are small (Telco: +0.3 pts, Bank Marketing: +0.2 pts), they may not replicate reliably across seeds.
 
 ### 6.2 TSTR Results: The Cost of Going Synthetic-Only
 
@@ -451,7 +453,7 @@ Both datasets confirm and amplify the pattern from Section 6.1: **severe class i
 
 **Hillstrom.** CTGAN delivers +5.7 AUC pts and SMOTE +5.8 AUC pts on average. This is notable because Hillstrom is clean, complete, and large — conditions where augmentation typically adds little. The gains are driven entirely by the conversion rate being 0.9%, leaving the classifier with too few positive examples to learn a stable boundary.
 
-**Criteo.** CTGAN averages +12.9 AUC pts, SMOTE +12.0 pts. The single-run numbers (+19.6, +18.6) were real but represent the best-case seed; the 5-seed mean is the more reliable estimate. Even at mean performance, these are the largest gains in this evaluation. Notably, TSTR also performs well (GC: 0.860, CTGAN: 0.917 vs real baseline 0.748) — at 0.2% positive rate, synthetic-only training can outperform a classifier trained on predominantly-negative real data. This is the one scenario where TSTR warrants consideration, though real-holdout validation remains essential.
+**Criteo.** CTGAN averages +12.9 AUC pts, SMOTE +12.0 pts. However, the +12.9 pts gain is partly driven by one outlier seed (seed 2024 baseline AUC=0.567, vs. 0.965–0.979 for the other four seeds). Without seed 2024, the mean CTGAN gain is +5.5 pts — still substantial, but the headline figure should be interpreted with this in mind. The wide baseline CI (±22.8 pts) directly reflects this seed-to-seed instability at 0.2% positive rate. Notably, TSTR also performs well (GC: 0.860, CTGAN: 0.917 vs real baseline 0.748) — at 0.2% positive rate, synthetic-only training can outperform a classifier trained on predominantly-negative real data. This is the one scenario where TSTR warrants consideration, though real-holdout validation remains essential.
 
 **GaussianCopula** underperforms CTGAN on both datasets, consistent with the literature: GC cannot model the conditional minority distribution as effectively as CTGAN's explicit class-conditional generation.
 
@@ -464,7 +466,7 @@ Combining all experiments, a clear pattern emerges:
 | Nomao (full) | 10,000 | 28.3% | < 0.1 pts | Skip it |
 | Telco Churn | 7,032 | 26.6% | +0.3 pts | Marginal |
 | Bank Marketing | 15,000 | 11.7% | +0.2 pts | Skip it |
-| German Credit | 1,000 | 30.0% | +5.3 pts | Worth it (small n) |
+| German Credit | 1,000 | 30.0% | +4.1 pts (single seed) | Worth it (small n) |
 | Nomao (sparse) | 500 | 28.3% | +0.5 pts (5-seed CI, within noise) | No — sparsity swamps signal |
 | **Hillstrom Email** | **10,000** | **0.9%** | **+5.8 pts (SMOTE, mean ± 95% CI)** | **Strong yes (imbalance)** |
 | **Criteo Display** | **10,000** | **0.2%** | **+12.9 pts (CTGAN, mean ± 95% CI)** | **Strong yes (extreme imbalance)** |
@@ -492,7 +494,7 @@ flowchart TD
     Q2 -->|No| Q3{Small cohort?\nn < 5K for any\ngroup of interest}
 
     Q3 -->|Yes| Q3b{n < 200?}
-    Q3b -->|Yes| P3a[Use LLM-based generator\nGReaT / REaLTabFormer\nDomain priors compensate\nfor data scarcity]
+    Q3b -->|Yes| P3a[Consider LLM-based generator\nGReaT / REaLTabFormer\nTheoretically motivated;\nvalidate sample() output first]
     Q3b -->|No| P3[Fit CTGAN or TabDDPM\nAugment to 2–5× original n\nValidate via stratified TSTR\nStop if TSTR gap > 5pp AUC]
     Q3 -->|No| Q4{Uplift / causal\ninference task?}
 
@@ -574,7 +576,7 @@ Based on the synthesized evidence:
 
 ## 11. Conclusion
 
-Synthetic data is not a universal performance enhancer. It is a targeted intervention most effective when real data is scarce, imbalanced, or privacy-constrained. Our original experiments on four public benchmark settings (Section 6) calibrate the expected magnitude of effects: TSTR gaps of 4–27% confirm that synthetic-only training is inadvisable; augmentation gains of 0.2–5.3% AUC are achievable, concentrated in small-n regimes; and a stress test on campaign lead attribution data (n=500, 70% feature sparsity) shows that synthetic augmentation can recover 138% of the performance gap caused by missing data — exceeding the full-feature baseline. The optimal mixing ratio α* ≈ 0.2–0.3 is stable across all settings, consistent with the 20–40% range reported by Davila et al. (2025). Under these conditions, modern generative methods — particularly diffusion-based models such as TabDDPM and TabSyn (Davila et al., 2025; Kotelnikov et al., 2023) and hybrid SMOTE+GAN approaches for imbalanced classification (Tanha et al., 2026) — can deliver measurable downstream improvements. The gains are rarely dramatic: 2–6 AUC points on churn and conversion tasks is a realistic upper bound under favorable conditions, and gains are smaller in regression settings such as LTV modeling.
+Synthetic data is not a universal performance enhancer. It is a targeted intervention most effective when real data is scarce or severely imbalanced. Our original experiments on six public benchmark settings (Section 6) calibrate the expected magnitude of effects: TSTR gaps of 4–27% confirm that synthetic-only training is inadvisable; augmentation gains of +4.1 AUC pts are achievable in small-n settings (single-seed estimate); and extreme class imbalance is the most reliable trigger for meaningful gains — CTGAN and SMOTE deliver +5.7–12.9 AUC pts on datasets with positive rates below 1% (5-seed CI). A stress test on campaign lead attribution data (n=500, 70% feature sparsity) found no reliable gain — a single-seed result suggesting 138% gap recovery was overturned by 5-seed CI (+0.5 pts, within noise). The optimal mixing ratio α* ≈ 0.2–0.3 is stable across all settings, consistent with the 20–40% range reported by Davila et al. (2025). Under appropriate conditions, modern generative methods — particularly diffusion-based models such as TabDDPM and TabSyn (Davila et al., 2025; Kotelnikov et al., 2023) and hybrid SMOTE+GAN approaches for imbalanced classification (Tanha et al., 2026) — can deliver measurable downstream improvements. The gains are rarely dramatic: 2–6 AUC points on churn and conversion tasks is a realistic upper bound under favorable conditions.
 
 The risks of synthetic data are underappreciated in practice. Distribution mismatch, causal structure corruption, near-duplicate privacy leakage (particularly from SMOTE-family methods), and the overhead of fitting and validating a generative model are real costs. The model collapse concern, while legitimate for iterative LLM training pipelines, does not apply to single-round tabular augmentation and should not discourage carefully validated synthesis.
 
