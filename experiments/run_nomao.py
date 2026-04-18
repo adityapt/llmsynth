@@ -38,41 +38,42 @@ def load_nomao():
     print(f"  Shape: {df.shape}, positive rate: {df['target'].mean()*100:.1f}%")
     return df, "target", "classification", "Nomao Lead"
 
-# Run
-print("=" * 60)
-df, target, task, name = load_nomao()
-print(f"\nLoaded {name}: {df.shape}, target={target}, task={task}")
+if __name__ == "__main__":
+    # Run
+    print("=" * 60)
+    df, target, task, name = load_nomao()
+    print(f"\nLoaded {name}: {df.shape}, target={target}, task={task}")
 
-# Cap for tractability
-if len(df) > 10000:
-    df = df.sample(10000, random_state=RANDOM_STATE).reset_index(drop=True)
-    print(f"  Capped to 10,000 rows")
+    # Cap for tractability
+    if len(df) > 10000:
+        df = df.sample(10000, random_state=RANDOM_STATE).reset_index(drop=True)
+        print(f"  Capped to 10,000 rows")
 
-print(f"  Positive rate after cap: {df[target].mean()*100:.1f}%")
+    print(f"  Positive rate after cap: {df[target].mean()*100:.1f}%")
 
-df_results = run_experiment(df, target, task, name)
-df_results.to_csv(RESULTS_DIR / f"metrics_nomao_lead.csv", index=False)
+    df_results = run_experiment(df, target, task, name)
+    df_results.to_csv(RESULTS_DIR / f"metrics_nomao_lead.csv", index=False)
 
-df_low = run_low_data_experiment(df, target, task, name)
-if not df_low.empty:
-    df_low.to_csv(RESULTS_DIR / f"lowdata_nomao_lead.csv", index=False)
+    df_low = run_low_data_experiment(df, target, task, name)
+    if not df_low.empty:
+        df_low.to_csv(RESULTS_DIR / f"lowdata_nomao_lead.csv", index=False)
 
-plot_ucurve(df_results, name, task)
-plot_low_data(df_low, name, task)
+    plot_ucurve(df_results, name, task)
+    plot_low_data(df_low, name, task)
 
-# Print summary
-print("\n=== RESULTS ===")
-metric = "auc_roc"
-base = df_results[df_results["condition"] == "real_only"][metric].mean()
-print(f"Baseline (real only): {base:.4f}")
-for method in ["GaussianCopula", "CTGAN", "SMOTE"]:
-    sub = df_results[(df_results["method"] == method) & (df_results["condition"] == "augmented")]
-    if sub.empty:
-        continue
-    best = sub[metric].max()
-    best_alpha = sub.loc[sub[metric].idxmax(), "alpha"]
-    tstr_sub = df_results[(df_results["method"] == method) & (df_results["condition"] == "synthetic_only")]
-    tstr = tstr_sub[metric].mean() if not tstr_sub.empty else float("nan")
-    print(f"{method}: TSTR={tstr:.4f}, Best aug={best:.4f} (α={best_alpha}), gain={best-base:+.4f}")
+    # Print summary
+    print("\n=== RESULTS ===")
+    metric = "auc_roc"
+    base = df_results[df_results["condition"] == "real_only"][metric].mean()
+    print(f"Baseline (real only): {base:.4f}")
+    for method in ["GaussianCopula", "CTGAN", "SMOTE"]:
+        sub = df_results[(df_results["method"] == method) & (df_results["condition"] == "augmented")]
+        if sub.empty:
+            continue
+        best = sub[metric].max()
+        best_alpha = sub.loc[sub[metric].idxmax(), "alpha"]
+        tstr_sub = df_results[(df_results["method"] == method) & (df_results["condition"] == "synthetic_only")]
+        tstr = tstr_sub[metric].mean() if not tstr_sub.empty else float("nan")
+        print(f"{method}: TSTR={tstr:.4f}, Best aug={best:.4f} (α={best_alpha}), gain={best-base:+.4f}")
 
 print("\nDone. Results in results/")
