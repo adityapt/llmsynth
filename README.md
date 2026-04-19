@@ -1,4 +1,4 @@
-# MarSynth
+# LLMSynth
 
 Empirical evaluation of synthetic data generation methods for marketing and product data science.
 
