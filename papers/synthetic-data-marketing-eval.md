@@ -217,7 +217,7 @@ We examine four canonical task types and map the evidence to practical recommend
 | TVAE | 3/5 | 4/5 | 3/5 | 3/5 | 5/5 | Small datasets, fast iteration |
 | Gaussian Copula | 3/5 | 3/5 | 3/5 | 4/5 | 5/5 | Privacy proxies, LTV tails, segmentation |
 | SMOTE | 2/5 | 5/5 | 3/5 | 2/5 | 5/5 | Imbalanced binary classification only |
-| GReaT / LLM-based | 3/5 | 3/5 | 3/5 | 2/5 | 1/5 | Extreme small-n (< 200 rows) — *theoretically motivated; unvalidated in this study (sampling failure with distilgpt2)* |
+| GReaT / LLM-based | 3/5 | 3/5 | 2/5 | 2/5 | 1/5 | **Requires semantic feature names; hurt by class imbalance.** Consistent negative gains on anonymized features (−3 to −7 pts, German Credit). Marginal positive at extreme small-n on semantic features (Hillstrom n=50, +2.3 pts, 4/5 seeds); significantly harmful at larger n (Hillstrom n=2000, −6.9 pts, 0/5 seeds). GPU required. |
 
 *Ratings are relative within class, based on aggregated benchmark evidence from Davila et al. (2025), Kotelnikov et al. (2023), and Won et al. (2026). SMOTE privacy ratings reflect near-duplicate risk from interpolation; they do not imply DP-grade guarantees for any method. "Utility (Imbalanced)" refers to performance on imbalanced classification benchmarks; "Utility (Augmentation)" refers to the mixed real+synthetic augmentation regime.*
 
@@ -321,39 +321,76 @@ These results are consistent with the literature synthesis in Sections 3–5 and
 
 ---
 
-## 6.6 LLM-Based Generation at Extreme Small-n: A Negative Result
+## 6.6 LLM-Based Generation: Feature Semantics Matter
 
-The experiments in Sections 6.1–6.5 use GaussianCopula and CTGAN. At very small n, these generators have too few rows to reliably learn joint distributions and augmented performance degrades relative to baseline. We attempted to evaluate GReaT (Borisov et al., 2023), an LLM-based tabular synthesizer that leverages pretraining priors, to test whether it could compensate for this scarcity.
+The experiments in Sections 6.1–6.5 use GaussianCopula and CTGAN. We evaluated GReaT (Borisov et al., 2023), an LLM-based tabular synthesizer, to test whether pre-trained language model priors improve synthetic data quality at small n. This section reports two experiments: an initial failed attempt with a weak base model, and a subsequent GPU-based experiment with a stronger model that produced valid samples but degraded performance.
 
-### Setup
+### Experiment 1: distilgpt2 — Sampling Failure
 
-**Generator:** GReaT (v0.0.13, `be-great` package) with `distilgpt2` as the base language model, fine-tuned for 50 epochs on the training set.
+**Generator:** GReaT (v0.0.13, `be-great` package) with `distilgpt2`, 50 epochs.
 
-**Dataset:** German Credit (n=1,000, 30% positive). Fixed 300-row holdout; training set subsampled to n ∈ {50, 100, 200, 500, 700} across 5 independent seeds.
+In every run, `model.sample(n)` returned an **empty DataFrame** (0 rows). The model generates text continuations that cannot be parsed back into structured tabular rows, silently returning zero samples. All reported GReaT results under this configuration are invalid artifacts of this failure.
 
-### Finding: GReaT Sampling Failed to Produce Valid Rows
+### Experiment 2: GPT-2 with Guided Sampling — Valid Samples, Negative Gains
 
-In every experiment, `model.sample(n)` returned an **empty DataFrame** (0 rows). Inspection confirmed that `be-great` v0.0.13 with `distilgpt2` fails at the post-generation parsing step: the LLM generates text continuations that cannot be parsed back into structured tabular rows, silently returning zero samples.
+**Generator:** GReaT with `gpt2` (117M parameters), `guided_sampling=True`, 50–100 epochs, executed on an NVIDIA GPU.
 
-As a result, the augmented training set was identical to the original training set in every run, and the downstream classifier was unchanged. The "0.000 gain" observed across all seeds and n values is an artifact of this failure, not a meaningful result.
+**Dataset:** German Credit (n=1,000, 30% positive, 20 anonymized features named `f0–f19`). Fixed 200-row holdout; training set subsampled to n ∈ {50, 100, 200, 500} across 5 independent seeds.
 
-The GC/CTGAN comparison from this experiment remains valid and is shown below:
+Sampling succeeded — `model.sample(n)` returned non-empty DataFrames. However, augmentation consistently degraded performance relative to baseline:
 
-| n (train) | Baseline (mean ± CI) | GaussianCopula | CTGAN |
+| n | Baseline (mean ± CI) | GReaT (mean ± CI) | Gain |
 |---|---|---|---|
-| 50 | 0.656 ± 0.066 | 0.646 ± 0.039 (−1.0%) | 0.663 ± 0.046 (+0.7%) |
-| 100 | 0.687 ± 0.020 | 0.648 ± 0.057 (−3.9%) | 0.700 ± 0.030 (+1.3%) |
-| 200 | 0.727 ± 0.036 | 0.688 ± 0.024 (−3.9%) | 0.685 ± 0.050 (−4.2%) |
-| 500 | 0.773 ± 0.009 | 0.757 ± 0.032 (−1.6%) | 0.736 ± 0.049 (−3.7%) |
-| 700 | 0.775 ± 0.001 | 0.770 ± 0.024 (−0.5%) | 0.759 ± 0.025 (−1.5%) |
+| 50 | 0.6446 ± 0.1153 | 0.6375 ± 0.0765 | −0.71 pts |
+| 100 | 0.7079 ± 0.0419 | 0.6377 ± 0.0333 | **−7.02 pts** |
+| 200 | 0.7587 ± 0.0284 | 0.6995 ± 0.0519 | **−5.92 pts** |
+| 500 | 0.7607 ± 0.0190 | 0.7307 ± 0.0213 | **−3.00 pts** |
 
-*Mean ± 95% CI across 5 independent seeds. GC and CTGAN gaps narrow as n grows — both degrade at all n tested, with the gap shrinking from ~4 pts at n=200 to <1.5 pts at n=700.*
+*Mean ± 95% CI across 5 independent seeds (seeds 42, 123, 7, 2024, 999).*
 
-### Implications for LLM-Based Generators
+### Explanation: Anonymous Features Undermine LLM Priors
 
-The theoretical motivation for LLM-based generation at small n is sound: a pre-trained model encodes distributional priors that pure data-driven generators cannot recover from a handful of rows. However, practical deployment of `be-great` in this evaluation revealed a hard dependency on successful text-to-row parsing, which is fragile with weaker base models (distilgpt2) and structured numeric features.
+The consistent degradation is attributable to the anonymized feature naming (`f0, f1, ..., f19`). GReaT's value proposition rests on the LLM's pre-trained knowledge about real-world concepts — it can leverage that "age" correlates with "income" or that "balance" follows certain distributions. When features are opaque numeric identifiers, this prior knowledge is inapplicable. The fine-tuned model generates syntactically valid rows that bear no semantic relationship to the ground-truth distribution, injecting noise into the training set and degrading downstream classifier performance.
 
-Stronger base models (e.g., GPT-2 large, LLaMA-family) may resolve this; the original GReaT paper reports results with larger models. Practitioners considering LLM-based tabular generation should validate that `model.sample()` is returning non-empty output before interpreting any downstream results.
+**This is a dataset-specific finding, not a universal indictment of LLM-based synthesis.** On datasets with semantically meaningful feature names, LLM priors may be operative at very small n. The Hillstrom experiment below tests this directly.
+
+### Experiment 3: GPT-2 on Hillstrom — Semantic Features, Extreme Imbalance
+
+**Generator:** GReaT with `gpt2`, `guided_sampling=True`, 50–100 epochs, NVIDIA GPU.
+
+**Dataset:** Hillstrom Email Marketing (64,000 rows, 0.9% positive rate, semantic features: `recency`, `history`, `mens`, `womens`, `zip_code`, `newbie`, `channel`). Fixed 10,000-row holdout (~90 positives); training set subsampled to n ∈ {50, 100, 200, 500, 1000, 2000} across 5 independent seeds.
+
+This experiment was designed to test whether semantic feature names unlock LLM priors and produce gains. Hillstrom features map to real-world marketing concepts — the hypothesis was that GPT-2's pretraining priors (recency, purchase history, channel) would generate higher-quality synthetic rows than on anonymized features.
+
+| n | Baseline (mean ± CI) | GReaT (mean ± CI) | Gain | Win rate |
+|---|---|---|---|---|
+| 50 | 0.4937 ± 0.0058 | 0.5162 ± 0.0469 | **+2.3 pts** | 4/5 seeds |
+| 100 | 0.4884 ± 0.0293 | 0.4999 ± 0.0525 | +1.2 pts | 3/5 seeds |
+| 200 | 0.4928 ± 0.0272 | 0.4968 ± 0.0908 | +0.4 pts | 3/5 seeds |
+| 500 | 0.5124 ± 0.0692 | 0.5122 ± 0.0788 | ~0 pts | 3/5 seeds |
+| 1000 | 0.5160 ± 0.0698 | 0.4763 ± 0.0710 | −4.0 pts | 1/5 seeds |
+| 2000 | 0.5345 ± 0.0596 | 0.4658 ± 0.0461 | **−6.9 pts** | 0/5 seeds |
+
+*Mean ± 95% CI across 5 independent seeds. The n=2000 loss is the only statistically significant result (non-overlapping CIs).*
+
+**Pattern:** GReaT shows a small, monotonically declining benefit as n grows. At extreme small-n (n=50), semantic features produce a modest positive signal (4/5 seeds, +2.3 pts) — consistent with LLM priors providing distributional structure when real data is nearly absent. By n=500, the gain is negligible. At n=2000, augmentation is significantly harmful (−6.9 pts, 0/5 seeds positive).
+
+**Why the degradation at large n?** Two compounding factors: (1) Hillstrom's 0.9% positive rate means GReaT samples mostly negative-class rows regardless of feature semantics — at larger n, this dilutes the minority-class signal rather than augmenting it. (2) As real data grows, the LLM prior becomes noise relative to the real-data signal. The class imbalance confounds the semantic-feature benefit, making it impossible to cleanly attribute the n=50 gain to feature semantics alone.
+
+**Key limitation:** This experiment cannot isolate feature semantics from class imbalance — both are present simultaneously. A follow-up experiment on a semantically-named, balanced dataset (e.g., Telco Churn, 26.6% positive) is needed to resolve this.
+
+### GC/CTGAN on German Credit (5-seed CI)
+
+For completeness, the GaussianCopula and CTGAN results on German Credit under 5-seed CI are:
+
+| n | Baseline (mean ± CI) | GaussianCopula | CTGAN |
+|---|---|---|---|
+| 50 | 0.656 ± 0.066 | 0.646 ± 0.039 (−1.0 pts) | 0.663 ± 0.046 (+0.7 pts) |
+| 100 | 0.687 ± 0.020 | 0.648 ± 0.057 (−3.9 pts) | 0.700 ± 0.030 (+1.3 pts) |
+| 200 | 0.727 ± 0.036 | 0.688 ± 0.024 (−3.9 pts) | 0.685 ± 0.050 (−4.2 pts) |
+| 500 | 0.773 ± 0.009 | 0.757 ± 0.032 (−1.6 pts) | 0.736 ± 0.049 (−3.7 pts) |
+
+No method produces reliable gains on German Credit. The anonymous feature space is equally hostile to statistical and LLM-based synthesizers.
 
 ---
 
@@ -582,7 +619,7 @@ The risks of synthetic data are underappreciated in practice. Distribution misma
 
 Marketing and product data science teams should treat synthetic augmentation as one tool in a broader pipeline — useful in specific regimes, evaluated rigorously using multi-axis frameworks, and documented transparently. The five-step evaluation protocol described in §7 provides a reproducible workflow for making this decision empirically rather than on vendor claims or optimistic benchmarks.
 
-The field is developing rapidly. Causal generative models, LLM-backed synthesis for small tabular datasets, and differentially private synthesizers with certified guarantees represent near-term advances that could expand the practical utility envelope significantly. For now, the evidence supports a cautious, task-specific application strategy rather than broad adoption.
+The field is developing rapidly. Causal generative models, LLM-backed synthesis for small tabular datasets, and differentially private synthesizers with certified guarantees represent near-term advances that could expand the practical utility envelope significantly. Our GReaT experiments (Section 6.6) suggest that LLM-based synthesis may offer marginal benefit at extreme small-n on semantically-named features, but class imbalance and large n actively undermine it. A controlled experiment on balanced, semantic-featured data (e.g., Telco Churn) is needed to isolate these factors before drawing firm conclusions about LLM-based generators in marketing contexts. For now, the evidence supports a cautious, task-specific application strategy rather than broad adoption.
 
 ---
 

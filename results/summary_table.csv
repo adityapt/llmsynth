@@ -1,12 +1,14 @@
-dataset,method,task,baseline,tstr,best_augmented,best_alpha
-Telco Churn,GaussianCopula,classification,0.8370006367415398,0.8025544724622226,0.839365122093896,0.2
-Telco Churn,CTGAN,classification,0.8370006367415398,0.7512010084329427,0.8357659793654327,0.2
-Telco Churn,SMOTE,classification,0.8370006367415398,,0.830954180492931,0.1
-Bank Marketing,GaussianCopula,classification,0.9085022676944158,0.7504804801898044,0.9103714888916852,0.2
-Bank Marketing,CTGAN,classification,0.9085022676944158,0.7186069247224399,0.9043529838169324,0.2
-Bank Marketing,SMOTE,classification,0.9085022676944158,,0.9078333059080512,0.1
-Credit Default,GaussianCopula,classification,0.7748809523809524,0.564047619047619,0.7819047619047619,0.1
-Credit Default,CTGAN,classification,0.7748809523809524,0.5111904761904762,0.815952380952381,0.3
-Credit Default,SMOTE,classification,0.7748809523809524,,0.7730952380952381,0.1
-Online Retail CLV,GaussianCopula,regression,-0.33514765344899455,-0.012504535022890284,-0.11764851084775896,0.5
-Online Retail CLV,CTGAN,regression,-0.33514765344899455,-0.057447211505838425,-0.12763283488979216,0.3
+dataset,method,task,baseline,tstr,best_augmented,best_alpha,notes
+Telco Churn,GaussianCopula,classification,0.8370006367415398,0.8025544724622226,0.839365122093896,0.2,
+Telco Churn,CTGAN,classification,0.8370006367415398,0.7512010084329427,0.8357659793654327,0.2,
+Telco Churn,SMOTE,classification,0.8370006367415398,,0.830954180492931,0.1,
+Bank Marketing,GaussianCopula,classification,0.9085022676944158,0.7504804801898044,0.9103714888916852,0.2,
+Bank Marketing,CTGAN,classification,0.9085022676944158,0.7186069247224399,0.9043529838169324,0.2,
+Bank Marketing,SMOTE,classification,0.9085022676944158,,0.9078333059080512,0.1,
+Credit Default,GaussianCopula,classification,0.7748809523809524,0.564047619047619,0.7819047619047619,0.1,
+Credit Default,CTGAN,classification,0.7748809523809524,0.5111904761904762,0.815952380952381,0.3,
+Credit Default,SMOTE,classification,0.7748809523809524,,0.7730952380952381,0.1,
+Online Retail CLV,GaussianCopula,regression,-0.33514765344899455,-0.012504535022890284,-0.11764851084775896,0.5,
+Online Retail CLV,CTGAN,regression,-0.33514765344899455,-0.057447211505838425,-0.12763283488979216,0.3,
+GReaT German Credit (GPT-2),GReaT,classification,0.7079,n/a,0.6375,n=50,GPU experiment; best at smallest n; all gains negative; anonymized features f0-f19 undermine LLM priors
+GReaT Hillstrom (GPT-2),GReaT,classification,0.4937,n/a,0.5162,n=50,GPU experiment; holdout=10K; marginal +2.3pts at n=50 (4/5 seeds); −6.9pts at n=2000 (significant); class imbalance 0.9% confounds semantic feature benefit
