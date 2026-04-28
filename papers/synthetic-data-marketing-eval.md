@@ -229,7 +229,7 @@ For benchmarks that include differentially private synthesis specifically, Chen 
 
 ## 6. Empirical Validation on Public Benchmark Datasets
 
-To complement the literature synthesis in Sections 3–5, we conducted a controlled experiment using three publicly available tabular datasets that represent canonical marketing and product data science tasks. Code and results are reproducible via `experiments/synthetic_data_eval.py` in the companion repository.
+To complement the literature synthesis in Sections 3–5, we conducted a controlled empirical evaluation across eight public datasets spanning balanced and imbalanced classification, sparse features, and real marketing operations. Sections 6.1–6.5 cover three benchmark datasets under the core augmentation protocol; §6.6 evaluates GReaT (LLM-based) across three configurations; §6.7 stress-tests augmentation under combined feature sparsity and small-n; and §6.8 evaluates on two real marketing datasets. Code is reproducible via the `experiments/` directory in the companion repository.
 
 ### 6.1 Experimental Setup
 
@@ -258,7 +258,7 @@ Primary metric: AUC-ROC. Secondary metrics: F1 on minority class, average precis
 
 Downstream model: GradientBoostingClassifier (sklearn defaults, `random_state=42`).
 
-**Note on replication.** The main experiments in Sections 6.1–6.3 use a single random seed. Results for Hillstrom and Criteo (Section 6.8) are reported as 5-seed mean ± 95% CI. Single-seed results should be treated as point estimates; where effect sizes are small (Telco: +0.3 pts, Bank Marketing: +0.2 pts), they may not replicate reliably across seeds.
+**Note on replication.** The main augmentation experiments in Sections 6.2–6.4 use a single random seed. All GReaT experiments (§6.6), the sparse stress test (§6.7), and the real marketing datasets (§6.8) are reported as 5-seed mean ± 95% CI via t-distribution. Single-seed results should be treated as point estimates; where effect sizes are small (Telco: +0.3 pts, Bank Marketing: +0.2 pts, German Credit single-seed: +4.1 pts), they may not replicate reliably across seeds — in the German Credit case, 5-seed CI at equivalent training sizes (n∈{50–500}) showed no consistent gain from any generator.
 
 ### 6.2 TSTR Results: The Cost of Going Synthetic-Only
 
@@ -396,7 +396,7 @@ No method produces reliable gains on German Credit. The anonymous feature space 
 
 ## 6.7 Stress Test: Sparse Features + Small n (Campaign Lead Attribution)
 
-The three experiments above used clean, complete datasets. Real marketing data — particularly campaign-based lead attribution — is rarely clean. CRM records are incomplete. Touchpoint data has gaps. New campaigns have cold-start users with no history. To test whether synthetic augmentation is useful under these conditions, we ran a targeted stress test on the Nomao lead dataset.
+The benchmark experiments in §6.2–6.5 used clean, complete datasets. Real marketing data — particularly campaign-based lead attribution — is rarely clean. CRM records are incomplete. Touchpoint data has gaps. New campaigns have cold-start users with no history. To test whether synthetic augmentation is useful under these conditions, we ran a targeted stress test on the Nomao lead dataset.
 
 ### Setup
 
@@ -484,7 +484,7 @@ Same protocol as Section 6.1: 80/20 train/test split, augmentation sweep at α �
 
 ### Discussion
 
-Both datasets confirm and amplify the pattern from Section 6.1: **severe class imbalance is the strongest predictor of synthetic augmentation value.**
+Both datasets confirm and amplify the pattern from Sections 6.2–6.5: **severe class imbalance is the strongest predictor of synthetic augmentation value.**
 
 **On variance and the meaning of wide CIs.** The baseline CIs are wide — ±9.2 pts for Hillstrom, ±22.8 pts for Criteo. This is not a measurement artifact; it reflects the genuine instability of learning from extremely rare events. With 0.9% positive rate and n=8,000 training rows, a training split contains roughly 72 real purchase events. Different random splits yield 55–90 positives — a 60% swing in minority-class signal — producing large cross-split variance in model performance. This instability is itself the core problem that augmentation addresses. Crucially, augmented models show substantially narrower CIs (CTGAN ±7.3 pts on Hillstrom, ±3.6 pts on Criteo) — synthetic data not only improves mean performance but stabilises it across splits.
 
@@ -505,7 +505,7 @@ Combining all experiments, a clear pattern emerges:
 | Nomao (full) | 10,000 | 28.3% | < 0.1 pts | Skip it |
 | Telco Churn | 7,032 | 26.6% | +0.3 pts | Marginal |
 | Bank Marketing | 15,000 | 11.7% | +0.2 pts | Skip it |
-| German Credit | 1,000 | 30.0% | +4.1 pts (single seed; 5-seed CI: +0.8 pts) | Marginal; single-seed estimate inflated |
+| German Credit | 1,000 | 30.0% | +4.1 pts (single seed; 5-seed CI at n≤500: no consistent gain) | Unreliable — single-seed estimate; CI experiments show noise |
 | Nomao (sparse) | 500 | 28.3% | +0.5 pts (within noise) | No — sparsity swamps signal |
 | **Hillstrom Email** | **10,000** | **0.9%** | **+5.8 pts (SMOTE)** | **Strong yes — imbalance driven** |
 | **Criteo Display** | **10,000** | **0.2%** | **+12.9 pts (CTGAN)** | **Strong yes — extreme imbalance** |
@@ -692,4 +692,4 @@ The field is developing rapidly. Causal generative models, instruction-tuned LLM
 
 ---
 
-*Slug: `synthetic-data-marketing-eval` — Final draft April 2026. Produced via primary-source synthesis across 16 references; Section 6 reports original experimental results on public datasets (Telco Churn, Bank Marketing, German Credit). Figures in Sections 1–5 are illustrative relative rankings unless otherwise noted. Empirical validation on proprietary marketing datasets is recommended before drawing operational conclusions. Experiment code: `experiments/synthetic_data_eval.py`. Results: `results/` directory. See `papers/synthetic-data-marketing-eval.provenance.md` for full source accounting and verification status.*
+*Slug: `synthetic-data-marketing-eval` — Final draft April 2026. Produced via primary-source synthesis across 20 references; Section 6 reports original experimental results on eight public datasets: Telco Churn, Bank Marketing, German Credit, Online Retail CLV, Nomao Lead (full and sparse), Hillstrom Email Marketing, and Criteo Uplift. GReaT (LLM-based) experiments were run on GPU (Databricks) across German Credit and Hillstrom (§6.6); all GReaT results are 5-seed CI. Figures in Sections 1–5 are illustrative relative rankings unless otherwise noted. Empirical validation on proprietary marketing datasets is recommended before drawing operational conclusions. Experiment code: `experiments/` directory. Results: `results/` directory. See `papers/synthetic-data-marketing-eval.provenance.md` for full source accounting and verification status.*
