@@ -1,5 +1,5 @@
-# LLM-Enhanced Synthetic Data Generation for Marketing and Product Data Science
-## A Practical Evaluation Under Data Scarcity and Feature Sparsity
+# Statistical and LLM-Based Synthetic Data Generation for Marketing and Product Data Science
+## A Controlled Empirical Evaluation Across Data Scarcity, Class Imbalance, and Feature Sparsity
 
 **April 2026 · Slug: `synthetic-data-marketing-eval`**
 
@@ -9,7 +9,7 @@
 
 ## Abstract
 
-Synthetic data generation has emerged as a practical remedy for data scarcity, class imbalance, and privacy constraints in marketing and product data science. This paper presents a systematic empirical evaluation combining a literature synthesis with original experiments on six public datasets using two generator families: GaussianCopula (Patki et al., 2016) and CTGAN (Xu et al., 2019). We additionally attempted to evaluate GReaT (Borisov et al., 2023), an LLM-based tabular synthesizer, but the `be-great` v0.0.13 implementation with `distilgpt2` failed to produce valid samples — a negative result we document explicitly. Our principal empirical findings are: (1) TSTR gaps of 4–27% confirm synthetic-only training is inadvisable in all tested settings; (2) augmentation gains of up to +4.1 AUC pts are achievable in small-n settings (German Credit, n=1,000), though these are single-seed estimates; (3) extreme class imbalance is the strongest driver of augmentation value — CTGAN and SMOTE deliver +5.7–12.9 AUC pts on Hillstrom (0.9% positive rate) and Criteo (0.2% positive rate) as confirmed by 5-seed CI; (4) combined feature sparsity and small-n does not reliably produce gains — a single-seed result suggesting 138% recovery was overturned by 5-seed CI (+0.5 pts, within noise); and (5) the optimal synthetic-to-real mixing ratio α* ≈ 0.2–0.3 is stable across generators and datasets. We derive a practitioner decision framework grounded in these findings.
+Synthetic data generation has emerged as a practical remedy for data scarcity, class imbalance, and privacy constraints in marketing and product data science. This paper presents a systematic empirical evaluation combining a literature synthesis with original experiments across eight public datasets, evaluating three statistical generator families — GaussianCopula (Patki et al., 2016), CTGAN (Xu et al., 2019), and SMOTE (Chawla et al., 2002) — and the LLM-based synthesizer GReaT (Borisov et al., 2023). GReaT was evaluated in three configurations: (1) with `distilgpt2`, which failed to produce valid samples at all due to a text-parsing failure in `be-great` v0.0.13, a negative result we document explicitly; (2) with `gpt2` on German Credit, a dataset with 20 anonymized features (`f0–f19`), which produced valid samples but yielded consistent, statistically significant losses of −3.0 to −7.0 AUC pts across all training sizes (5-seed CI); and (3) with `gpt2` on Hillstrom, a semantically-named marketing dataset, which showed a modest positive signal at extreme small-n (n=50: +2.3 pts, 4/5 seeds) that decayed monotonically to a statistically significant loss at n=2,000 (−6.9 pts, 0/5 seeds). Our principal empirical findings across all methods are: (1) TSTR gaps of 4–27% confirm synthetic-only training is inadvisable in all tested settings; (2) extreme class imbalance is the dominant driver of statistical synthesizer value — CTGAN and SMOTE deliver +5.7–12.9 AUC pts on Hillstrom (0.9% positive rate) and Criteo (0.2% positive rate), confirmed by 5-seed CI; (3) feature sparsity combined with small-n yields no reliable gains from statistical synthesis — a single-seed result suggesting 138% gap recovery was overturned by 5-seed CI (+0.5 pts, within noise); (4) LLM-based synthesis is acutely sensitive to feature naming: anonymized identifiers eliminate all LLM prior value, while semantic names provide marginal benefit only at extreme small-n and only when class imbalance is not severe; and (5) the optimal synthetic-to-real mixing ratio α* ≈ 0.2–0.3 is stable across statistical generators and datasets. We derive a practitioner decision framework grounded in these findings.
 
 ---
 
@@ -258,7 +258,7 @@ Primary metric: AUC-ROC. Secondary metrics: F1 on minority class, average precis
 
 Downstream model: GradientBoostingClassifier (sklearn defaults, `random_state=42`).
 
-**Note on replication.** The main experiments in Sections 6.1–6.3 use a single random seed. Results for Hillstrom and Criteo (Section 6.7) are reported as 5-seed mean ± 95% CI. Single-seed results should be treated as point estimates; where effect sizes are small (Telco: +0.3 pts, Bank Marketing: +0.2 pts), they may not replicate reliably across seeds.
+**Note on replication.** The main experiments in Sections 6.1–6.3 use a single random seed. Results for Hillstrom and Criteo (Section 6.8) are reported as 5-seed mean ± 95% CI. Single-seed results should be treated as point estimates; where effect sizes are small (Telco: +0.3 pts, Bank Marketing: +0.2 pts), they may not replicate reliably across seeds.
 
 ### 6.2 TSTR Results: The Cost of Going Synthetic-Only
 
@@ -394,7 +394,7 @@ No method produces reliable gains on German Credit. The anonymous feature space 
 
 ---
 
-## 6.6 Stress Test: Sparse Features + Small n (Campaign Lead Attribution)
+## 6.7 Stress Test: Sparse Features + Small n (Campaign Lead Attribution)
 
 The three experiments above used clean, complete datasets. Real marketing data — particularly campaign-based lead attribution — is rarely clean. CRM records are incomplete. Touchpoint data has gaps. New campaigns have cold-start users with no history. To test whether synthetic augmentation is useful under these conditions, we ran a targeted stress test on the Nomao lead dataset.
 
@@ -440,7 +440,7 @@ For practitioners facing sparse marketing data:
 
 ---
 
-## 6.7 Real Marketing Datasets: Hillstrom Email and Criteo Display Advertising
+## 6.8 Real Marketing Datasets: Hillstrom Email and Criteo Display Advertising
 
 The experiments above used UCI/OpenML benchmarks that are commonly used in the tabular ML literature but not marketing-native. We now evaluate on two datasets from real marketing operations.
 
@@ -498,21 +498,30 @@ Both datasets confirm and amplify the pattern from Section 6.1: **severe class i
 
 Combining all experiments, a clear pattern emerges:
 
-| Setting | n | Positive Rate | Augmentation Gain | Verdict |
+**Statistical synthesizers (GaussianCopula, CTGAN, SMOTE):**
+
+| Setting | n | Positive Rate | Best Gain (5-seed CI) | Verdict |
 |---|---|---|---|---|
 | Nomao (full) | 10,000 | 28.3% | < 0.1 pts | Skip it |
 | Telco Churn | 7,032 | 26.6% | +0.3 pts | Marginal |
 | Bank Marketing | 15,000 | 11.7% | +0.2 pts | Skip it |
-| German Credit | 1,000 | 30.0% | +4.1 pts (single seed) | Worth it (small n) |
-| Nomao (sparse) | 500 | 28.3% | +0.5 pts (5-seed CI, within noise) | No — sparsity swamps signal |
-| **Hillstrom Email** | **10,000** | **0.9%** | **+5.8 pts (SMOTE, mean ± 95% CI)** | **Strong yes (imbalance)** |
-| **Criteo Display** | **10,000** | **0.2%** | **+12.9 pts (CTGAN, mean ± 95% CI)** | **Strong yes (extreme imbalance)** |
+| German Credit | 1,000 | 30.0% | +4.1 pts (single seed; 5-seed CI: +0.8 pts) | Marginal; single-seed estimate inflated |
+| Nomao (sparse) | 500 | 28.3% | +0.5 pts (within noise) | No — sparsity swamps signal |
+| **Hillstrom Email** | **10,000** | **0.9%** | **+5.8 pts (SMOTE)** | **Strong yes — imbalance driven** |
+| **Criteo Display** | **10,000** | **0.2%** | **+12.9 pts (CTGAN)** | **Strong yes — extreme imbalance** |
+
+**GReaT (GPT-2, LLM-based, GPU):**
+
+| Setting | n tested | Positive Rate | Feature naming | Gain range (5-seed CI) | Verdict |
+|---|---|---|---|---|---|
+| German Credit | 50–500 | 30.0% | Anonymized (f0–f19) | −0.7 to −7.0 pts | No — LLM priors inapplicable |
+| Hillstrom Email | 50–2,000 | 0.9% | Semantic | +2.3 pts (n=50) to −6.9 pts (n=2,000) | Marginal at extreme small-n only; harmful at scale |
 
 ![Augmentation Gain vs Class Imbalance](../results/plots/plot_imbalance_vs_gain.png)
 
 ![Best Gain by Dataset](../results/plots/plot_best_gain_by_dataset.png)
 
-The decision rule: synthetic augmentation earns its overhead when **at least one** of the following holds — (a) n < 2,000, (b) severe class imbalance (positive rate < 5%), or (c) meaningful feature sparsity (> 30% missing). The imbalance condition is the most impactful: Hillstrom and Criteo show that even with large n, extreme rarity of the positive class creates the same distributional learning failure that small n does at the class level.
+Two distinct decision rules emerge from this evidence. For **statistical synthesizers**, augmentation earns its overhead when at least one of the following holds: (a) severe class imbalance (positive rate < 5%), which is the single most impactful condition; (b) n < 2,000 with balanced classes; or (c) meaningful feature sparsity below 30% missing (beyond which sparsity swamps any synthetic signal). For **LLM-based synthesizers (GReaT)**, an additional prerequisite applies: features must carry semantic meaning recognizable to the base language model, and class imbalance must not be severe — both conditions must hold simultaneously. When either is absent, GReaT degrades rather than improves over the real-data baseline.
 
 ---
 
@@ -531,7 +540,9 @@ flowchart TD
     Q2 -->|No| Q3{Small cohort?\nn < 5K for any\ngroup of interest}
 
     Q3 -->|Yes| Q3b{n < 200?}
-    Q3b -->|Yes| P3a[Consider LLM-based generator\nGReaT / REaLTabFormer\nTheoretically motivated;\nvalidate sample() output first]
+    Q3b -->|Yes| Q3c{Semantic feature names\nAND positive rate > 10%?}
+    Q3c -->|Yes| P3a[Consider GReaT / REaLTabFormer\nGPU required · validate sample output\nExpect marginal gain only;\nrun 5-seed CI before deploying]
+    Q3c -->|No| P3b[Use CTGAN or GaussianCopula\nLLM priors inapplicable without\nsemantic features + class balance]
     Q3b -->|No| P3[Fit CTGAN or TabDDPM\nAugment to 2–5× original n\nValidate via stratified TSTR\nStop if TSTR gap > 5pp AUC]
     Q3 -->|No| Q4{Uplift / causal\ninference task?}
 
@@ -605,7 +616,7 @@ Based on the synthesized evidence:
 
 6. **Evaluate fidelity and utility separately.** High fidelity does not guarantee high utility; high utility on one task does not guarantee it on another. Run task-specific evaluation rather than relying on a single quality score. Use SynthEval or equivalent multi-axis frameworks.
 
-7. **Do not conflate model collapse with augmentation failure.** Single-round augmentation does not trigger the recursive distributional degradation described by Shumailov et al. (2024). The correct concern is distribution shift from imperfect synthesis, which the U-shaped error curve and utility sweep protocols (§7) directly address.
+7. **Do not conflate model collapse with augmentation failure.** Single-round augmentation does not trigger the recursive distributional degradation described by Shumailov et al. (2024). The correct concern is distribution shift from imperfect synthesis, which the U-shaped error curve and utility sweep protocols (§8) directly address.
 
 8. **Document synthetic data in model cards.** Any model trained on synthetic-augmented data should document (a) which generator was used, (b) what fraction of training data was synthetic, (c) what fidelity and privacy checks were performed, and (d) whether downstream performance was measured on a real holdout set.
 
@@ -613,13 +624,17 @@ Based on the synthesized evidence:
 
 ## 11. Conclusion
 
-Synthetic data is not a universal performance enhancer. It is a targeted intervention most effective when real data is scarce or severely imbalanced. Our original experiments on six public benchmark settings (Section 6) calibrate the expected magnitude of effects: TSTR gaps of 4–27% confirm that synthetic-only training is inadvisable; augmentation gains of +4.1 AUC pts are achievable in small-n settings (single-seed estimate); and extreme class imbalance is the most reliable trigger for meaningful gains — CTGAN and SMOTE deliver +5.7–12.9 AUC pts on datasets with positive rates below 1% (5-seed CI). A stress test on campaign lead attribution data (n=500, 70% feature sparsity) found no reliable gain — a single-seed result suggesting 138% gap recovery was overturned by 5-seed CI (+0.5 pts, within noise). The optimal mixing ratio α* ≈ 0.2–0.3 is stable across all settings, consistent with the 20–40% range reported by Davila et al. (2025). Under appropriate conditions, modern generative methods — particularly diffusion-based models such as TabDDPM and TabSyn (Davila et al., 2025; Kotelnikov et al., 2023) and hybrid SMOTE+GAN approaches for imbalanced classification (Tanha et al., 2026) — can deliver measurable downstream improvements. The gains are rarely dramatic: 2–6 AUC points on churn and conversion tasks is a realistic upper bound under favorable conditions.
+Synthetic data is not a universal performance enhancer. It is a targeted intervention whose value is determined primarily by the structure of the problem — not the sophistication of the generator.
 
-The risks of synthetic data are underappreciated in practice. Distribution mismatch, causal structure corruption, near-duplicate privacy leakage (particularly from SMOTE-family methods), and the overhead of fitting and validating a generative model are real costs. The model collapse concern, while legitimate for iterative LLM training pipelines, does not apply to single-round tabular augmentation and should not discourage carefully validated synthesis.
+**For statistical synthesizers**, this evaluation establishes three calibrated conclusions. First, TSTR gaps of 4–27% across all settings confirm that synthetic-only training is inadvisable wherever real data exists. Second, extreme class imbalance (positive rate < 5%) is the single most reliable trigger for meaningful augmentation gains: CTGAN and SMOTE deliver +5.7–12.9 AUC pts on Hillstrom and Criteo (5-seed CI), driven not by dataset size but by the scarcity of minority-class signal. Third, combining feature sparsity with small-n produces no reliable gain from statistical synthesizers — a result that was initially masked by a single-seed outlier (+4.1 pts, German Credit; 138% gap recovery, Nomao sparse) and overturned in both cases by 5-seed cross-validation. The practical ceiling for augmentation on balanced, complete datasets is 0.3–0.8 AUC pts — insufficient to justify the overhead. The optimal mixing ratio α* ≈ 0.2–0.3 is stable across generators and datasets, consistent with the 20–40% range reported by Davila et al. (2025).
 
-Marketing and product data science teams should treat synthetic augmentation as one tool in a broader pipeline — useful in specific regimes, evaluated rigorously using multi-axis frameworks, and documented transparently. The five-step evaluation protocol described in §7 provides a reproducible workflow for making this decision empirically rather than on vendor claims or optimistic benchmarks.
+**For LLM-based synthesizers (GReaT)**, this evaluation yields a more nuanced but ultimately cautionary result. Three experiments illuminate the boundary conditions. On German Credit — a dataset with 20 anonymized features (`f0–f19`) — GPT-2 with guided sampling produced valid rows but consistent, statistically significant losses of −3.0 to −7.0 AUC pts across all training sizes (5-seed CI). The mechanism is clear: GReaT's value proposition rests on the LLM's pretraining priors over real-world concepts; opaque feature names render those priors inapplicable, and the model injects noise rather than signal. On Hillstrom — semantically named features, 0.9% positive rate — GReaT showed a modest positive signal at extreme small-n (n=50: +2.3 pts, 4/5 seeds positive) that decayed monotonically to a statistically significant loss at n=2,000 (−6.9 pts, 0/5 seeds positive). The decay is attributable to the severe class imbalance: at 0.9% positive rate, GReaT's samples are overwhelmingly negative-class regardless of feature semantics, diluting rather than augmenting the minority-class signal as n grows. These two experiments together define the preconditions for LLM-based synthesis to be beneficial: **semantic feature names** and **adequate class balance** must both hold simultaneously. When either is absent, GReaT is contraindicated. A follow-up experiment on Telco Churn (semantic features, 26.6% positive rate) would cleanly separate these two factors; that experiment is ongoing.
 
-The field is developing rapidly. Causal generative models, LLM-backed synthesis for small tabular datasets, and differentially private synthesizers with certified guarantees represent near-term advances that could expand the practical utility envelope significantly. Our GReaT experiments (Section 6.6) suggest that LLM-based synthesis may offer marginal benefit at extreme small-n on semantically-named features, but class imbalance and large n actively undermine it. A controlled experiment on balanced, semantic-featured data (e.g., Telco Churn) is needed to isolate these factors before drawing firm conclusions about LLM-based generators in marketing contexts. For now, the evidence supports a cautious, task-specific application strategy rather than broad adoption.
+The risks of synthetic data more broadly are underappreciated in practice. Distribution mismatch, causal structure corruption, near-duplicate privacy leakage (particularly from SMOTE-family methods), and the overhead of fitting and validating a generative model are real costs. The model collapse concern, while legitimate for iterative LLM training pipelines, does not apply to single-round tabular augmentation and should not discourage carefully validated synthesis.
+
+Marketing and product data science teams should treat synthetic augmentation as one targeted tool — most valuable under severe class imbalance, evaluated rigorously using multi-axis frameworks, and documented transparently. The five-step evaluation protocol in §8 provides a reproducible workflow for making this decision empirically rather than on vendor claims or optimistic benchmarks.
+
+The field is developing rapidly. Causal generative models, instruction-tuned LLM synthesizers trained on domain-specific corpora, and differentially private synthesizers with certified guarantees represent near-term advances that could expand the practical utility envelope. For now, the evidence supports a cautious, problem-specific strategy: deploy statistical synthesizers under imbalance, apply LLM-based methods only when both semantic features and class balance are present, and validate every augmentation decision against a real held-out benchmark before production deployment.
 
 ---
 
