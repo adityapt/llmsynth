@@ -1,13 +1,24 @@
 %python
-# GReaT on Hillstrom — tests whether semantic feature names unlock LLM priors
-# Hillstrom features: recency, history, mens, womens, zip_code, newbie, channel
-# Positive rate: 0.9% — extreme imbalance + semantic features = best GReaT candidate
+# GReaT on Telco Churn — semantic features at moderate (26.6%) positive rate.
+# Telco features: gender, SeniorCitizen, Partner, Dependents, tenure, PhoneService,
+#   MultipleLines, InternetService, OnlineSecurity, OnlineBackup, DeviceProtection,
+#   TechSupport, StreamingTV, StreamingMovies, Contract, PaperlessBilling,
+#   PaymentMethod, MonthlyCharges, TotalCharges
+# Positive rate: 26.6% — isolates the semantic-feature variable from the class-imbalance
+# effect observed on Hillstrom (§6.6 of paper). Cleanly separates: does GReaT help
+# when feature names are semantic AND classes are not extremely imbalanced?
+#
+# Design parity with run_great_hillstrom_databricks.py:
+#   - Same SEEDS, SMALL_NS, ckpt convention, epochs schedule
+#   - Stratified small-n sampling preserves positive rate
+#   - HOLDOUT_N=2000 (Telco has 7,032 rows total; 10,000 not feasible)
 
 import warnings, os, shutil
 warnings.filterwarnings("ignore")
 import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import LabelEncoder
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.metrics import roc_auc_score
 from scipy import stats
@@ -15,12 +26,12 @@ from be_great import GReaT
 
 TARGET    = "target"
 SEEDS     = [42, 123, 7, 2024, 999]
-SMALL_NS  = [50, 100, 200, 500]
-HOLDOUT_N = 500
+SMALL_NS  = [50, 100, 200, 500, 1000, 2000]
+HOLDOUT_N = 2000
 # Set LLMSYNTH_WORK_DIR env var (or replace the default below) before running.
 WORK_DIR  = os.environ.get("LLMSYNTH_WORK_DIR", "/Workspace/Users/<your-username>/Temp")
-DATA_PATH = f"{WORK_DIR}/hillstrom.csv"
-OUT_PATH  = f"{WORK_DIR}/great_hillstrom_results.csv"
+DATA_PATH = f"{WORK_DIR}/telco_churn.csv"
+OUT_PATH  = f"{WORK_DIR}/great_telco_results.csv"
 
 def ci95(values):
     arr = np.array([v for v in values if not np.isnan(v)])
@@ -29,7 +40,16 @@ def ci95(values):
     se = stats.sem(arr)
     return float(np.mean(arr)), float(se * stats.t.ppf(0.975, df=len(arr)-1))
 
+# ── Telco-specific data prep (raw IBM CSV → GReaT-ready) ──────────────────
 df = pd.read_csv(DATA_PATH)
+df = df.drop(columns=["customerID"], errors="ignore")
+df["TotalCharges"] = pd.to_numeric(df["TotalCharges"], errors="coerce")
+df = df.dropna().reset_index(drop=True)
+df = df.rename(columns={"Churn": TARGET})
+df[TARGET] = (df[TARGET] == "Yes").astype(int)
+for c in df.select_dtypes(include="object").columns:
+    df[c] = LabelEncoder().fit_transform(df[c])
+
 print(f"Loaded: {df.shape}, positive rate: {df[TARGET].mean()*100:.2f}%", flush=True)
 print(f"Features: {list(df.columns)}", flush=True)
 
@@ -38,6 +58,8 @@ _, df_holdout = train_test_split(df, test_size=HOLDOUT_N, random_state=42,
 X_ho = df_holdout.drop(columns=[TARGET]).values.astype(float)
 y_ho = df_holdout[TARGET].values
 df_pool = df.drop(df_holdout.index).reset_index(drop=True)
+pos_pool = df_pool[df_pool[TARGET] == 1]
+neg_pool = df_pool[df_pool[TARGET] == 0]
 
 # Resume if interrupted
 if os.path.exists(OUT_PATH):
@@ -56,8 +78,12 @@ for n_train in SMALL_NS:
             continue
 
         np.random.seed(seed)
-        df_tr = df_pool.sample(min(n_train, len(df_pool)),
-                               random_state=seed).reset_index(drop=True)
+        n_pos = max(1, int(round(n_train * len(pos_pool) / len(df_pool))))
+        n_neg = n_train - n_pos
+        df_tr = pd.concat([
+            pos_pool.sample(n_pos, random_state=seed),
+            neg_pool.sample(n_neg, random_state=seed)
+        ]).sample(frac=1, random_state=seed).reset_index(drop=True)
         X_tr = df_tr.drop(columns=[TARGET]).values.astype(float)
         y_tr = df_tr[TARGET].values
 
@@ -72,7 +98,7 @@ for n_train in SMALL_NS:
         # GReaT
         try:
             epochs = 100 if n_train <= 100 else 50
-            ckpt_dir = "/tmp/great_ckpt_hillstrom"
+            ckpt_dir = "/tmp/great_ckpt_telco"
             if os.path.exists(ckpt_dir):
                 shutil.rmtree(ckpt_dir)
             model = GReaT(llm="gpt2", batch_size=32, epochs=epochs, fp16=True,

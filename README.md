@@ -21,6 +21,7 @@ All key findings are backed by **5-seed cross-validation** (seeds 42, 123, 7, 20
 - `run_criteo.py` — Criteo Uplift Display Advertising (real ad data, 0.2% conversion)
 - `run_great_databricks.py` — GReaT (GPT-2) on German Credit, designed for Databricks GPU cluster
 - `run_great_hillstrom_databricks.py` — GReaT (GPT-2) on Hillstrom, designed for Databricks GPU cluster
+- `run_great_telco_databricks.py` — GReaT (GPT-2) on Telco Churn, isolates semantic-features effect from class-imbalance effect (semantic features + 26.6% positive rate); inline data prep handles the raw IBM CSV
 - `run_great_kaggle.py` — GReaT (GPT-2) on German Credit, alternative runner for Kaggle GPU notebooks
 - `run_great_colab.py` — GReaT (distilgpt2) experiment, original Colab attempt (sampling failure documented)
 

@@ -13,9 +13,10 @@ TARGET    = "target"
 SEEDS     = [42, 123, 7, 2024, 999]
 SMALL_NS  = [50, 100, 200, 500]
 HOLDOUT_N = 200
-DATA_PATH = "/Workspace/Users/adityapu@zillowgroup.com/Temp/credit_default.csv"
-OUT_PATH  = "/Workspace/Users/adityapu@zillowgroup.com/Temp/great_results.csv"
-WORK_DIR  = "/Workspace/Users/adityapu@zillowgroup.com/Temp"
+# Set LLMSYNTH_WORK_DIR env var (or replace the default below) before running.
+WORK_DIR  = os.environ.get("LLMSYNTH_WORK_DIR", "/Workspace/Users/<your-username>/Temp")
+DATA_PATH = f"{WORK_DIR}/credit_default.csv"
+OUT_PATH  = f"{WORK_DIR}/great_results.csv"
 
 def ci95(values):
     arr = np.array([v for v in values if not np.isnan(v)])

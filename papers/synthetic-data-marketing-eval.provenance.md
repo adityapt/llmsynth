@@ -129,7 +129,7 @@ All §6.6 (GReaT) and §6.8 (Hillstrom, Criteo) results report 5-seed cross-vali
 - **Exact paper titles for Shidani et al. 2025 and Chia Ramírez 2025** — titles inferred from arXiv abstract page display; should be confirmed against the official PDF title pages before formal citation.
 - **SMOTE near-duplicate / privacy risk** — attributed to Davila et al. 2025, Table 8 (DCR-based privacy scores); a specific membership-inference attack paper is not cited separately.
 - **KDD Cup 2009 Appetency** — script `experiments/run_kdd_appetency.py` exists in the repo but was not used in the paper; no `metrics_kdd_appetency.csv` or `ci_kdd_appetency.csv` outputs exist. Excluded from §6.
-- **Telco Churn × GReaT** — flagged as an open follow-up in §11 to cleanly separate the semantic-feature and class-imbalance effects observed in §6.6.
+- **Telco Churn × GReaT** — flagged as an open follow-up in §11 to cleanly separate the semantic-feature and class-imbalance effects observed in §6.6. Script committed at `experiments/run_great_telco_databricks.py` (mirrors the corrected Hillstrom recipe: stratified small-n sampling, 5-seed CI, n ∈ {50…2000}, `HOLDOUT_N=2000` due to Telco's 7,032-row total). Pending GPU run; no result CSV yet.
 
 ---
 
