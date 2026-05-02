@@ -221,6 +221,8 @@ We examine four canonical task types and map the evidence to practical recommend
 
 *Ratings are relative within class, based on aggregated benchmark evidence from Davila et al. (2025), Kotelnikov et al. (2023), and Won et al. (2026). SMOTE privacy ratings reflect near-duplicate risk from interpolation; they do not imply DP-grade guarantees for any method. "Utility (Imbalanced)" refers to performance on imbalanced classification benchmarks; "Utility (Augmentation)" refers to the mixed real+synthetic augmentation regime.*
 
+*Note: TabDDPM and TabSyn ratings are drawn from the cited external benchmarks; they were **not** evaluated in the original §6 experiments of this paper, which cover SMOTE, GaussianCopula, CTGAN, and GReaT. Practitioner recommendations involving TabDDPM (§7, §10) rest on the external evidence cited rather than on direct replication here.*
+
 **Figure 5** (see `fig5-privacy-utility.png`) plots the privacy–utility frontier across methods. Key observations: TabDDPM occupies the high-utility, moderate-privacy region; CTAB-GAN+ achieves better privacy at a utility cost; SMOTE sits at high utility but low privacy (Davila et al., 2025, Table 8); LLM-based methods score poorly on both dimensions due to memorization risk and computational overhead.
 
 For benchmarks that include differentially private synthesis specifically, Chen et al. (2025; arXiv:2504.14061) report that statistical methods (PrivBayes, PrivSyn) achieve higher synthesis utility but lower runtime efficiency compared to deep learning methods (PATE-GAN, DP-CTGAN), confirming a utility–efficiency tradeoff within the DP regime.
@@ -610,7 +612,7 @@ Based on the synthesized evidence:
 
 3. **Find and respect the optimal mixing ratio.** Run a mixing sweep before deploying augmentation at scale. The default 1:1 balance for oversampling is often suboptimal. Ratios of 6:1 to 3:1 (majority:minority) may perform better (Chia Ramírez, 2025).
 
-4. **Use TabDDPM when compute allows; CTGAN or hybrid SMOTE+GAN otherwise.** TabDDPM and TabSyn currently dominate tabular augmentation benchmarks (Davila et al., 2025; Kotelnikov et al., 2023). If compute or deployment complexity favors a lighter model, CTGAN is a reliable second choice. For imbalanced classification specifically, the hybrid SMOTE+GAN approach is competitive with diffusion models at substantially lower compute cost (Tanha et al., 2026).
+4. **Use TabDDPM when compute allows; CTGAN or hybrid SMOTE+GAN otherwise.** TabDDPM and TabSyn currently dominate tabular augmentation benchmarks (Davila et al., 2025; Kotelnikov et al., 2023); this recommendation rests on those external benchmarks rather than on §6 of this paper, which evaluated SMOTE, GaussianCopula, CTGAN, and GReaT but did not run TabDDPM or TabSyn directly. If compute or deployment complexity favors a lighter model, CTGAN is a reliable second choice — and is directly supported by the §6.8 marketing-data results (Hillstrom +6.98 SMOTE / Criteo +12.9 CTGAN AUC pts under extreme imbalance, 5-seed CI). For imbalanced classification specifically, the hybrid SMOTE+GAN approach is competitive with diffusion models at substantially lower compute cost (Tanha et al., 2026).
 
 5. **Apply caution to uplift and attribution problems.** Synthetic data from association-based generators corrupts causal structure. Restrict synthetic data use in uplift modeling to evaluation benchmarking with known ground-truth DGPs.
 

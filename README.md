@@ -7,14 +7,16 @@ All key findings are backed by **5-seed cross-validation** (seeds 42, 123, 7, 20
 ## What's Here
 
 **Paper:** `papers/synthetic-data-marketing-eval.md`
-*LLM-Enhanced Synthetic Data Generation for Marketing and Product Data Science: A Practical Evaluation Under Data Scarcity and Feature Sparsity*
+*Statistical and LLM-Based Synthetic Data Generation for Marketing and Product Data Science — A Controlled Empirical Evaluation Across Data Scarcity, Class Imbalance, and Feature Sparsity*
+
+**Provenance:** `papers/synthetic-data-marketing-eval.provenance.md` — source accounting, verification status, and method-coverage notes.
 
 **Experiments:** `experiments/`
 - `synthetic_data_eval.py` — main experiment runner (Telco Churn, Bank Marketing, German Credit, Online Retail CLV)
 - `run_remaining.py` — runs Credit Default + CLV datasets using cached results from first two
 - `run_nomao.py` — Nomao lead dataset (full, n=10K)
 - `run_nomao_sparse.py` — Nomao with 70% simulated missingness + small n=500
-- `run_kdd_appetency.py` — KDD Cup 2009 Appetency (natural CRM sparsity, 70% missing)
+- `run_kdd_appetency.py` — KDD Cup 2009 Appetency (natural CRM sparsity, 70% missing) *(script only; not used in the paper — no result files generated)*
 - `run_hillstrom.py` — Hillstrom Email Marketing (GaussianCopula/CTGAN/SMOTE, real campaign data, 0.9% conversion)
 - `run_criteo.py` — Criteo Uplift Display Advertising (real ad data, 0.2% conversion)
 - `run_great_databricks.py` — GReaT (GPT-2) on German Credit, designed for Databricks GPU cluster
@@ -39,8 +41,8 @@ All key findings are backed by **5-seed cross-validation** (seeds 42, 123, 7, 20
 | Bank Marketing | 15,000 | Classification | 11.7% | UCI / OpenML |
 | German Credit | 1,000 | Classification | 30.0% | OpenML id=31 |
 | Online Retail CLV | 4,000 | Regression | — | UCI (fallback) |
-| Nomao Lead | 10,000 | Classification | 28.3% | OpenML id=1486 |
-| KDD Appetency | 5,000 | Classification | 6.7% | OpenML id=1112 |
+| Nomao Lead (full) | 10,000 | Classification | 28.3% | OpenML id=1486 |
+| Nomao Lead (sparse, 70% missing) | 500 | Classification | 28.3% | OpenML id=1486 |
 | Hillstrom Email | 64,000 | Classification | 0.9% | MineThatData (2008) |
 | Criteo Uplift | 13.9M (cap 10K) | Classification | 0.2% | Criteo AI Lab (2018) |
 
