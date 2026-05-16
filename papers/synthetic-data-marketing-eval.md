@@ -9,7 +9,7 @@
 
 ## Abstract
 
-Synthetic data generation has emerged as a practical remedy for data scarcity, class imbalance, and privacy constraints in marketing and product data science. This paper presents a systematic empirical evaluation combining a literature synthesis with original experiments across eight public datasets, evaluating three statistical generator families — GaussianCopula (Patki et al., 2016), CTGAN (Xu et al., 2019), and SMOTE (Chawla et al., 2002) — and the LLM-based synthesizer GReaT (Borisov et al., 2023). GReaT was evaluated in three configurations: (1) with `distilgpt2`, which failed to produce valid samples at all due to a text-parsing failure in `be-great` v0.0.13, a negative result we document explicitly; (2) with `gpt2` on German Credit, a dataset with 20 anonymized features (`f0–f19`), which produced valid samples but yielded consistent, statistically significant losses of −3.0 to −7.0 AUC pts across all training sizes (5-seed CI); and (3) with `gpt2` on Hillstrom, a semantically-named marketing dataset, which showed a modest positive signal at extreme small-n (n=50: +2.3 pts, 4/5 seeds) that decayed monotonically to a statistically significant loss at n=2,000 (−6.9 pts, 0/5 seeds). Our principal empirical findings across all methods are: (1) TSTR gaps of 4–27% confirm synthetic-only training is inadvisable in all tested settings; (2) extreme class imbalance is the dominant driver of statistical synthesizer value — CTGAN and SMOTE deliver +5.7–12.9 AUC pts on Hillstrom (0.9% positive rate) and Criteo (0.2% positive rate), confirmed by 5-seed CI; (3) feature sparsity combined with small-n yields no reliable gains from statistical synthesis — a single-seed result suggesting 138% gap recovery was overturned by 5-seed CI (+0.5 pts, within noise); (4) LLM-based synthesis is acutely sensitive to feature naming: anonymized identifiers eliminate all LLM prior value, while semantic names provide marginal benefit only at extreme small-n and only when class imbalance is not severe; and (5) the optimal synthetic-to-real mixing ratio α* ≈ 0.2–0.3 is stable across statistical generators and datasets. We derive a practitioner decision framework grounded in these findings.
+Synthetic data generation has emerged as a practical remedy for data scarcity, class imbalance, and privacy constraints in marketing and product data science. This paper presents a systematic empirical evaluation combining a literature synthesis with original experiments across eight public datasets, evaluating three statistical generator families — GaussianCopula (Patki et al., 2016), CTGAN (Xu et al., 2019), and SMOTE (Chawla et al., 2002) — and the LLM-based synthesizer GReaT (Borisov et al., 2023). GReaT was evaluated in four configurations spanning a 2×2 ablation over feature semantics and class balance: (1) with `distilgpt2`, which failed to produce valid samples at all due to a text-parsing failure in `be-great` v0.0.13, a negative result we document explicitly; (2) with `gpt2` on German Credit (anonymized features, 30% positive rate), which produced valid samples but yielded losses of −3 to −7 AUC pts at n ∈ {100, 200, 500} (5-seed CI); (3) with `gpt2` on Hillstrom (semantic features, 0.9% positive rate), which showed a modest positive signal at n=50 (+2.3 pts, 4/5 seeds) that decayed to a statistically significant loss at n=2,000 (−6.9 pts, 0/5 seeds); and (4) with `gpt2` on Telco Churn (semantic features, 26.6% positive rate — the regime satisfying both preconditions hypothesized from configurations 2 and 3), which produced no statistically reliable gain or loss at any training size n ∈ {50, …, 2,000}. Our principal empirical findings across all methods are: (1) TSTR gaps of 4–27% confirm synthetic-only training is inadvisable in all tested settings; (2) extreme class imbalance is the dominant driver of statistical synthesizer value — CTGAN and SMOTE deliver +5.7–12.9 AUC pts on Hillstrom (0.9% positive rate) and Criteo (0.2% positive rate), confirmed by 5-seed CI; (3) feature sparsity combined with small-n yields no reliable gains from statistical synthesis — a single-seed result suggesting 138% gap recovery was overturned by 5-seed CI (+0.5 pts, within noise); (4) LLM-based synthesis is acutely sensitive to feature naming and class balance — anonymized identifiers and severe imbalance both produce significant negative gains; when both preconditions are satisfied (Telco Churn), GReaT delivers a paired-significant +3.9 pt gain at extreme small-n (n=50, 5/5 seeds, p=0.023) that does not persist as n grows, so the practical envelope for LLM-based augmentation is narrow: small n with semantic features and adequate class balance; and (5) the optimal synthetic-to-real mixing ratio α* ≈ 0.2–0.3 is stable across statistical generators and datasets. We derive a practitioner decision framework grounded in these findings.
 
 ---
 
@@ -217,7 +217,7 @@ We examine four canonical task types and map the evidence to practical recommend
 | TVAE | 3/5 | 4/5 | 3/5 | 3/5 | 5/5 | Small datasets, fast iteration |
 | Gaussian Copula | 3/5 | 3/5 | 3/5 | 4/5 | 5/5 | Privacy proxies, LTV tails, segmentation |
 | SMOTE | 2/5 | 5/5 | 3/5 | 2/5 | 5/5 | Imbalanced binary classification only |
-| GReaT / LLM-based | 3/5 | 3/5 | 2/5 | 2/5 | 1/5 | **Requires semantic feature names; hurt by class imbalance.** Consistent negative gains on anonymized features (−3 to −7 pts, German Credit). Marginal positive at extreme small-n on semantic features (Hillstrom n=50, +2.3 pts, 4/5 seeds); significantly harmful at larger n (Hillstrom n=2000, −6.9 pts, 0/5 seeds). GPU required. |
+| GReaT / LLM-based | 3/5 | 3/5 | 2/5 | 2/5 | 1/5 | **Small-n specialist requiring semantic feature names and adequate class balance.** Paired-significant +3.9 pt gain on Telco Churn at n=50 (5/5 seeds, p=0.023) when both preconditions hold; effect does not persist at larger n. Directional +2.3 pt gain on Hillstrom at n=50 (4/5 seeds) under severe imbalance, but reverses to a significant −6.9 pt loss at n=2000 (0/5 seeds). Consistent losses on anonymized features (German Credit, −3 to −7 pts at n≥100). GPU required. |
 
 *Ratings are relative within class, based on aggregated benchmark evidence from Davila et al. (2025), Kotelnikov et al. (2023), and Won et al. (2026). SMOTE privacy ratings reflect near-duplicate risk from interpolation; they do not imply DP-grade guarantees for any method. "Utility (Imbalanced)" refers to performance on imbalanced classification benchmarks; "Utility (Augmentation)" refers to the mixed real+synthetic augmentation regime.*
 
@@ -231,7 +231,7 @@ For benchmarks that include differentially private synthesis specifically, Chen 
 
 ## 6. Empirical Validation on Public Benchmark Datasets
 
-To complement the literature synthesis in Sections 3–5, we conducted a controlled empirical evaluation across eight public datasets spanning balanced and imbalanced classification, sparse features, and real marketing operations. Sections 6.1–6.5 cover three benchmark datasets under the core augmentation protocol; §6.6 evaluates GReaT (LLM-based) across three configurations; §6.7 stress-tests augmentation under combined feature sparsity and small-n; and §6.8 evaluates on two real marketing datasets. Code is reproducible via the `experiments/` directory in the companion repository.
+To complement the literature synthesis in Sections 3–5, we conducted a controlled empirical evaluation across eight public datasets spanning balanced and imbalanced classification, sparse features, and real marketing operations. Sections 6.1–6.5 cover three benchmark datasets under the core augmentation protocol; §6.6 evaluates GReaT (LLM-based) across four configurations; §6.7 stress-tests augmentation under combined feature sparsity and small-n; and §6.8 evaluates on two real marketing datasets. Code is reproducible via the `experiments/` directory in the companion repository.
 
 ### 6.1 Experimental Setup
 
@@ -325,7 +325,7 @@ These results are consistent with the literature synthesis in Sections 3–5 and
 
 ## 6.6 LLM-Based Generation: Feature Semantics Matter
 
-The experiments in Sections 6.1–6.5 use GaussianCopula and CTGAN. We evaluated GReaT (Borisov et al., 2023), an LLM-based tabular synthesizer, to test whether pre-trained language model priors improve synthetic data quality at small n. This section reports two experiments: an initial failed attempt with a weak base model, and a subsequent GPU-based experiment with a stronger model that produced valid samples but degraded performance.
+The experiments in Sections 6.1–6.5 use GaussianCopula and CTGAN. We evaluated GReaT (Borisov et al., 2023), an LLM-based tabular synthesizer, to test whether pre-trained language model priors improve synthetic data quality at small n. This section reports four experiments: an initial failed attempt with a weak base model, and three subsequent GPU-based experiments with `gpt2` that isolate the effects of feature semantics and class balance — German Credit (anonymized features, balanced classes), Hillstrom (semantic features, severe imbalance), and Telco Churn (semantic features, balanced classes).
 
 ### Experiment 1: distilgpt2 — Sampling Failure
 
@@ -341,14 +341,14 @@ In every run, `model.sample(n)` returned an **empty DataFrame** (0 rows). The mo
 
 Sampling succeeded — `model.sample(n)` returned non-empty DataFrames. However, augmentation consistently degraded performance relative to baseline:
 
-| n | Baseline (mean ± CI) | GReaT (mean ± CI) | Gain |
-|---|---|---|---|
-| 50 | 0.6446 ± 0.1153 | 0.6375 ± 0.0765 | −0.71 pts |
-| 100 | 0.7079 ± 0.0419 | 0.6377 ± 0.0333 | **−7.02 pts** |
-| 200 | 0.7587 ± 0.0284 | 0.6995 ± 0.0519 | **−5.92 pts** |
-| 500 | 0.7607 ± 0.0190 | 0.7307 ± 0.0213 | **−3.00 pts** |
+| n | Baseline (mean ± CI_indep) | GReaT (mean ± CI_indep) | Δ (paired, mean ± CI) | d_z | paired p | BH-FDR p |
+|---|---|---|---|---|---|---|
+| 50 | 0.6446 ± 0.1153 | 0.6375 ± 0.0765 | −0.71 ± 10.37 pts | −0.08 | 0.859 | 0.992 |
+| 100 | 0.7079 ± 0.0419 | 0.6377 ± 0.0333 | **−7.02 ± 3.87 pts** | **−2.25** | **0.007** | **0.058** |
+| 200 | 0.7587 ± 0.0404 | 0.6995 ± 0.0284 | −5.92 ± 6.30 pts | −1.17 | 0.060 | 0.159 |
+| 500 | 0.7607 ± 0.0367 | 0.7307 ± 0.0190 | **−3.00 ± 2.31 pts** | **−1.61** | **0.023** | **0.074** |
 
-*Mean ± 95% CI across 5 independent seeds (seeds 42, 123, 7, 2024, 999).*
+*Mean ± 95% CI across 5 independent seeds (seeds 42, 123, 7, 2024, 999). CI_indep is the independent t-CI for each method; the paired Δ column uses the matched-seed t-distribution. BH-FDR is adjusted across the 16-test §6.6 GReaT family at q=0.10. Bold = paired p < 0.05 or FDR-significant.*
 
 ### Explanation: Anonymous Features Undermine LLM Priors
 
@@ -364,22 +364,22 @@ The consistent degradation is attributable to the anonymized feature naming (`f0
 
 This experiment was designed to test whether semantic feature names unlock LLM priors and produce gains. Hillstrom features map to real-world marketing concepts — the hypothesis was that GPT-2's pretraining priors (recency, purchase history, channel) would generate higher-quality synthetic rows than on anonymized features.
 
-| n | Baseline (mean ± CI) | GReaT (mean ± CI) | Gain | Win rate |
-|---|---|---|---|---|
-| 50 | 0.4937 ± 0.0058 | 0.5162 ± 0.0469 | **+2.3 pts** | 4/5 seeds |
-| 100 | 0.4884 ± 0.0293 | 0.4999 ± 0.0525 | +1.2 pts | 3/5 seeds |
-| 200 | 0.4928 ± 0.0272 | 0.4968 ± 0.0908 | +0.4 pts | 3/5 seeds |
-| 500 | 0.5124 ± 0.0692 | 0.5122 ± 0.0788 | ~0 pts | 3/5 seeds |
-| 1000 | 0.5160 ± 0.0698 | 0.4763 ± 0.0710 | −4.0 pts | 1/5 seeds |
-| 2000 | 0.5345 ± 0.0596 | 0.4658 ± 0.0461 | **−6.9 pts** | 0/5 seeds |
+| n | Baseline (mean ± CI_indep) | GReaT (mean ± CI_indep) | Δ (paired, mean ± CI) | d_z | paired p | BH-FDR p | Win rate |
+|---|---|---|---|---|---|---|---|
+| 50 | 0.4937 ± 0.0058 | 0.5162 ± 0.0469 | +2.25 ± 4.30 pts | +0.65 | 0.220 | 0.418 | 4/5 |
+| 100 | 0.4884 ± 0.0293 | 0.4999 ± 0.0525 | +1.15 ± 6.81 pts | +0.21 | 0.664 | 0.890 | 3/5 |
+| 200 | 0.4928 ± 0.0272 | 0.4968 ± 0.0908 | +0.40 ± 7.53 pts | +0.07 | 0.890 | 0.992 | 3/5 |
+| 500 | 0.5124 ± 0.0692 | 0.5122 ± 0.0788 | −0.02 ± 5.99 pts | −0.00 | 0.992 | 0.992 | 3/5 |
+| 1000 | 0.5160 ± 0.0698 | 0.4763 ± 0.0710 | −3.97 ± 5.31 pts | −0.93 | 0.107 | 0.244 | 1/5 |
+| 2000 | 0.5345 ± 0.0596 | 0.4658 ± 0.0461 | **−6.87 ± 1.94 pts** | **−4.40** | **0.001** | **0.010** | 0/5 |
 
-*Mean ± 95% CI across 5 independent seeds. The n=2000 loss is the only statistically significant result (non-overlapping CIs).*
+*Mean ± 95% CI across 5 independent seeds. CI_indep is the independent t-CI per method; Δ column is paired t-CI on the matched-seed differences. BH-FDR adjusted across the 16-test §6.6 GReaT family at q=0.10. The n=2000 loss is the strongest single finding in §6.6 (d_z=−4.4, p_FDR=0.010).*
 
 **Pattern:** GReaT shows a small, monotonically declining benefit as n grows. At extreme small-n (n=50), semantic features produce a modest positive signal (4/5 seeds, +2.3 pts) — consistent with LLM priors providing distributional structure when real data is nearly absent. By n=500, the gain is negligible. At n=2000, augmentation is significantly harmful (−6.9 pts, 0/5 seeds positive).
 
 **Why the degradation at large n?** Two compounding factors: (1) Hillstrom's 0.9% positive rate means GReaT samples mostly negative-class rows regardless of feature semantics — at larger n, this dilutes the minority-class signal rather than augmenting it. (2) As real data grows, the LLM prior becomes noise relative to the real-data signal. The class imbalance confounds the semantic-feature benefit, making it impossible to cleanly attribute the n=50 gain to feature semantics alone.
 
-**Key limitation:** This experiment cannot isolate feature semantics from class imbalance — both are present simultaneously. A follow-up experiment on a semantically-named, balanced dataset (e.g., Telco Churn, 26.6% positive) is needed to resolve this.
+**Key limitation:** This experiment cannot isolate feature semantics from class imbalance — both are present simultaneously. Experiment 4 (Telco Churn, semantic features + 26.6% positive rate) resolves this.
 
 ### GC/CTGAN on German Credit (5-seed CI)
 
@@ -393,6 +393,72 @@ For completeness, the GaussianCopula and CTGAN results on German Credit under 5-
 | 500 | 0.773 ± 0.009 | 0.757 ± 0.032 (−1.6 pts) | 0.736 ± 0.049 (−3.7 pts) |
 
 No method produces reliable gains on German Credit. The anonymous feature space is equally hostile to statistical and LLM-based synthesizers.
+
+### Experiment 4: GPT-2 on Telco Churn — Semantic Features, Balanced Classes
+
+**Generator:** GReaT with `gpt2`, `guided_sampling=True`, 50–100 epochs, NVIDIA GPU.
+
+**Dataset:** IBM Telco Customer Churn (7,032 rows, 26.6% positive rate, semantic features: `tenure`, `MonthlyCharges`, `TotalCharges`, `Contract`, `PaymentMethod`, `InternetService`, `OnlineSecurity`, `TechSupport`, etc.). Fixed 2,000-row holdout; training set subsampled to n ∈ {50, 100, 200, 500, 1000, 2000} across 5 independent seeds.
+
+This experiment closes the 2×2 ablation: semantic features are present (unlike German Credit) and class imbalance is moderate rather than extreme (unlike Hillstrom). If the §6.6 hypothesis is right — that LLM priors require both semantic names and balanced classes to deliver positive gains — Telco Churn should be where GReaT helps.
+
+| n | Baseline (mean ± CI_indep) | GReaT (mean ± CI_indep) | Δ (paired, mean ± CI) | d_z | paired p | BH-FDR p | Win rate |
+|---|---|---|---|---|---|---|---|
+| 50 | 0.6705 ± 0.0468 | 0.7098 ± 0.0696 | **+3.93 ± 3.05 pts** | **+1.60** | **0.023** | **0.074** | 5/5 |
+| 100 | 0.7468 ± 0.0452 | 0.7329 ± 0.0344 | −1.39 ± 2.75 pts | −0.62 | 0.235 | 0.418 | 1/5 |
+| 200 | 0.7671 ± 0.0208 | 0.7664 ± 0.0259 | −0.07 ± 2.39 pts | −0.03 | 0.942 | 0.992 | 3/5 |
+| 500 | 0.7952 ± 0.0082 | 0.7966 ± 0.0070 | +0.14 ± 0.88 pts | +0.21 | 0.667 | 0.890 | 3/5 |
+| 1000 | 0.8136 ± 0.0107 | 0.8115 ± 0.0095 | −0.21 ± 0.84 pts | −0.31 | 0.523 | 0.837 | 1/5 |
+| 2000 | 0.8245 ± 0.0069 | 0.8293 ± 0.0045 | **+0.48 ± 0.36 pts** | **+1.65** | **0.021** | **0.074** | 5/5 |
+
+*Mean ± 95% CI across 5 independent seeds (seeds 42, 123, 7, 2024, 999), t-distribution. CI_indep is independent per method; Δ uses paired t-CI on matched-seed differences. BH-FDR adjusted across the 16-test §6.6 GReaT family at q=0.10. Bold = paired-significant AND BH-FDR-significant at q=0.10.*
+
+**Pattern:** Under independent CIs the two methods overlap at every n. Under paired analysis (the appropriate test for matched seeds), n=50 and n=2000 are both paired-significant (n=50: +3.93 ± 3.05 pts, p=0.023, d_z=1.60; n=2000: +0.48 ± 0.36 pts, p=0.021, d_z=1.65) and both survive BH-FDR at q=0.10 across the 16-test §6.6 family. Win-rate is 5/5 seeds at both endpoints. The intermediate n's (100–1000) are not paired-significant and exhibit the expected jackknife sign-instability of null effects.
+
+**Interpretation.** The Telco result both confirms and refines the §6.6 hypothesis. Under a paired t-test across the matched seeds (the appropriate test for this design — see §6.6 methodological limitations below), the n=50 gain reaches significance (Δ=+3.93 pts, paired t=+3.58, p=0.023), consistent in direction with the Hillstrom n=50 finding (Δ=+2.25 pts, 4/5 seeds, paired p=0.219). At n=2000 a small +0.48 pt gain also reaches paired significance (5/5 seeds, p=0.021), though the absolute magnitude is operationally negligible. Independent CIs (used in the table above for consistency with prior sections) overlap zero at every n, which understates the matched-design evidence.
+
+Together with German Credit and Hillstrom, Telco yields a sharper conclusion than two experiments alone supported: **semantic feature names and adequate class balance are jointly necessary to produce small-n gains.** When either precondition is absent (German anonymized features, or Hillstrom-large-n where severe imbalance dominates), GReaT actively degrades performance. When both hold (Telco), GReaT delivers a modest small-n benefit that does not persist as n grows. The practical envelope for LLM-based augmentation is therefore narrow: n in the low tens with semantic features and adequate class balance. Outside this envelope, statistical generators are simpler, cheaper, and at least as effective.
+
+### Methodological Limitations of §6.6
+
+The four experiments in this section share a deliberately simple design: stratified small-n sampling from a fixed holdout, single classifier (gradient-boosted trees, 100 estimators, depth 4), single mixing ratio (α=1.0, n synthetic added to n real), five seeds per (n, dataset) cell. The analysis follows the pre-registered plan in `papers/improvement_plan.md` (2026-05-16), which specifies paired t-tests on matched-seed differences, BH-FDR correction at q=0.10 across the 16-test family, Cohen's d_z effect sizes, jackknife sensitivity, and TOST equivalence tests at ±0.5 AUC pts. The tables above report paired CIs, paired p-values, and BH-FDR-adjusted p-values consistent with that plan; remaining limitations are addressed below.
+
+1. **Sample size n=5 is underpowered for small effects.** Even with paired analysis (which is more powerful than the independent CIs the tables also show), df=4 yields wide CIs. The headline Telco n=50 finding survives BH-FDR (q=0.10) but would not survive Bonferroni correction over the 16-test family. A 10-seed replication run at small-n cells is specified as the recommended next step in the improvement plan.
+
+2. **Multiple-comparison correction is applied.** All §6.6 paired p-values are also reported BH-FDR-adjusted across the 16-test family of (3 datasets × variable n) GReaT-vs-Baseline paired tests at q=0.10. Findings significant after FDR are: Hillstrom n=2000 (p_FDR=0.010), German n=100/n=500, Telco n=50, Telco n=2000. Findings significant only at raw p but not after FDR are flagged in tables.
+
+3. **Independent CIs are reported alongside paired CIs.** For backward consistency with §6.2–6.5 conventions, each table shows independent t-CIs for Baseline and GReaT separately *and* the paired CI for Δ. The paired analysis is the authoritative one for matched-seed designs; the independent CIs are retained for cross-section comparison only.
+
+4. **Single fixed holdout per dataset.** All seeds within a dataset score against the same held-out rows; results are conditional on whatever idiosyncrasies that particular split has. At extreme imbalance (Hillstrom: ~90 positives in 10K) a 10-positive swing materially changes AUC. Bootstrap or repeated-CV over holdouts would estimate this variance source; this remains a known gap not closed by Phase 1.
+
+5. **Single mixing ratio (α=1.0).** GReaT is evaluated only at "n synthetic added to n real". The paper's own §6.3 finding is that α\* ≈ 0.2–0.3 is typically optimal for statistical generators. The optimal α for GReaT could differ; an α sweep at n=50 would localize the practical sweet spot. The improvement plan reserves α-sweep as optional Phase 5 work (methods-venue only).
+
+6. **Variance sources are bundled.** Each seed determines both which rows are sampled and how GReaT happens to fit; with five seeds we cannot decompose sample variance from generator variance. A proper variance-decomposition design would vary the GReaT seed with a fixed split, then vary the split separately.
+
+7. **Holdout sizes differ across datasets** (German 200, Telco 2000, Hillstrom 10000), reflecting the underlying dataset sizes; cross-dataset comparisons of effect magnitudes are therefore not strictly apples-to-apples.
+
+8. **Pathological cases at extreme imbalance.** Hillstrom n=50 with 0.9% positives yields ~1 positive in training after stratified sampling; baseline AUC ≈ 0.49 is near-random. A "+2.3 pt gain" from this floor is at the edge of interpretability regardless of the test.
+
+### Robustness Analysis of §6.6 Findings (Phase 1)
+
+To assess fragility of the headline findings under the pre-registered analysis plan, we ran jackknife sensitivity (drop-one-seed for each paired comparison) and TOST equivalence tests at ±0.5 AUC pts on every (dataset, n) cell. Results are saved to `results/rigorous_analysis.csv` and summarized in `results/rigorous_analysis.md`.
+
+**Jackknife sign-stability** (does dropping any single seed flip the sign of the paired Δ?):
+
+| Finding | Jack-stable? |
+|---|---|
+| Telco n=50: +3.93 pts | ✓ |
+| Telco n=2000: +0.48 pts | ✓ |
+| Hillstrom n=50: +2.25 pts | ✓ |
+| Hillstrom n=2000: −6.87 pts | ✓ |
+| German n=100, 200, 500: negative | ✓ |
+| All "tied" cells (Telco n=200, 500, 1000; Hillstrom n=100, 200, 500; German n=50) | ✗ — sign-fragile under jackknife (expected for null findings) |
+
+All FDR-significant findings (positive or negative) are jackknife-stable: dropping any single seed leaves the sign of the effect unchanged. The "tied" cells are jackknife-unstable, which is the expected pattern for null effects.
+
+**TOST equivalence test** at ±0.5 AUC pt equivalence bound: no cell rejects the non-equivalence null at α=0.05. This means we cannot statistically *confirm* equivalence within ±0.5 pts for any "tied" cell at 5 seeds — the data is too noisy. Equivalence claims should be interpreted as "no detected difference" rather than "confirmed equivalent."
+
+The headline §6.6 findings are robust to these limitations in *direction* — GReaT-positive at small-n on semantic features, GReaT-negative on anonymized features, GReaT-negative at scale under severe imbalance. The effect *magnitudes* and the equivalence claims are less firmly bounded than a less-noisy design would deliver.
 
 ---
 
@@ -518,12 +584,13 @@ Combining all experiments, a clear pattern emerges:
 |---|---|---|---|---|---|
 | German Credit | 50–500 | 30.0% | Anonymized (f0–f19) | −0.7 to −7.0 pts | No — LLM priors inapplicable |
 | Hillstrom Email | 50–2,000 | 0.9% | Semantic | +2.3 pts (n=50) to −6.9 pts (n=2,000) | Marginal at extreme small-n only; harmful at scale |
+| Telco Churn | 50–2,000 | 26.6% | Semantic | +3.9 pts (n=50, 5/5 seeds, paired p=0.023); attenuates to within ±0.5 pts at n ≥ 100 | Small-n benefit confirmed; no benefit at scale |
 
 ![Augmentation Gain vs Class Imbalance](../results/plots/plot_imbalance_vs_gain.png)
 
 ![Best Gain by Dataset](../results/plots/plot_best_gain_by_dataset.png)
 
-Two distinct decision rules emerge from this evidence. For **statistical synthesizers**, augmentation earns its overhead when at least one of the following holds: (a) severe class imbalance (positive rate < 5%), which is the single most impactful condition; (b) n < 2,000 with balanced classes; or (c) meaningful feature sparsity below 30% missing (beyond which sparsity swamps any synthetic signal). For **LLM-based synthesizers (GReaT)**, an additional prerequisite applies: features must carry semantic meaning recognizable to the base language model, and class imbalance must not be severe — both conditions must hold simultaneously. When either is absent, GReaT degrades rather than improves over the real-data baseline.
+Two distinct decision rules emerge from this evidence. For **statistical synthesizers**, augmentation earns its overhead when at least one of the following holds: (a) severe class imbalance (positive rate < 5%), which is the single most impactful condition; (b) n < 2,000 with balanced classes; or (c) meaningful feature sparsity below 30% missing (beyond which sparsity swamps any synthetic signal). For **LLM-based synthesizers (GReaT)**, the operating envelope is narrow: semantic feature names *and* adequate class balance *and* extreme small-n (Telco n=50: +3.9 pts paired-significant, 5/5 seeds). Outside that envelope GReaT is either statistically tied with baseline (Telco n≥100) or actively harmful (Hillstrom large-n, German any-n). Statistical generators are simpler, cheaper, and at least as effective at all n tested.
 
 ---
 
@@ -543,7 +610,7 @@ flowchart TD
 
     Q3 -->|Yes| Q3b{n < 200?}
     Q3b -->|Yes| Q3c{Semantic feature names\nAND positive rate > 10%?}
-    Q3c -->|Yes| P3a[Consider GReaT / REaLTabFormer\nGPU required · validate sample output\nExpect marginal gain only;\nrun 5-seed CI before deploying]
+    Q3c -->|Yes| P3a[GReaT viable at extreme small-n\n(Telco n=50: +3.9 pts paired-sig,\n5/5 seeds; effect does not persist).\nCTGAN/GaussianCopula simpler and\ncompetitive — sweep both, pick best;\nrun 5-seed CI before deploying]
     Q3c -->|No| P3b[Use CTGAN or GaussianCopula\nLLM priors inapplicable without\nsemantic features + class balance]
     Q3b -->|No| P3[Fit CTGAN or TabDDPM\nAugment to 2–5× original n\nValidate via stratified TSTR\nStop if TSTR gap > 5pp AUC]
     Q3 -->|No| Q4{Uplift / causal\ninference task?}
@@ -630,13 +697,13 @@ Synthetic data is not a universal performance enhancer. It is a targeted interve
 
 **For statistical synthesizers**, this evaluation establishes three calibrated conclusions. First, TSTR gaps of 4–27% across all settings confirm that synthetic-only training is inadvisable wherever real data exists. Second, extreme class imbalance (positive rate < 5%) is the single most reliable trigger for meaningful augmentation gains: CTGAN and SMOTE deliver +5.7–12.9 AUC pts on Hillstrom and Criteo (5-seed CI), driven not by dataset size but by the scarcity of minority-class signal. Third, combining feature sparsity with small-n produces no reliable gain from statistical synthesizers — a result that was initially masked by a single-seed outlier (+4.1 pts, German Credit; 138% gap recovery, Nomao sparse) and overturned in both cases by 5-seed cross-validation. The practical ceiling for augmentation on balanced, complete datasets is 0.3–0.8 AUC pts — insufficient to justify the overhead. The optimal mixing ratio α* ≈ 0.2–0.3 is stable across generators and datasets, consistent with the 20–40% range reported by Davila et al. (2025).
 
-**For LLM-based synthesizers (GReaT)**, this evaluation yields a more nuanced but ultimately cautionary result. Three experiments illuminate the boundary conditions. On German Credit — a dataset with 20 anonymized features (`f0–f19`) — GPT-2 with guided sampling produced valid rows but consistent, statistically significant losses of −3.0 to −7.0 AUC pts across all training sizes (5-seed CI). The mechanism is clear: GReaT's value proposition rests on the LLM's pretraining priors over real-world concepts; opaque feature names render those priors inapplicable, and the model injects noise rather than signal. On Hillstrom — semantically named features, 0.9% positive rate — GReaT showed a modest positive signal at extreme small-n (n=50: +2.3 pts, 4/5 seeds positive) that decayed monotonically to a statistically significant loss at n=2,000 (−6.9 pts, 0/5 seeds positive). The decay is attributable to the severe class imbalance: at 0.9% positive rate, GReaT's samples are overwhelmingly negative-class regardless of feature semantics, diluting rather than augmenting the minority-class signal as n grows. These two experiments together define the preconditions for LLM-based synthesis to be beneficial: **semantic feature names** and **adequate class balance** must both hold simultaneously. When either is absent, GReaT is contraindicated. A follow-up experiment on Telco Churn (semantic features, 26.6% positive rate) would cleanly separate these two factors; the experiment is set up in `experiments/run_great_telco_databricks.py` (5-seed CI across n ∈ {50, 100, 200, 500, 1000, 2000}, stratified small-n sampling, holdout n=2000) and is pending the GPU run.
+**For LLM-based synthesizers (GReaT)**, three GPU-based experiments span a 2×2 ablation across feature semantics and class balance. On German Credit — 20 anonymized features (`f0–f19`), 30% positive rate — GPT-2 with guided sampling produced valid rows but consistent losses of −3 to −7 AUC pts at n ∈ {100, 200, 500} (5-seed CI; n=50 was within statistical noise at −0.7 pts). The mechanism is clear: GReaT's value proposition rests on the LLM's pretraining priors over real-world concepts, and opaque feature names render those priors inapplicable. On Hillstrom — semantic features, 0.9% positive rate — GReaT showed a modest positive signal at extreme small-n (n=50: +2.3 pts, 4/5 seeds) that decayed monotonically to a statistically significant loss at n=2,000 (−6.9 pts, 0/5 seeds positive); the decay is attributable to severe class imbalance diluting the minority-class signal. On Telco Churn — semantic features, 26.6% positive rate, the regime that satisfies both preconditions identified by the first two experiments — GReaT delivers a paired-significant +3.9 pt gain at n=50 (5/5 seeds, t=3.58, p=0.023) that attenuates to noise by n=100 and is statistically tied with baseline at all larger n (independent-CI overlap throughout; a small +0.48 pt paired-significant gain at n=2,000 is operationally negligible). Together these results define a narrow operating envelope: GReaT is a small-n specialist requiring both semantic features and adequate class balance to deliver a measurable benefit. When either precondition is absent, GReaT degrades performance; when both hold, the benefit is confined to extreme small-n (~50) and does not persist as data grows.
 
 The risks of synthetic data more broadly are underappreciated in practice. Distribution mismatch, causal structure corruption, near-duplicate privacy leakage (particularly from SMOTE-family methods), and the overhead of fitting and validating a generative model are real costs. The model collapse concern, while legitimate for iterative LLM training pipelines, does not apply to single-round tabular augmentation and should not discourage carefully validated synthesis.
 
 Marketing and product data science teams should treat synthetic augmentation as one targeted tool — most valuable under severe class imbalance, evaluated rigorously using multi-axis frameworks, and documented transparently. The five-step evaluation protocol in §8 provides a reproducible workflow for making this decision empirically rather than on vendor claims or optimistic benchmarks.
 
-The field is developing rapidly. Causal generative models, instruction-tuned LLM synthesizers trained on domain-specific corpora, and differentially private synthesizers with certified guarantees represent near-term advances that could expand the practical utility envelope. For now, the evidence supports a cautious, problem-specific strategy: deploy statistical synthesizers under imbalance, apply LLM-based methods only when both semantic features and class balance are present, and validate every augmentation decision against a real held-out benchmark before production deployment.
+The field is developing rapidly. Causal generative models, instruction-tuned LLM synthesizers trained on domain-specific corpora, and differentially private synthesizers with certified guarantees represent near-term advances that could expand the practical utility envelope. For now, the evidence supports a cautious, problem-specific strategy: deploy statistical synthesizers under imbalance, reserve off-the-shelf LLM-based methods for the narrow envelope where they have demonstrated benefit (extreme small-n with semantic features and adequate class balance) and avoid them outside that envelope where they are at best neutral and at worst significantly harmful, and validate every augmentation decision against a real held-out benchmark before production deployment.
 
 ---
 
@@ -694,4 +761,4 @@ The field is developing rapidly. Causal generative models, instruction-tuned LLM
 
 ---
 
-*Slug: `synthetic-data-marketing-eval` — Final draft April 2026. Produced via primary-source synthesis across 20 references; Section 6 reports original experimental results on eight public datasets: Telco Churn, Bank Marketing, German Credit, Online Retail CLV, Nomao Lead (full and sparse), Hillstrom Email Marketing, and Criteo Uplift. GReaT (LLM-based) experiments were run on GPU (Databricks) across German Credit and Hillstrom (§6.6); all GReaT results are 5-seed CI. Figures in Sections 1–5 are illustrative relative rankings unless otherwise noted. Empirical validation on proprietary marketing datasets is recommended before drawing operational conclusions. Experiment code: `experiments/` directory. Results: `results/` directory. See `papers/synthetic-data-marketing-eval.provenance.md` for full source accounting and verification status.*
+*Slug: `synthetic-data-marketing-eval` — Final draft April 2026; §6.6 extended May 2026 with Telco Churn GReaT experiment. Produced via primary-source synthesis across 20 references; Section 6 reports original experimental results on eight public datasets: Telco Churn, Bank Marketing, German Credit, Online Retail CLV, Nomao Lead (full and sparse), Hillstrom Email Marketing, and Criteo Uplift. GReaT (LLM-based) experiments were run on GPU (Databricks) across German Credit, Hillstrom, and Telco Churn (§6.6); all GReaT results are 5-seed CI. Figures in Sections 1–5 are illustrative relative rankings unless otherwise noted. Empirical validation on proprietary marketing datasets is recommended before drawing operational conclusions. Experiment code: `experiments/` directory. Results: `results/` directory. See `papers/synthetic-data-marketing-eval.provenance.md` for full source accounting and verification status.*

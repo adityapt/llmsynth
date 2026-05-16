@@ -1,4 +1,8 @@
-"""Run only Credit Default and Online Retail CLV, then merge with cached results."""
+"""Run only German Credit and Online Retail CLV, then merge with cached results.
+
+Note: the loader is `load_credit_default()` for historical reasons but actually loads
+Statlog German Credit (OpenML id=31). The output dataset label is "German Credit".
+"""
 import sys
 sys.path.insert(0, '.')
 from experiments.synthetic_data_eval import (

@@ -4,15 +4,20 @@ Confidence interval experiment — multi-seed re-runs of key headline results.
 Runs 5 independent seeds for:
   1. Hillstrom Email      (headline: CTGAN +8.3 AUC at α=0.3)
   2. Criteo Display Ads   (headline: CTGAN +19.6 AUC at α=0.5)
-  3. German Credit        (GReaT vs CTGAN vs GC at n ∈ {50, 100, 200})
+  3. German Credit        (CTGAN vs GaussianCopula at n ∈ {50, 100, 200, 500, 700})
 
 Each seed produces a different train/test split AND different generator samples,
 giving variance across both the evaluation partition and the synthesis process.
 
+Note: the GReaT branch was previously here but produced identical AUCs to
+Baseline (silent sampling failure with distilgpt2 on opaque feature names).
+GReaT German results now come from `run_great_databricks.py` (GPU); see
+`results/great_german_results.csv`.
+
 Output:
   results/ci_hillstrom.csv        — per-seed rows
   results/ci_criteo.csv
-  results/ci_great_german.csv
+  results/ci_great_german.csv     — Baseline / GC / CTGAN only (no GReaT)
   results/ci_summary.csv          — mean ± 95% CI across seeds (paper-ready)
 """
 import sys, warnings
@@ -246,17 +251,17 @@ print(ci_crit[ci_crit["alpha"].isin([0, 0.5])][
 # 3. GReaT vs GC vs CTGAN on German Credit at small-n
 # ─────────────────────────────────────────────────────────────────────────────
 print("\n" + "="*60)
-print("EXPERIMENT 3: GReaT vs CTGAN vs GC (German Credit, small-n)")
+print("EXPERIMENT 3: CTGAN vs GC (German Credit, small-n)")
 print("="*60)
 
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.metrics import roc_auc_score
 try:
-    from llmsynth import GReaT
+    from llmsynth import GReaT  # noqa: F401  (kept for future re-enable; GReaT branch is disabled below)
     great_available = True
 except ImportError:
     try:
-        from be_great import GReaT
+        from be_great import GReaT  # noqa: F401
         great_available = True
     except ImportError:
         great_available = False
@@ -326,37 +331,29 @@ for n_train in small_ns:
         except Exception as e:
             print(f"  CTGAN failed: {e}", end="")
 
-        # GReaT augmentation at α=1.0
-        if great_available:
-            try:
-                model = GReaT(llm="distilgpt2", batch_size=32, epochs=50)
-                model.fit(df_tr)
-                df_syn = model.sample(n_train)
-                df_syn.columns = df_tr.columns
-                df_syn[credit_target] = df_syn[credit_target].astype(int)
-                X_aug  = np.vstack([X_tr, df_syn.drop(columns=[credit_target]).values.astype(float)])
-                y_aug  = np.concatenate([y_tr, df_syn[credit_target].values])
-                clf3 = GradientBoostingClassifier(n_estimators=100, max_depth=4, random_state=seed)
-                clf3.fit(X_aug, y_aug)
-                gr_auc = roc_auc_score(y_ho, clf3.predict_proba(X_ho)[:, 1])
-                great_rows.append({"n": n_train, "seed": seed, "method": "GReaT", "auc": gr_auc})
-                print(f"  GReaT={gr_auc:.4f}")
-            except Exception as e:
-                print(f"  GReaT failed: {e}")
-        else:
-            print()
+        # GReaT branch disabled — distilgpt2 with opaque feature names produced
+        # samples scored identically to Baseline (silent fallback). GReaT German
+        # results now come from `run_great_databricks.py` (GPU); see
+        # `results/great_german_results.csv`.
+        print()
 
 df_great_ci = pd.DataFrame(great_rows)
-df_great_ci.to_csv(RESULTS_DIR / "ci_great_german.csv", index=False)
+out_path = RESULTS_DIR / "ci_great_german.csv"
+if out_path.exists():
+    # File on disk is a merged artifact (n=50…700, accumulated across commits).
+    # This script only covers n ∈ {50,100,200}, so writing would shrink it.
+    out_path = RESULTS_DIR / "ci_great_german_smalln.csv"
+df_great_ci.to_csv(out_path, index=False)
+print(f"Wrote: {out_path}")
 
-# Summarise GReaT CI
-print("\nGReaT CI Summary (AUC mean ± 95% CI across 5 seeds):")
+# Summarise German Credit small-n CI (Baseline / GC / CTGAN)
+print("\nGerman Credit CI Summary (AUC mean ± 95% CI across 5 seeds):")
 print(f"{'n':>6}  {'Method':<16}  {'Mean AUC':>10}  {'± 95% CI':>10}  {'vs Baseline':>12}")
 print("-" * 60)
 for n in small_ns:
     sub = df_great_ci[df_great_ci["n"] == n]
     base_mean, _ = ci95(sub[sub["method"] == "Baseline"]["auc"].values)
-    for meth in ["Baseline", "GaussianCopula", "CTGAN", "GReaT"]:
+    for meth in ["Baseline", "GaussianCopula", "CTGAN"]:
         vals = sub[sub["method"] == meth]["auc"].values
         if len(vals) == 0:
             continue

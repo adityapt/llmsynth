@@ -273,7 +273,7 @@ if ci_great_path.exists():
 
     ax.set_xlabel("Training set size n", fontsize=12)
     ax.set_ylabel("AUC-ROC", fontsize=12)
-    ax.set_title("LLM vs Statistical Generators at Extreme Small-n\n"
+    ax.set_title("Statistical Generators at Extreme Small-n\n"
                  "(German Credit, fixed 300-row holdout, 5 seeds, shaded = 95% CI)",
                  fontsize=12, fontweight="bold")
     ax.legend(fontsize=10)
@@ -311,6 +311,61 @@ elif great_path.exists():
         plt.savefig(PLOTS / "plot_great_smalln.png", dpi=160, bbox_inches="tight")
         plt.close()
         print("Saved: plot_great_smalln.png")
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 4b. GReaT GPU runs — Baseline vs GReaT on German / Telco / Hillstrom
+# ─────────────────────────────────────────────────────────────────────────────
+
+from scipy import stats as sc
+
+GREAT_GPU_RUNS = [
+    ("great_german_results.csv", "German Credit", "holdout=200"),
+    ("great_telco_results.csv",  "Telco Churn",   "holdout=2000"),
+    ("ci_great_hillstrom.csv",   "Hillstrom",     "holdout=10000"),
+]
+
+for fname, label, holdout in GREAT_GPU_RUNS:
+    path = RESULTS / fname
+    if not path.exists():
+        continue
+    df_g = pd.read_csv(path)
+    ns = sorted(df_g["n"].unique())
+
+    fig, ax = plt.subplots(figsize=(8, 5.5))
+    for gen in ["Baseline", "GReaT"]:
+        sub = df_g[df_g["method"] == gen]
+        if sub.empty:
+            continue
+        means, lows, highs, ns_plot = [], [], [], []
+        for n in ns:
+            vals = sub[sub["n"] == n]["auc"].values
+            if len(vals) == 0:
+                continue
+            m = np.mean(vals)
+            h = sc.sem(vals) * sc.t.ppf(0.975, df=len(vals)-1) if len(vals) > 1 else 0
+            means.append(m); lows.append(m-h); highs.append(m+h); ns_plot.append(n)
+        ls = "--" if gen == "Baseline" else "-"
+        marker = None if gen == "Baseline" else "o"
+        ax.plot(ns_plot, means, linestyle=ls, marker=marker,
+                label=gen, color=COLORS.get(gen, "#888"), **STYLE)
+        if gen == "GReaT":
+            ax.fill_between(ns_plot, lows, highs,
+                            color=COLORS.get(gen, "#888"), alpha=0.12)
+
+    ax.set_xlabel("Training set size n", fontsize=12)
+    ax.set_ylabel("AUC-ROC", fontsize=12)
+    ax.set_title(f"GReaT vs Baseline — {label}\n"
+                 f"(5 seeds, shaded = 95% CI, {holdout})",
+                 fontsize=12, fontweight="bold")
+    ax.legend(fontsize=10)
+    ax.grid(alpha=0.3)
+    ax.set_xticks(ns)
+    plt.tight_layout()
+    out_name = f"plot_great_gpu_{label.lower().replace(' ', '_')}.png"
+    plt.savefig(PLOTS / out_name, dpi=160, bbox_inches="tight")
+    plt.close()
+    print(f"Saved: {out_name}")
 
 
 # ─────────────────────────────────────────────────────────────────────────────

@@ -72,9 +72,9 @@ for n_train in SMALL_NS:
         # GReaT
         try:
             epochs = 100 if n_train <= 100 else 50
-            ckpt_dir = "/tmp/great_ckpt_hillstrom"
-            if os.path.exists(ckpt_dir):
-                shutil.rmtree(ckpt_dir)
+            # Per-cell ckpt dir — /tmp because Workspace corrupts PyTorch binaries
+            ckpt_dir = f"/tmp/great_ckpt_hillstrom/n{n_train}_seed{seed}"
+            os.makedirs(ckpt_dir, exist_ok=True)
             model = GReaT(llm="gpt2", batch_size=32, epochs=epochs, fp16=True,
                           experiment_dir=ckpt_dir,
                           logging_steps=1, logging_strategy="epoch")
@@ -88,6 +88,11 @@ for n_train in SMALL_NS:
             df_syn.columns = df_tr.columns
             df_syn[TARGET] = pd.to_numeric(df_syn[TARGET],
                                            errors="coerce").fillna(0).astype(int)
+
+            # Persist synthetic data for future α-sweeps / multi-classifier runs
+            syn_dir = f"{WORK_DIR}/syn_hillstrom"
+            os.makedirs(syn_dir, exist_ok=True)
+            df_syn.to_csv(f"{syn_dir}/syn_n{n_train}_seed{seed}.csv", index=False)
             X_aug = np.vstack([X_tr,
                                df_syn.drop(columns=[TARGET]).values.astype(float)])
             y_aug = np.concatenate([y_tr, df_syn[TARGET].values])

@@ -60,7 +60,7 @@ The paper cites **20 references**, listed below with verification status.
 
 | Dataset | n | Task | Positive rate | Source | Used in §6 subsection |
 |---|---|---|---|---|---|
-| Telco Churn | 7,032 | Classification | 26.6% | IBM Kaggle | §6.2–6.5 |
+| Telco Churn | 7,032 | Classification | 26.6% | IBM Kaggle | §6.2–6.5; §6.6 (GReaT) |
 | Bank Marketing | 15,000 | Classification | 11.7% | UCI / OpenML | §6.2–6.5 |
 | German Credit | 1,000 | Classification | 30.0% | OpenML id=31 | §6.2–6.5; §6.6 (GReaT) |
 | Online Retail CLV | 4,000 | Regression | — | UCI fallback | §6.2–6.5 |
@@ -76,7 +76,7 @@ The paper cites **20 references**, listed below with verification status.
 | GaussianCopula | SDV v1.36 | All §6 datasets |
 | CTGAN | SDV / CTGAN v0.12 | All §6 datasets |
 | SMOTE | imbalanced-learn v0.12 | Classification datasets only |
-| GReaT (GPT-2) | be-great v0.0.13 | §6.6 — German Credit, Hillstrom |
+| GReaT (GPT-2) | be-great v0.0.13 | §6.6 — German Credit, Hillstrom, Telco Churn |
 | GReaT (distilgpt2) | be-great v0.0.13 | §6.6 — Colab attempt; documented sampling failure |
 
 ### Methods *not* evaluated (cited from external benchmarks)
@@ -129,7 +129,7 @@ All §6.6 (GReaT) and §6.8 (Hillstrom, Criteo) results report 5-seed cross-vali
 - **Exact paper titles for Shidani et al. 2025 and Chia Ramírez 2025** — titles inferred from arXiv abstract page display; should be confirmed against the official PDF title pages before formal citation.
 - **SMOTE near-duplicate / privacy risk** — attributed to Davila et al. 2025, Table 8 (DCR-based privacy scores); a specific membership-inference attack paper is not cited separately.
 - **KDD Cup 2009 Appetency** — script `experiments/run_kdd_appetency.py` exists in the repo but was not used in the paper; no `metrics_kdd_appetency.csv` or `ci_kdd_appetency.csv` outputs exist. Excluded from §6.
-- **Telco Churn × GReaT** — flagged as an open follow-up in §11 to cleanly separate the semantic-feature and class-imbalance effects observed in §6.6. Script committed at `experiments/run_great_telco_databricks.py` (mirrors the corrected Hillstrom recipe: stratified small-n sampling, 5-seed CI, n ∈ {50…2000}, `HOLDOUT_N=2000` due to Telco's 7,032-row total). Pending GPU run; no result CSV yet.
+- **Telco Churn × GReaT** — completed. GPU run produced 5-seed CI across n ∈ {50, 100, 200, 500, 1000, 2000} with `HOLDOUT_N=2000`; raw per-seed AUCs are in `results/great_telco_results.csv`. Result: GReaT and Baseline statistically tied at every n (n=50 GReaT-leading by +3.9 pts within ±7 pt CI; n=2,000 by +0.5 pts within ±0.7 pt CI). Reported as Experiment 4 in §6.6 and incorporated into the §6 synthesis conclusion (semantic features + class balance are necessary to avoid GReaT-induced degradation but not sufficient to produce gains).
 
 ---
 
@@ -155,12 +155,25 @@ All §6.6 (GReaT) and §6.8 (Hillstrom, Criteo) results report 5-seed cross-vali
 | `results/plots/plot_ci_criteo.png` | 5-seed CI on Criteo by method | §6.8 |
 | `results/plots/plot_imbalance_vs_gain.png` | Best augmentation gain vs. positive rate, all §6 datasets | §6.8 synthesis |
 | `results/plots/plot_best_gain_by_dataset.png` | Best gain per dataset summary | §6.8 synthesis |
-| `results/plots/plot_great_smalln.png` | GReaT performance vs n on Hillstrom / German Credit | §6.6 |
+| `results/plots/plot_great_smalln.png` | GC / CTGAN vs Baseline on German Credit small-n (statistical generators only; GReaT line removed after 2026-05 audit revealed the original GReaT branch had silently fallen back to Baseline) | §6.6 |
+| `results/plots/plot_great_gpu_german_credit.png` | GPU GReaT vs Baseline on German Credit, 5-seed CI, holdout=200 | §6.6 (Exp 2) |
+| `results/plots/plot_great_gpu_hillstrom.png` | GPU GReaT vs Baseline on Hillstrom, 5-seed CI, holdout=10K | §6.6 (Exp 3) |
+| `results/plots/plot_great_gpu_telco_churn.png` | GPU GReaT vs Baseline on Telco Churn, 5-seed CI, holdout=2000 | §6.6 (Exp 4) |
 | `results/ucurve_*.png` (8 files) | Per-dataset α-mixing curves | §6.3, §6.7 |
 | `results/lowdata_*.png` (5 files) | Performance vs. real training-set size | §6.4 |
 | `results/summary_comparison.png` | Cross-dataset summary | §6.5 |
 
 All §6 plots are produced by `experiments/make_plots.py` from CSVs in `results/`.
+
+## §6.6 Rigorous Re-Analysis (Phase 1, 2026-05-16)
+
+Per the pre-registered improvement plan (`papers/improvement_plan.md`), §6.6 GReaT findings were re-analyzed with paired t-tests, BH-FDR correction, Cohen's d_z, jackknife sensitivity, and TOST equivalence. Outputs:
+
+- `experiments/rigorous_analysis.py` — analysis script
+- `results/rigorous_analysis.csv` — tidy per-cell statistics (16 paired tests)
+- `results/rigorous_analysis.md` — human-readable summary
+
+Findings significant after BH-FDR at q=0.10: Hillstrom n=2000 (p_FDR=0.010); German n=100 (p_FDR=0.058), n=500 (p_FDR=0.074); Telco n=50 (p_FDR=0.074), n=2000 (p_FDR=0.074). All other cells are not paired-significant after FDR. The Telco n=50 finding (paper headline) survives BH-FDR at q=0.10 but would not survive Bonferroni; jackknife sign-stable.
 
 ---
 

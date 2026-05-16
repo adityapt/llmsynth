@@ -13,7 +13,7 @@ All key findings are backed by **5-seed cross-validation** (seeds 42, 123, 7, 20
 
 **Experiments:** `experiments/`
 - `synthetic_data_eval.py` — main experiment runner (Telco Churn, Bank Marketing, German Credit, Online Retail CLV)
-- `run_remaining.py` — runs Credit Default + CLV datasets using cached results from first two
+- `run_remaining.py` — runs German Credit + CLV datasets using cached results from first two (the German Credit loader is named `load_credit_default` for historical reasons; the actual dataset is Statlog German Credit, OpenML id=31)
 - `run_nomao.py` — Nomao lead dataset (full, n=10K)
 - `run_nomao_sparse.py` — Nomao with 70% simulated missingness + small n=500
 - `run_kdd_appetency.py` — KDD Cup 2009 Appetency (natural CRM sparsity, 70% missing) *(script only; not used in the paper — no result files generated)*
@@ -28,8 +28,10 @@ All key findings are backed by **5-seed cross-validation** (seeds 42, 123, 7, 20
 **Results:** `results/`
 - `metrics_*.csv` — AUC/F1/AP per dataset × generator × condition
 - `ci_*.csv` — 5-seed confidence interval results per dataset
-- `ci_great_german.csv` — GReaT distilgpt2 on German Credit (sampling failure; GReaT = Baseline throughout)
+- `ci_great_german.csv` — Baseline / GaussianCopula / CTGAN on German Credit, n ∈ {50,100,200,500,700}, 300-row holdout (statistical generators only)
 - `ci_great_hillstrom.csv` — GReaT GPT-2 on Hillstrom, n ∈ {50,100,200,500,1000,2000}, holdout=10K
+- `great_german_results.csv` — GReaT GPT-2 vs Baseline on German Credit, n ∈ {50,100,200,500}, holdout=200 (GPU run, 5-seed CI)
+- `great_telco_results.csv` — GReaT GPT-2 vs Baseline on Telco Churn, n ∈ {50,100,200,500,1000,2000}, holdout=2000 (GPU run, 5-seed CI)
 - `ucurve_*.png` — U-shaped augmentation curves
 - `lowdata_*.png` — performance vs. training set size
 - `summary_table.csv` — cross-dataset summary including GReaT results

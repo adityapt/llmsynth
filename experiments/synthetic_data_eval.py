@@ -160,7 +160,9 @@ def load_credit_default():
             df.to_csv(path, index=False)
     df = pd.read_csv(path)
     target = "target"
-    return df, target, "classification", "Credit Default"
+    # Note: data file is `credit_default.csv` for historical reasons, but the
+    # underlying dataset is Statlog German Credit (OpenML id=31, UCI statlog/german).
+    return df, target, "classification", "German Credit"
 
 
 def load_online_retail_clv():
