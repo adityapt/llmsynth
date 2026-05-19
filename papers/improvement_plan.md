@@ -115,12 +115,12 @@ The paper's §6.6 will mark confirmatory vs exploratory findings explicitly afte
 
 ## 7. Phase 5 — α-sweep across all three datasets [COMPLETED 2026-05-18/19]
 
-Extended beyond the original "Telco only" Methods-venue scoping after the German α-sweep result (Δ=+1.69 pts at n=100, α=0.1; raw p=0.005, d_z=2.45) showed α=1.0 is suboptimal universally and contradicted the §6.6 main-table interpretation.
+Extended beyond the original "Telco only" Methods-venue scoping after the German α-sweep result (Δ=+1.69 pts at n=100, α=0.1; raw p=0.005, d_z=2.45) showed α=1.0 is suboptimal in 8 of 9 (dataset, n) cells and contradicted the §6.6 main-table interpretation.
 
 **What was run:** α-sweep across all three datasets at n ∈ {50, 100, 200} × α ∈ {0.1, 0.2, 0.3, 0.5, 1.0} × 5 seeds (matched-design, same GReaT fit per (n, seed), sub-sample synthetic for each α). Three scripts: `experiments/run_great_alpha_sweep_{dataset}_databricks.py`.
 
 **Key findings (incorporated into paper §6.6 Experiment 5):**
-- α=1.0 universally suboptimal: best α was 0.1 (4 cells), 0.2 (3), 0.3 (2), 1.0 (1).
+- α=1.0 almost never optimal: best α was 0.1 (3 cells), 0.2 (3), 0.3 (2), 1.0 (1: Hillstrom n=100).
 - Strongest single positive cell: German Credit n=100, α=0.1 (Δ=+1.69 pts, d_z=2.45, raw p=0.005). BH-FDR over the 45-test family: p=0.104 (just over q=0.10).
 - No α-sweep cell survives BH-FDR at q=0.10 over the 45-test family.
 - α-sweep at α=1.0 vs Phase 1 results = natural experiment for GReaT-fit variance: drift up to 4.6 pp, Telco n=50 headline lost paired significance (p=0.023→0.134), Hillstrom n=50 flipped sign. Documents that user-level `seed` controls NumPy/sklearn only; PyTorch/CUDA/Transformers RNGs are independent.
