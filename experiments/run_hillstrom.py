@@ -21,7 +21,20 @@ from sklearn.preprocessing import LabelEncoder
 import matplotlib.pyplot as plt
 
 ALPHAS = [0.1, 0.2, 0.3, 0.5, 1.0]
-N_CAP = 10000   # cap for tractable CTGAN; ~15% of full dataset
+
+# N_CAP rationale:
+# - Compute: CTGAN fit time scales ~linearly with n; full Hillstrom (64K rows) takes
+#   ~6x longer per fit than 10K, and we run multiple generators × seeds × alphas.
+# - Information: at 0.9% positive rate, 10K rows ≈ 90 minority examples — already on
+#   the floor for stable CTGAN training on the minority class. Going to 64K would add
+#   ~480 more positives proportionally but the bottleneck is class-conditional density
+#   estimation, not row count. Marginal compute cost ≫ marginal class-balance benefit.
+# - Scope: we study the data-scarcity / imbalanced-minority regime where augmentation
+#   plausibly helps. Practitioners facing new campaigns or cold-start segments rarely
+#   have 64K labeled rows. We do NOT claim augmentation helps at full-data scale.
+# - Cross-dataset consistency: matches Criteo (also 10K, 0.2% positive) for §6.8
+#   apples-to-apples comparison along the imbalance axis.
+N_CAP = 10000
 
 
 def load_hillstrom():

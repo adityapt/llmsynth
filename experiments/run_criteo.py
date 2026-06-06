@@ -24,7 +24,23 @@ from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
 
 ALPHAS = [0.1, 0.2, 0.3, 0.5, 1.0]
-N_CAP = 10000   # 13.9M rows total; cap for tractable generation
+
+# N_CAP rationale:
+# - Compute: full Criteo is 13.9M rows. CTGAN fit at full scale is infeasible
+#   (~days per fit); GReaT fine-tuning at this scale is infeasible too. 10K is
+#   what the full experimental matrix (multiple generators × seeds × alphas)
+#   permits on the available GPU budget.
+# - Information: at 0.2% positive rate, 10K rows ≈ 20 minority examples. This is
+#   already the most extreme imbalance setting in the paper. Scaling to 100K
+#   would give 200 positives — more, but still in the rare-event regime where
+#   the dynamics of imbalanced classification are unchanged. The cap preserves
+#   the regime of interest while keeping compute feasible.
+# - Scope: same as Hillstrom — we study the imbalanced-minority data-scarcity
+#   regime, not the "you already have 13M rows" regime. We do NOT claim
+#   augmentation helps at full-data scale.
+# - Cross-dataset consistency: matches Hillstrom (also 10K) for §6.8
+#   apples-to-apples along the imbalance axis.
+N_CAP = 10000
 
 
 def load_criteo_uplift():

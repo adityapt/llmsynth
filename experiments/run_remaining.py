@@ -36,6 +36,10 @@ for loader in [load_credit_default, load_online_retail_clv]:
     df, target, task, name = loader()
     print(f"\nLoaded {name}: {df.shape}, target={target}, task={task}")
 
+    # See synthetic_data_eval.py for full cap rationale (CTGAN-fit-time +
+    # moderate-imbalance information argument). Bank Marketing is the only
+    # §6.2-6.5 dataset large enough to hit this cap; here it covers the
+    # remaining-dataset re-run path through the same loaders.
     if len(df) > 15000:
         df = df.sample(15000, random_state=RANDOM_STATE).reset_index(drop=True)
         print(f"  Capped to 15,000 rows")

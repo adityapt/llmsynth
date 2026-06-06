@@ -553,7 +553,18 @@ if __name__ == "__main__":
         df, target, task, name = loader()
         print(f"\nLoaded {name}: {df.shape}, target={target}, task={task}")
 
-        # cap dataset size for reasonable runtime
+        # Cap rationale (applies to Bank Marketing only, the lone §6.2-6.5 dataset
+        # exceeding 15K rows):
+        # - Compute: CTGAN fit time scales ~linearly with n; full Bank Marketing
+        #   (45,211 rows) is ~3x slower per fit and we run multiple generators ×
+        #   seeds × alpha values. 15K keeps the full experimental matrix tractable.
+        # - Information: at 11.7% positive rate, 15K rows ≈ 1,755 minority examples
+        #   — well above the floor needed for stable CTGAN training. Higher cap
+        #   here (vs 10K for Hillstrom/Criteo in §6.8) reflects the moderate
+        #   imbalance: more positives are usefully preserved at higher row counts.
+        # - Scope: same as the §6.8 datasets — we study the data-scarcity regime
+        #   where augmentation plausibly helps; we do NOT claim it helps at full
+        #   45K scale.
         if len(df) > 15000:
             df = df.sample(15000, random_state=RANDOM_STATE).reset_index(drop=True)
             print(f"  Capped to 15,000 rows")
