@@ -34,16 +34,18 @@
 # synthcity pulls a compatible torch; on a GPU node it will use CUDA automatically.
 #
 # DATA CONTRACT:
-#   This script consumes a PREPARED CSV that already has a numeric `target` column
-#   and numeric feature columns — i.e. the dataframe returned by
-#   experiments/run_hillstrom.load_hillstrom() / run_criteo.load_criteo_uplift().
-#   Export it once locally so splits match the paper exactly:
+#   This script reads the CSVs saved by the canonical loaders:
+#     - hillstrom.csv         (saved by experiments/run_hillstrom.load_hillstrom)
+#     - criteo_uplift.csv     (saved by experiments/run_criteo.load_criteo_uplift)
 #
-#       from experiments.run_hillstrom import load_hillstrom
-#       df, target, task, name = load_hillstrom()
-#       df.to_csv("hillstrom_prepared.csv", index=False)   # then upload to WORK_DIR
+#   These files are ALREADY preprocessed when written to disk: 'target' column
+#   renamed from 'conversion', treatment/segment/visit columns dropped, object
+#   columns label-encoded. Upload them once to WORK_DIR — typically the same
+#   `hillstrom.csv` used by run_great_hillstrom_databricks.py is what you want.
 #
-#   (same for load_criteo_uplift -> criteo_prepared.csv). Upload both to WORK_DIR.
+# TO RE-RUN CRITEO ONLY: delete ci_tabddpm_criteo.csv from WORK_DIR first so
+#   the resume logic doesn't skip any seeds, then run this notebook. Hillstrom
+#   will be skipped automatically (all 5 seeds already in ci_tabddpm_hillstrom.csv).
 # =============================================================================
 
 import warnings, os, random
@@ -51,6 +53,7 @@ warnings.filterwarnings("ignore")
 import numpy as np
 import pandas as pd
 import torch
+
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.metrics import roc_auc_score, f1_score, average_precision_score
@@ -64,7 +67,7 @@ TARGET   = "target"
 SEEDS    = [42, 123, 7, 2024, 999]
 ALPHAS   = [0.1, 0.2, 0.3, 0.5, 1.0]
 N_CAP    = 10_000
-DEVICE   = "cuda" if torch.cuda.is_available() else "cpu"
+DEVICE   = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # TabDDPM hyperparameters (synthcity "ddpm" plugin). These are reasonable
 # defaults for ~8k-row training sets; bump N_ITER if fidelity looks weak.
@@ -73,11 +76,18 @@ NUM_TIMESTEPS = 1000     # diffusion steps
 DDPM_LR       = 1e-3
 DDPM_BATCH    = 1024
 
-# Which datasets to run. Each entry: (key, prepared_csv_filename, output_csv).
+# Per-dataset config:
+#   (display_name, raw_csv_path, preload_nrows, pool_shuffle_seed, output_csv_path)
+# preload_nrows: nrows passed to pd.read_csv; None means read all.
+# pool_shuffle_seed: if not None, shuffle df_full with this seed after loading
+#   to match the canonical loader's row ordering. Criteo uses 42 because
+#   load_criteo_uplift() calls df.sample(..., random_state=42) on the 50K pool —
+#   without this shuffle the per-seed cap sampling draws different rows and the
+#   Baseline AUCs diverge from ci_criteo.csv.
 WORK_DIR = os.environ.get("LLMSYNTH_WORK_DIR", "/Workspace/Users/<your-username>/Temp")
 DATASETS = [
-    ("Hillstrom Email", f"{WORK_DIR}/hillstrom_prepared.csv", f"{WORK_DIR}/ci_tabddpm_hillstrom.csv"),
-    ("Criteo Display",  f"{WORK_DIR}/criteo_prepared.csv",    f"{WORK_DIR}/ci_tabddpm_criteo.csv"),
+    ("Hillstrom Email", f"{WORK_DIR}/hillstrom.csv",     None,      None, f"{WORK_DIR}/ci_tabddpm_hillstrom.csv"),
+    ("Criteo Display",  f"{WORK_DIR}/criteo_uplift.csv", N_CAP * 5, 42,   f"{WORK_DIR}/ci_tabddpm_criteo.csv"),
 ]
 
 
@@ -132,18 +142,43 @@ def tabddpm_sample(df_train, n_syn, seed):
     return syn
 
 
-def run_dataset(name, data_path, out_path):
+def load_prepared(data_path, preload_nrows, pool_shuffle_seed):
+    """Read a loader-prepared CSV from WORK_DIR.
+
+    preload_nrows caps the read (Criteo: 50K to match load_criteo_uplift).
+    pool_shuffle_seed re-applies the canonical loader's post-read shuffle so
+    the per-seed cap sampling draws the same rows as the reference CI runs.
+    """
+    df = pd.read_csv(data_path, nrows=preload_nrows)
+    df = df.dropna().reset_index(drop=True)
+    assert TARGET in df.columns, f"{data_path} missing '{TARGET}' column"
+    non_numeric = [c for c in df.columns
+                   if c != TARGET and not pd.api.types.is_numeric_dtype(df[c])]
+    assert not non_numeric, (
+        f"{data_path} has non-numeric feature columns {non_numeric}; "
+        f"re-run the loader to regenerate it."
+    )
+    if pool_shuffle_seed is not None:
+        df = df.sample(len(df), random_state=pool_shuffle_seed).reset_index(drop=True)
+    return df
+
+
+def run_dataset(name, data_path, preload_nrows, pool_shuffle_seed, out_path):
     print(f"\n{'='*64}\nTabDDPM CI experiment: {name}\n{'='*64}", flush=True)
-    df_full = pd.read_csv(data_path)
-    assert TARGET in df_full.columns, f"{data_path} must contain a '{TARGET}' column"
+    df_full = load_prepared(data_path, preload_nrows, pool_shuffle_seed)
     print(f"Loaded {df_full.shape}, positive rate {df_full[TARGET].mean()*100:.2f}%", flush=True)
 
     n_use = min(N_CAP, len(df_full))
 
-    # Resume support
+    # Resume support — a seed counts as "done" only if it has a non-NaN α=1.0 row.
     if os.path.exists(out_path):
         rows = pd.read_csv(out_path).to_dict("records")
-        done = {int(r["seed"]) for r in rows if r["method"] == "TabDDPM" and r["alpha"] == ALPHAS[-1]}
+        done = {
+            int(r["seed"]) for r in rows
+            if r["method"] == "TabDDPM"
+            and r["alpha"] == ALPHAS[-1]
+            and pd.notna(r.get("auc_roc"))
+        }
         print(f"Resuming — {len(done)} seeds already complete", flush=True)
     else:
         rows, done = [], set()
@@ -213,10 +248,10 @@ def run_dataset(name, data_path, out_path):
 
 
 if __name__ == "__main__" or True:  # Databricks runs top-level
-    for name, data_path, out_path in DATASETS:
+    for name, data_path, preload_nrows, pool_shuffle_seed, out_path in DATASETS:
         if not os.path.exists(data_path):
-            print(f"\n[skip] {name}: {data_path} not found — export & upload it first "
+            print(f"\n[skip] {name}: {data_path} not found — upload it to WORK_DIR "
                   f"(see DATA CONTRACT header).", flush=True)
             continue
-        run_dataset(name, data_path, out_path)
+        run_dataset(name, data_path, preload_nrows, pool_shuffle_seed, out_path)
     print("\nDone.", flush=True)
