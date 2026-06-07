@@ -150,6 +150,8 @@ All four gains are within the baseline confidence interval. The single notably p
 
 A consistent secondary observation across the augmentation sweeps is the U-curve in α: performance peaks at α ∈ {0.1, 0.2, 0.3} on every dataset and degrades toward α = 1.0. This pattern motivates the α* analysis in §5.3.
 
+**Figure 1.** U-shaped augmentation curves for all benchmark datasets (`results/ucurve_telco_churn.png`, `ucurve_bank_marketing.png`, `ucurve_credit_default.png`, `ucurve_nomao_lead.png`). Each curve shows AUC vs. α for GaussianCopula, CTGAN, and SMOTE; the peak consistently falls at α ∈ {0.1–0.3}.
+
 ### 4.3 Sparsity Stress Test: Sparsity Eliminates Small-n Augmentation Gains
 
 The Nomao sparse condition (n = 500, 70% simulated missing features) combines the two conditions under which augmentation has historically been most promising: small training set and degraded baseline performance. The hypothesis is that synthetic generators trained on dense imputed data should be able to recover some of the lost signal.
@@ -186,6 +188,8 @@ The two marketing datasets — Hillstrom at 0.9% positive rate and Criteo at 0.2
 Two observations beyond the headline gains warrant attention. First, the baseline confidence intervals are wide (±9.2 pts on Hillstrom, ±22.8 pts on Criteo); this is not a measurement artifact but a direct consequence of learning from approximately 72 (Hillstrom) and 16 (Criteo) real minority examples per training split. Second, the augmented confidence intervals are substantially narrower — CTGAN's Criteo CI is ±3.6 points, an order-of-magnitude reduction. Synthetic augmentation under extreme imbalance does not only improve mean performance; it stabilises learning across splits.
 
 The baseline TSTR check from §4.1 also holds here: even on these tasks where augmentation works strongly, synthetic-only training does not match real-only training. Augmentation, not replacement, is the operative regime.
+
+**Figure 2.** Augmentation U-curves for Hillstrom and Criteo (`results/ucurve_hillstrom.png`, `results/ucurve_criteo.png`). The steep rise from α=0 to α≈0.2 and stabilisation/decline thereafter is pronounced on both datasets; the CI bands illustrate the variance-stabilising effect of augmentation on the marketing datasets.
 
 ### 4.5 TabDDPM vs CTGAN: Compute Cost Not Justified
 
@@ -307,17 +311,59 @@ Future work should extend this evaluation to causal/uplift settings (where augme
 
 ## References
 
-1. Borisov, V., Seßler, K., Leemann, T., Pawelczyk, M., & Kasneci, G. (2023). *Language Models are Realistic Tabular Data Generators*. ICLR 2023.
-2. Chawla, N. V., Bowyer, K. W., Hall, L. O., & Kegelmeyer, W. P. (2002). SMOTE: Synthetic Minority Over-sampling Technique. *Journal of Artificial Intelligence Research*, 16, 321–357.
-3. Davila, A., et al. (2025). *Synthetic Tabular Data Generation Benchmark on Prosumer Hardware*. [Cited as augmentation benchmark establishing the gap addressed by this paper — verify exact venue and author list before submission.]
-4. Diemert, E., Betlei, A., Renaudin, C., & Amini, M.-R. (2018). *A Large Scale Benchmark for Uplift Modeling*. KDD AdKDD Workshop.
-5. Erickson, N., et al. (2025). *TabArena: A Living Benchmark for Tabular Foundation Models*. [Verify venue.]
-6. Hillstrom, K. (2008). *MineThatData Email Analytics And Data Mining Challenge*. MineThatData blog.
-7. Kotelnikov, A., Baranchuk, D., Rubachev, I., & Babenko, A. (2023). *TabDDPM: Modelling Tabular Data with Diffusion Models*. ICML 2023.
-8. Patki, N., Wedge, R., & Veeramachaneni, K. (2016). *The Synthetic Data Vault*. IEEE International Conference on Data Science and Advanced Analytics (DSAA).
-9. Xu, L., Skoularidou, M., Cuesta-Infante, A., & Veeramachaneni, K. (2019). *Modeling Tabular Data using Conditional GAN*. NeurIPS 2019.
+1. **Xu, L., Skoularidou, M., Cuesta-Infante, A., & Veeramachaneni, K.** (2019). Modeling Tabular Data using Conditional GAN. *Advances in Neural Information Processing Systems (NeurIPS 2019)*. https://papers.neurips.cc/paper/8953-modeling-tabular-data-using-conditional-gan.pdf
 
-*Bibliography to be expanded to 20–25 references and hand-verified before submission. References marked with "[Verify ...]" require confirmation against the publication record.*
+2. **Kotelnikov, A., Baranchuk, D., Rubachev, I., & Babenko, A.** (2023). TabDDPM: Modelling Tabular Data with Diffusion Models. *Proceedings of ICML 2023*. https://proceedings.mlr.press/v202/kotelnikov23a/kotelnikov23a.pdf
+
+3. **Davila Restrepo, G. et al.** (2025). Benchmarking Tabular Data Synthesis: Evaluating Tools, Metrics, and Datasets on Prosumer Hardware. *Data Science Journal*. https://datascience.codata.org/articles/10.5334/dsj-2025-037
+
+4. **Chawla, N. V., Bowyer, K. W., Hall, L. O., & Kegelmeyer, W. P.** (2002). SMOTE: Synthetic Minority Over-sampling Technique. *Journal of Artificial Intelligence Research*, 16, 321–357.
+
+5. **Borisov, V., Seßler, K., Leemann, T., Pawelczyk, M., & Kasneci, G.** (2023). Language Models are Realistic Tabular Data Generators. *Proceedings of ICLR 2023*. arXiv:2210.06280. https://arxiv.org/abs/2210.06280
+
+6. **Patki, N., Wedge, R., & Veeramachaneni, K.** (2016). The Synthetic Data Vault. *IEEE International Conference on Data Science and Advanced Analytics (DSAA)*. https://dai.lids.mit.edu/wp-content/uploads/2018/03/SDV.pdf
+
+7. **Hillstrom, K.** (2008). MineThatData E-Mail Analytics And Data Mining Challenge. *MineThatData Blog*. https://blog.minethatdata.com/2008/03/minethatdata-e-mail-analytics-and-data.html
+
+8. **Diemert, E., Betlei, A., Dieudonne-Boucher, C., & Amini, M.-R.** (2018). A Large Scale Benchmark for Uplift Modeling. *AdKDD & TargetAd Workshop, KDD 2018*. https://ailab.criteo.com/criteo-uplift-modeling-dataset/
+
+9. **Erickson, N. et al.** (2025). TabArena: A Living Benchmark for ML on Tabular Data. *NeurIPS 2025*. https://neurips.cc/virtual/2025/poster/121499
+
+10. **Won, D.-H. et al.** (2026). Synthetic Data Augmentation for Imbalanced Tabular Data: A Comparative Study of Generation Methods. *Electronics*, 15(4), 883. https://www.mdpi.com/2079-9292/15/4/883
+
+11. **Agrawal, R., Hamdare, S., Ghosh, D., et al.** (2026). Improving Predictive Performance in Telecom Churn Modeling with Hybrid SMOTE and GAN-Based Synthetic Data Generation. *International Journal of Computational Intelligence Systems*. https://link.springer.com/article/10.1007/s44196-026-01204-3
+
+12. **Fonseca, J., & Bacao, F.** (2023). Synthetic Data Generation for Imbalanced Learning on Tabular Data. *Expert Systems with Applications*. https://www.sciencedirect.com/article/pii/S0957417421000233
+
+13. **Camino, R. et al.** (2020). Oversampling Tabular Data with Deep Generative Models: Is it worth the effort? *ICML 2020 Workshop on Uncertainty & Robustness in Deep Learning*. https://proceedings.mlr.press/v137/camino20a/camino20a.pdf
+
+14. **Shidani, A., Farghly, T., Sun, Y., Ganjgahi, H., & Deligiannidis, G.** (2025). Beyond Real Data: Synthetic Data through the Lens of Regularization. *arXiv:2510.08095*. https://arxiv.org/abs/2510.08095 ⚠️ *Verify title and authors before submission.*
+
+15. **Chia Ramírez, L.** (2025). Finding the Sweet Spot: Optimal Data Augmentation Ratio for Imbalanced Credit Scoring Using ADASYN. *arXiv:2510.18252*. https://arxiv.org/abs/2510.18252 ⚠️ *Verify title before submission.*
+
+16. **Du, Y., & Li, N.** (2024). Systematic Assessment of Tabular Data Synthesis Algorithms. *arXiv:2402.06806*. https://arxiv.org/abs/2402.06806
+
+17. **Sidorenko, A., Platzer, M., Scriminaci, M., & Tiwald, P.** (2025). Benchmarking Synthetic Tabular Data: A Multi-Dimensional Evaluation Framework. *arXiv:2504.01908*. https://arxiv.org/abs/2504.01908
+
+18. **Lautrup, A. D., Hyrup, T., & Zimek, A.** (2024). SynthEval: A Framework for Detailed Utility and Privacy Evaluation of Tabular Synthetic Data. *Data Mining and Knowledge Discovery*. arXiv:2404.15821. https://arxiv.org/abs/2404.15821
+
+19. **Shumailov, I., Shumaylov, Z., Zhao, Y., Papernot, N., Anderson, R., & Gal, Y.** (2024). AI models collapse when trained on recursively generated data. *Nature*, 631, 755–759. https://www.nature.com/articles/s41586-024-07566-y
+
+20. **Chen, K. et al.** (2025). Benchmarking Differentially Private Tabular Data Synthesis Methods. *arXiv:2504.14061*. https://arxiv.org/abs/2504.14061
+
+21. **Shi, J., Xu, M., Hua, W., Zhang, H., Ermon, S., & Leskovec, J.** (2025). TabDiff: a Mixed-type Diffusion Model for Tabular Data Generation. *ICLR 2025*. arXiv:2410.20626. https://arxiv.org/abs/2410.20626
+
+22. **Solatorio, A. V., & Dupriez, O.** (2023). REaLTabFormer: Generating Realistic Relational and Tabular Data using Transformers. *arXiv:2302.02041*. https://arxiv.org/abs/2302.02041
+
+23. **Bouthillier, X. et al.** (2021). Accounting for Variance in Machine Learning Benchmarks. *Proceedings of MLSys 2021*. arXiv:2103.03098. https://arxiv.org/abs/2103.03098
+
+24. **van Breugel, B., Qian, Z., & van der Schaar, M.** (2023). Synthetic Data, Real Errors: How (Not) to Publish and Use Synthetic Data. *Proceedings of ICML 2023*. arXiv:2305.09235. https://arxiv.org/abs/2305.09235
+
+25. **Haibo He, & Garcia, E. A.** (2009). Learning from Imbalanced Data. *IEEE Transactions on Knowledge and Data Engineering*, 21(9), 1263–1284.
+
+26. **Branco, P., Torgo, L., & Ribeiro, R. P.** (2016). A Survey of Predictive Modeling on Imbalanced Domains. *ACM Computing Surveys*, 49(2), 31.
+
+*All references marked ⚠️ require hand-verification of title, authors, and venue before submission. All DOI/arXiv links should be checked to resolve to the intended paper.*
 
 ---
 
