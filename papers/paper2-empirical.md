@@ -135,6 +135,8 @@ Training on synthetic data alone and testing on real data — the TSTR protocol 
 
 The TSTR gap grows monotonically as the dataset shrinks. German Credit (n = 1,000) shows the largest gap, consistent with the intuition that smaller training sets give the generator less material to learn the joint distribution faithfully. Across all configurations, no generator closes the gap. The implication for practitioners is unambiguous: synthetic data is an augmentation method, not a replacement method. Production models should not be trained on synthetic-only data unless real data is structurally unavailable.
 
+**Figure 1.** Cross-dataset summary of generator performance across conditions (`results/summary_comparison.png`). Bars show AUC relative to the real-data baseline across TSTR, augmentation-best, and low-data conditions for each dataset × generator combination.
+
 ### 4.2 Augmentation Sweep on Benchmark Datasets: Gains Within Noise
 
 We next test whether mixing synthetic and real data improves on the real-data baseline. On the four benchmark datasets with positive rate above 10%, the best gain from any generator at any α is consistently below +0.5 AUC points.
@@ -150,7 +152,13 @@ All four gains are within the baseline confidence interval. The single notably p
 
 A consistent secondary observation across the augmentation sweeps is the U-curve in α: performance peaks at α ∈ {0.1, 0.2, 0.3} on every dataset and degrades toward α = 1.0. This pattern motivates the α* analysis in §5.3.
 
-**Figure 1.** U-shaped augmentation curves for all benchmark datasets (`results/ucurve_telco_churn.png`, `ucurve_bank_marketing.png`, `ucurve_credit_default.png`, `ucurve_nomao_lead.png`). Each curve shows AUC vs. α for GaussianCopula, CTGAN, and SMOTE; the peak consistently falls at α ∈ {0.1–0.3}.
+**Figure 2.** U-shaped augmentation curves for all benchmark datasets.
+- `results/ucurve_telco_churn.png` — Telco Churn (26.6% positive rate)
+- `results/ucurve_bank_marketing.png` — Bank Marketing (11.7%)
+- `results/ucurve_credit_default.png` — German Credit (30.0%)
+- `results/ucurve_nomao_lead.png` — Nomao Lead full (28.3%)
+
+Each curve shows AUC vs. α for GaussianCopula, CTGAN, and SMOTE. The performance peak falls at α ∈ {0.1–0.3} on every dataset; gains are within noise of the baseline in all cases.
 
 ### 4.3 Sparsity Stress Test: Sparsity Eliminates Small-n Augmentation Gains
 
@@ -162,6 +170,8 @@ The Nomao sparse condition (n = 500, 70% simulated missing features) combines th
 | Nomao dense reference | 0.992 ± —  | — | — | (separate baseline) |
 
 The dense baseline (last row) is reported for context: with all features present, the same classifier reaches AUC = 0.992, a 9.44-point gain over the sparse baseline. Augmentation closes none of this gap meaningfully. The finding is consistent with the imbalance hypothesis: sparsity-driven baseline degradation is not the failure mode synthetic augmentation addresses. Augmentation needs minority-class data starvation, not feature-information starvation, to deliver value.
+
+**Figure 3.** Augmentation U-curve for the sparse stress test (`results/ucurve_nomao_sparse.png`). The flat curve (all gains < 0.5 pts across all α) contrasts with the steep gains on the marketing datasets in Figure 5.
 
 ### 4.4 Marketing Datasets: Strong Gains Under Extreme Imbalance
 
@@ -189,7 +199,15 @@ Two observations beyond the headline gains warrant attention. First, the baselin
 
 The baseline TSTR check from §4.1 also holds here: even on these tasks where augmentation works strongly, synthetic-only training does not match real-only training. Augmentation, not replacement, is the operative regime.
 
-**Figure 2.** Augmentation U-curves for Hillstrom and Criteo (`results/ucurve_hillstrom.png`, `results/ucurve_criteo.png`). The steep rise from α=0 to α≈0.2 and stabilisation/decline thereafter is pronounced on both datasets; the CI bands illustrate the variance-stabilising effect of augmentation on the marketing datasets.
+**Figure 4.** Low-data regime: AUC vs real training set size n ∈ {250, 500, 1000, 2000} for benchmark datasets.
+- `results/lowdata_telco_churn.png`
+- `results/lowdata_bank_marketing.png`
+- `results/lowdata_credit_default.png`
+- `results/lowdata_nomao_lead.png`
+
+Augmentation recovers 30–60% of the performance gap at n=250 across all datasets; the benefit narrows rapidly at n ≥ 1,000.
+
+**Figure 5.** Augmentation U-curves for the two marketing datasets (`results/ucurve_hillstrom.png`, `results/ucurve_criteo.png`). The steep rise from α=0 to α≈0.2 and the substantially narrower CI bands on augmented runs (vs baseline) are the primary visual evidence for the variance-stabilisation finding.
 
 ### 4.5 TabDDPM vs CTGAN: Compute Cost Not Justified
 
