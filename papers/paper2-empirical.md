@@ -271,26 +271,28 @@ Second, and more methodologically consequential: we performed a natural experime
 
 ### 4.8 Statistical Summary
 
-We report paired t-tests on per-seed AUC differences for all headline comparisons, with Benjamini-Hochberg FDR correction at q=0.10 over the family of 10 tests. All tests use matched seeds per comparison. Effect sizes are Cohen's d_z (mean of paired differences / SD of paired differences).
+We report paired t-tests on per-seed AUC differences for all headline comparisons, with Benjamini-Hochberg FDR correction at q=0.10 over the family of 12 tests. Effect sizes are Cohen's d_z. Where both 5-seed and 10-seed data exist (§4.4 vs §4.6), both are reported; the 5-seed test matches the §4.4 confidence interval tables, the 10-seed test uses the multi-classifier GBC data from §4.6.
 
-| Comparison | n seeds | Δ mean | 95% CI | d_z | p_raw | p_fdr | Sig |
+| Comparison | n | Δ mean | 95% CI | d_z | p_raw | p_fdr | Sig |
 |---|---|---|---|---|---|---|---|
-| CTGAN vs Baseline — Hillstrom (α=1.0) | 10 | +0.033 | [−0.003, +0.069] | +0.65 | 0.070 | 0.134 | — |
-| CTGAN vs Baseline — Criteo (α=0.3) | 10 | +0.120 | [+0.004, +0.237] | +0.74 | 0.044 | 0.134 | — |
-| SMOTE vs Baseline — Hillstrom (α=0.2) | 10 | +0.012 | [−0.037, +0.061] | +0.18 | 0.589 | 0.655 | — |
-| SMOTE vs Baseline — Criteo (α=0.3) | 10 | +0.100 | [−0.015, +0.214] | +0.62 | 0.080 | 0.134 | — |
-| GaussianCopula vs Baseline — Hillstrom | 10 | +0.005 | [−0.031, +0.041] | +0.10 | 0.755 | 0.755 | — |
-| GaussianCopula vs Baseline — Criteo | 10 | −0.040 | [−0.196, +0.115] | −0.18 | 0.574 | 0.655 | — |
-| CTGAN vs TabDDPM — Hillstrom | 5 | +0.044 | [−0.007, +0.095] | +1.07 | 0.076 | 0.134 | — |
-| CTGAN vs TabDDPM — Criteo | 5 | +0.030 | [−0.002, +0.061] | +1.17 | 0.059 | 0.134 | — |
-| GReaT vs Baseline — Hillstrom n=50 | 5 | +0.023 | [−0.021, +0.065] | +0.65 | 0.220 | 0.314 | — |
-| GReaT vs Baseline — Hillstrom n=2000 | 5 | −0.069 | [−0.088, −0.049] | −4.40 | 0.001 | **0.006** | **✅** |
+| CTGAN vs Baseline — Hillstrom α=1.0 (5-seed) | 5 | +0.058 | [−0.003, +0.118] | +1.18 | 0.058 | 0.138 | — |
+| CTGAN vs Baseline — Criteo α=0.2 (5-seed) | 5 | +0.129 | [−0.093, +0.351] | +0.72 | 0.183 | 0.239 | — |
+| SMOTE vs Baseline — Hillstrom α=0.1 (5-seed) | 5 | +0.058 | [−0.048, +0.165] | +0.68 | 0.202 | 0.239 | — |
+| SMOTE vs Baseline — Criteo α=0.3 (5-seed) | 5 | +0.120 | [−0.106, +0.346] | +0.66 | 0.215 | 0.239 | — |
+| CTGAN vs Baseline — Hillstrom α=1.0 (10-seed GBC) | 10 | +0.033 | [−0.003, +0.069] | +0.65 | 0.070 | 0.138 | — |
+| CTGAN vs Baseline — Criteo α=0.3 (10-seed GBC) | 10 | +0.120 | [+0.004, +0.237] | +0.74 | 0.044 | 0.138 | — |
+| SMOTE vs Baseline — Hillstrom α=0.2 (10-seed GBC) | 10 | +0.012 | [−0.037, +0.061] | +0.18 | 0.589 | 0.589 | — |
+| SMOTE vs Baseline — Criteo α=0.3 (10-seed GBC) | 10 | +0.100 | [−0.015, +0.214] | +0.62 | 0.080 | 0.138 | — |
+| CTGAN vs TabDDPM — Hillstrom (5-seed) | 5 | +0.044 | [−0.007, +0.095] | +1.07 | 0.076 | 0.138 | — |
+| CTGAN vs TabDDPM — Criteo (5-seed) | 5 | +0.030 | [−0.002, +0.061] | +1.17 | 0.059 | 0.138 | — |
+| GReaT vs Baseline — Hillstrom n=50 (5-seed) | 5 | +0.023 | [−0.020, +0.065] | +0.65 | 0.220 | 0.239 | — |
+| **GReaT vs Baseline — Hillstrom n=2000 (5-seed)** | **5** | **−0.069** | **[−0.088, −0.049]** | **−4.40** | **0.001** | **0.007** | **✅** |
 
-**Primary finding — cross-dataset regression.** The formal test of the imbalance hypothesis regresses per-dataset CTGAN gain on log(positive rate) across all six datasets. The relationship is highly significant: slope = −0.024 (SE = 0.003), R² = 0.92, p = 0.0023. Interpretation: for every 10-fold reduction in positive rate, CTGAN augmentation produces an additional +0.055 AUC gain on average. This is the primary statistical support for the claim that class imbalance drives augmentation value.
+**Primary finding — cross-dataset regression.** The formal test of the imbalance hypothesis regresses per-dataset CTGAN gain on log(positive rate) across all six datasets: slope = −0.024 (SE = 0.003), R² = 0.92, p = 0.0023. For every 10-fold reduction in positive rate, augmentation produces an additional +0.055 AUC gain. This is the primary statistical support for the imbalance-as-driver claim.
 
-**Individual comparisons.** The individual 5-seed and 10-seed comparisons show medium-to-large effect sizes on the marketing datasets (d_z = 0.62–1.17) but do not reach FDR significance at the sample sizes available. The CTGAN-Criteo comparison (p_raw = 0.044, d_z = 0.74, n = 10) is nominally significant; power analysis indicates approximately 15 seeds would be required for FDR-level significance at this effect size. The only individually FDR-significant comparison is the GReaT harm at n=2000 (p_fdr = 0.006, d_z = −4.40) — a very large and robust effect.
+**Individual comparisons.** Marketing dataset comparisons show medium-to-large effect sizes (d_z = 0.62–1.18) consistent across both 5-seed and 10-seed tests, but none reach FDR significance. At 5 seeds, 80% power requires d_z ≥ 2.0; the observed effects (d_z ≈ 0.7–1.2) would individually reach significance at approximately 10–15 seeds. The CTGAN-Criteo 10-seed comparison (p_raw = 0.044) is nominally significant at α=0.05 but does not survive FDR correction over the 12-test family. The only FDR-significant individual comparison is GReaT harm at n=2000 (p_fdr = 0.007, d_z = −4.40).
 
-**CTGAN vs TabDDPM.** The CTGAN advantage shows large effect sizes (d_z = 1.07–1.17) on both datasets at 5 seeds but does not reach FDR significance. Power analysis at d_z ≈ 1.1 and α=0.05 (one-sided) indicates approximately 10 seeds would yield 80% power; the present 5-seed comparison is underpowered. The direction and effect size are consistent across both datasets.
+**CTGAN vs TabDDPM.** Large effect sizes (d_z = 1.07–1.17) consistent in direction across both datasets. Underpowered at 5 seeds; direction and magnitude are consistent with the cross-dataset pattern.
 
 ---
 
