@@ -135,7 +135,7 @@ Training on synthetic data alone and testing on real data — the TSTR protocol 
 
 The TSTR gap grows monotonically as the dataset shrinks. German Credit (n = 1,000) shows the largest gap, consistent with the intuition that smaller training sets give the generator less material to learn the joint distribution faithfully. Across all configurations, no generator closes the gap. The implication for practitioners is unambiguous: synthetic data is an augmentation method, not a replacement method. Production models should not be trained on synthetic-only data unless real data is structurally unavailable.
 
-**Figure 1.** Cross-dataset summary of generator performance (`results/summary_comparison.png`). Augmentation gains concentrate on the two imbalanced marketing datasets (Hillstrom 0.9%, Criteo 0.2%); all five generators are within noise on the four balanced benchmark datasets (positive rate ≥ 11.7%). TSTR underperforms real-only training across all datasets and generators.
+**Figure 1.** Cross-dataset summary of generator performance (`results/plots/paper2/fig1_summary_comparison.png`). Augmentation gains concentrate on the two imbalanced marketing datasets (Hillstrom 0.9%, Criteo 0.2%); all five generators are within noise on the four balanced benchmark datasets (positive rate ≥ 11.7%). TSTR underperforms real-only training across all datasets and generators.
 
 ### 4.2 Augmentation Sweep on Benchmark Datasets: Gains Within Noise
 
@@ -152,13 +152,7 @@ All four gains are within the baseline confidence interval. The single notably p
 
 A consistent secondary observation across the augmentation sweeps is the U-curve in α: performance peaks at α ∈ {0.1, 0.2, 0.3} on every dataset and degrades toward α = 1.0. This pattern motivates the α* analysis in §5.3.
 
-**Figure 2.** U-shaped augmentation curves for all benchmark datasets.
-- `results/ucurve_telco_churn.png` — Telco Churn (26.6% positive rate)
-- `results/ucurve_bank_marketing.png` — Bank Marketing (11.7%)
-- `results/ucurve_credit_default.png` — German Credit (30.0%)
-- `results/ucurve_nomao_lead.png` — Nomao Lead full (28.3%)
-
-Each curve shows AUC vs. α for GaussianCopula, CTGAN, and SMOTE. The performance peak falls at α ∈ {0.1–0.3} on every dataset; gains are within noise of the baseline in all cases.
+**Figure 2.** U-shaped augmentation curves for all benchmark datasets (`results/plots/paper2/fig2_ucurves_benchmark.png`). Each panel shows AUC vs. α for GaussianCopula, CTGAN, and SMOTE with 95% CI bands (5 seeds). The performance peak falls at α ∈ {0.1–0.3} on every dataset; gains are within noise of the baseline in all cases.
 
 ### 4.3 Sparsity Stress Test: Sparsity Eliminates Small-n Augmentation Gains
 
@@ -171,7 +165,7 @@ The Nomao sparse condition (n = 500, 70% simulated missing features) combines th
 
 The dense baseline (last row) is reported for context: with all features present, the same classifier reaches AUC = 0.992, a 9.44-point gain over the sparse baseline. Augmentation closes none of this gap meaningfully. The finding is consistent with the imbalance hypothesis: sparsity-driven baseline degradation is not the failure mode synthetic augmentation addresses. Augmentation needs minority-class data starvation, not feature-information starvation, to deliver value.
 
-**Figure 3.** Augmentation U-curve for the sparse stress test (`results/ucurve_nomao_sparse.png`). The flat curve (all gains < 0.5 pts across all α) contrasts with the steep gains on the marketing datasets in Figure 5.
+**Figure 3.** Augmentation U-curve for the sparse stress test (`results/plots/paper2/fig3_ucurve_sparse.png`). The flat curve (all gains < 0.5 pts across all α) — compared against the dense baseline at AUC=0.992 — shows that sparsity-driven performance gaps are not recoverable through synthetic augmentation.
 
 ### 4.4 Marketing Datasets: Strong Gains Under Extreme Imbalance
 
@@ -199,15 +193,9 @@ Two observations beyond the headline gains warrant attention. First, the baselin
 
 The baseline TSTR check from §4.1 also holds here: even on these tasks where augmentation works strongly, synthetic-only training does not match real-only training. Augmentation, not replacement, is the operative regime.
 
-**Figure 4.** Low-data regime: AUC vs real training set size n ∈ {250, 500, 1000, 2000} for benchmark datasets.
-- `results/lowdata_telco_churn.png`
-- `results/lowdata_bank_marketing.png`
-- `results/lowdata_credit_default.png`
-- `results/lowdata_nomao_lead.png`
+**Figure 4.** Low-data regime: AUC vs real training set size n ∈ {250, 500, 1000, 2000} for benchmark datasets (`results/plots/paper2/fig4_lowdata_regime.png`). Augmentation recovers 30–60% of the performance gap at n=250 across all datasets; the benefit narrows rapidly at n ≥ 1,000.
 
-Augmentation recovers 30–60% of the performance gap at n=250 across all datasets; the benefit narrows rapidly at n ≥ 1,000.
-
-**Figure 5.** Augmentation U-curves for the two marketing datasets (`results/ucurve_hillstrom.png`, `results/ucurve_criteo.png`). The steep rise from α=0 to α≈0.2 and the substantially narrower CI bands on augmented runs (vs baseline) are the primary visual evidence for the variance-stabilisation finding.
+**Figure 5.** Augmentation U-curves for Hillstrom and Criteo with 95% CI bands (`results/plots/paper2/fig5_marketing_ci.png`). The steep rise from α=0 to α≈0.2 and the substantially narrower CI bands on augmented runs (vs the wide baseline band) are the primary visual evidence for the variance-stabilisation finding.
 
 ### 4.5 TabDDPM vs CTGAN: Compute Cost Not Justified
 
@@ -225,6 +213,8 @@ Extended training hurts rather than helps. On Hillstrom, TabDDPM at N_iter=10,00
 The paired comparison of CTGAN vs TabDDPM-10k shows: Hillstrom Δ=+7.76 pts (d_z=+1.25, p=0.049); Criteo Δ=+6.41 pts (d_z=+0.73, p=0.179). The Hillstrom result is nominally significant and represents the strongest individual paired test in the study outside of GReaT n=2000.
 
 This addresses the concern that the CTGAN advantage reflects undertrained TabDDPM. More training does not close the gap; it widens it. The architectural explanation in §5.2 — TabDDPM's unconditional sampling produces predominantly negative-class rows under extreme imbalance, while CTGAN's conditional vector explicitly targets the minority class — is consistent with this pattern: no amount of training can compensate for sampling from the wrong class distribution.
+
+**Figure 6.** CTGAN vs TabDDPM at N_iter=2k and N_iter=10k on Hillstrom and Criteo (`results/plots/paper2/fig7_tabddpm_comparison.png`). Extended training (dashed line) widens rather than closes the CTGAN advantage; on Hillstrom, all five TabDDPM-10k α values fall below baseline.
 
 ### 4.6 Multi-Classifier Robustness: Findings Are Not GBC-Specific
 
@@ -255,6 +245,10 @@ The CTGAN advantage on Criteo is preserved across Gradient Boosting (+12.04 pts)
 | MLP | 0.492 ± 0.034 | +5.50 pts (α=1.0) | +10.49 pts (α=0.1) |
 
 On Hillstrom, SMOTE on MLP delivers the largest gain (+10.49 pts at α=0.1). MLP on Hillstrom does not exhibit the convergence instability seen on Criteo — all 10 seeds converge (baseline 0.492 ± 0.034) — because the 0.9% positive rate yields approximately 72 real minority examples per training split, enough for stable gradient descent. The 0.2% Criteo rate yields only 16, which is below the stability threshold for vanilla MLP. Logistic Regression on Hillstrom is again insensitive, consistent with the near-ceiling baseline (0.652 is near the best augmented AUC observed for this dataset).
+
+**Figure 7.** MLP per-seed AUC on Criteo: baseline vs CTGAN-augmented (`results/plots/paper2/fig8_mlp_rescue.png`). Seeds marked ✗ failed to converge (AUC < 0.15); all 10 seeds reach AUC > 0.86 after CTGAN augmentation.
+
+**Figure 8.** Multi-classifier robustness on Criteo (`results/plots/paper2/fig9_multiclassifier.png`). Left: baseline AUC per classifier (LR near ceiling at 0.963; MLP collapsed at 0.284). Right: best augmentation gain — CTGAN leads on GBC and RF; LR insensitive; MLP rescued from failure.
 
 ### 4.7 GReaT (LLM-Based): Strong Per-Seed Fit Variance
 
@@ -299,6 +293,8 @@ We report paired t-tests on per-seed AUC differences for all headline comparison
 **Individual comparisons.** Marketing dataset comparisons show medium-to-large effect sizes (d_z = 0.62–1.18) consistent across both 5-seed and 10-seed tests, but none reach FDR significance. At 5 seeds, 80% power requires d_z ≥ 2.0; the observed effects (d_z ≈ 0.7–1.2) would individually reach significance at approximately 10–15 seeds. The CTGAN-Criteo 10-seed comparison (p_raw = 0.044) is nominally significant at α=0.05 but does not survive FDR correction over the 12-test family. The only FDR-significant individual comparison is GReaT harm at n=2000 (p_fdr = 0.007, d_z = −4.40).
 
 **CTGAN vs TabDDPM.** Large effect sizes (d_z = 1.07–1.17) consistent in direction across both datasets. Underpowered at 5 seeds; direction and magnitude are consistent with the cross-dataset pattern.
+
+**Figure 9.** Cross-dataset regression of CTGAN gain on log(positive rate) across six datasets (`results/plots/paper2/fig6_regression_hypothesis.png`). Slope = −0.024, R² = 0.92, p = 0.0023. Hillstrom and Criteo sit at the top-right (high gain, low positive rate); the four balanced benchmarks cluster near zero gain.
 
 ---
 
