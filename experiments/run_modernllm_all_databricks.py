@@ -47,19 +47,19 @@ from be_great import GReaT
 from transformers import set_seed as _hf_set_seed
 
 # ── Config ────────────────────────────────────────────────────────────────────
-# With LoRA (efficient_finetuning="lora"), only adapter params (~10M) have optimizer states.
-# Frozen backbone loaded in fp16. Memory: fp16_model + tiny_LoRA_states + activations.
+# Full fine-tuning (all weights updated) — same protocol as original GReaT paper.
+# H100 80GB fits Mistral-7B full fine-tuning comfortably (~32GB with Adam).
 #
-#   mistralai/Mistral-7B-v0.1   7B  fp16=14GB + LoRA~0.1GB ≈ 15GB ← DEFAULT, A10G safe
-#   meta-llama/Llama-3.2-3B     3B  fp16=6GB  + LoRA~0.1GB ≈  7GB ← any GPU
-#   EleutherAI/gpt-j-6b         6B  fp16=12GB + LoRA~0.1GB ≈ 13GB ← A10G safe
+#   mistralai/Mistral-7B-v0.1   7B  ← DEFAULT, H100 safe
+#   meta-llama/Llama-3.1-8B     8B  ← H100 safe (needs HF token + Llama licence)
+#   EleutherAI/gpt-j-6b         6B  ← H100 safe, no token needed
 LLM_MODEL              = os.environ.get("LLMSYNTH_LLM_MODEL", "mistralai/Mistral-7B-v0.1")
 WORK_DIR               = os.environ.get("LLMSYNTH_WORK_DIR", "/Workspace/Users/<your-username>/Temp")
 SEEDS                  = [42, 123, 7, 2024, 999]
 ALPHAS                 = [0.1, 0.2, 0.3, 0.5, 1.0]
 SMALL_NS_SWEEP         = [50, 100, 200]
-BATCH_SIZE             = 1
-GRADIENT_ACCUM_STEPS   = 8
+BATCH_SIZE             = 16   # H100 80GB — no memory constraints
+GRADIENT_ACCUM_STEPS   = 1    # no accumulation needed
 
 print(f"Model     : {LLM_MODEL}", flush=True)
 print(f"GPU       : {torch.cuda.get_device_name(0) if torch.cuda.is_available() else 'CPU'}", flush=True)
@@ -120,39 +120,24 @@ def ci95(values):
 
 
 def fit_and_sample(df_tr, n_samples, llm_model, batch_size, epochs, ckpt_dir):
-    """Fit GReaT with modern LLM via LoRA and return n_samples synthetic rows.
+    """Fit GReaT with modern LLM (full fine-tuning) and return n_samples synthetic rows.
 
-    LoRA keeps frozen backbone in fp16 (~14GB for 7B) and only trains
-    adapter layers (~10M params) — optimizer states are negligible.
-    Patch from_pretrained to load in fp16 before GReaT wraps it.
+    Same protocol as original GReaT paper — all weights updated.
+    H100 80GB fits Mistral-7B full fine-tuning comfortably.
     """
     if os.path.exists(ckpt_dir):
         shutil.rmtree(ckpt_dir)
 
-    # Monkey-patch to force fp16 model loading (GReaT loads in fp32 by default)
-    import transformers as _tr
-    _orig = _tr.AutoModelForCausalLM.from_pretrained
-    def _fp16_loader(name, **kw):
-        kw.setdefault("torch_dtype", torch.float16)
-        kw.setdefault("device_map", "auto")
-        return _orig(name, **kw)
-    _tr.AutoModelForCausalLM.from_pretrained = _fp16_loader
-
-    try:
-        model = GReaT(
-            llm=llm_model,
-            batch_size=batch_size,
-            epochs=epochs,
-            fp16=True,
-            efficient_finetuning="lora",      # only train LoRA adapters (~10M params)
-            gradient_accumulation_steps=GRADIENT_ACCUM_STEPS,
-            experiment_dir=ckpt_dir,
-            logging_steps=1,
-            logging_strategy="epoch",
-        )
-    finally:
-        # Restore original loader regardless of outcome
-        _tr.AutoModelForCausalLM.from_pretrained = _orig
+    model = GReaT(
+        llm=llm_model,
+        batch_size=batch_size,
+        epochs=epochs,
+        fp16=True,
+        gradient_accumulation_steps=GRADIENT_ACCUM_STEPS,
+        experiment_dir=ckpt_dir,
+        logging_steps=1,
+        logging_strategy="epoch",
+    )
     print(f"  [fit]", end="", flush=True)
     model.fit(df_tr)
     print(f"  [sample n={n_samples}]", end="", flush=True)
