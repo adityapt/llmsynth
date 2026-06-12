@@ -127,6 +127,8 @@ def fit_and_sample(df_tr, n_samples, llm_model, batch_size, epochs, ckpt_dir):
         epochs=epochs,
         fp16=True,
         gradient_accumulation_steps=GRADIENT_ACCUM_STEPS,
+        optim="adafactor",        # Adam stores 2× model in fp32; Adafactor ~0.1× → fits on A10G
+        adafactor=True,
         experiment_dir=ckpt_dir,
         logging_steps=1,
         logging_strategy="epoch",
