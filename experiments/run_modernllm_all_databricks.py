@@ -42,19 +42,18 @@ from be_great import GReaT
 from transformers import set_seed as _hf_set_seed
 
 # ── Config ────────────────────────────────────────────────────────────────────
-# Model options by GPU memory:
-#   T4 16GB  → EleutherAI/gpt-neo-2.7B (6GB fp16) or Mistral-7B with LOAD_IN_8BIT=True (~7GB)
-#   A10G 24GB → mistralai/Mistral-7B-v0.1 (14GB fp16) without quantization
-LLM_MODEL      = os.environ.get("LLMSYNTH_LLM_MODEL", "mistralai/Mistral-7B-v0.1")
-LOAD_IN_8BIT   = os.environ.get("LLMSYNTH_8BIT", "true").lower() == "true"  # halves VRAM
+# Model options by GPU memory (fp16):
+#   T4  16GB  → EleutherAI/gpt-neo-2.7B (~6GB)  ← default, safe on T4
+#               EleutherAI/gpt-j-6b       (~12GB) ← fits T4 if little else running
+#   A10G 24GB → mistralai/Mistral-7B-v0.1 (~14GB) ← set LLMSYNTH_LLM_MODEL
+LLM_MODEL      = os.environ.get("LLMSYNTH_LLM_MODEL", "EleutherAI/gpt-neo-2.7B")
 WORK_DIR       = os.environ.get("LLMSYNTH_WORK_DIR", "/Workspace/Users/<your-username>/Temp")
 SEEDS          = [42, 123, 7, 2024, 999]
 ALPHAS         = [0.1, 0.2, 0.3, 0.5, 1.0]
 SMALL_NS_SWEEP = [50, 100, 200]   # n values for alpha sweep (shoulder region)
-BATCH_SIZE     = 2                # reduced for larger models; 8-bit cuts memory further
+BATCH_SIZE     = 8                # gpt-neo-2.7B is smaller; increase if OOM reduce to 4
 
 print(f"Model     : {LLM_MODEL}", flush=True)
-print(f"8-bit     : {LOAD_IN_8BIT}", flush=True)
 print(f"GPU       : {torch.cuda.get_device_name(0) if torch.cuda.is_available() else 'CPU'}", flush=True)
 if torch.cuda.is_available():
     print(f"GPU VRAM  : {torch.cuda.get_device_properties(0).total_memory / 1e9:.1f} GB", flush=True)
@@ -121,7 +120,6 @@ def fit_and_sample(df_tr, n_samples, llm_model, batch_size, epochs, ckpt_dir):
         batch_size=batch_size,
         epochs=epochs,
         fp16=True,
-        load_in_8bit=LOAD_IN_8BIT,   # halves VRAM: Mistral-7B ~7GB instead of ~14GB
         experiment_dir=ckpt_dir,
         logging_steps=1,
         logging_strategy="epoch",
