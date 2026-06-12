@@ -51,12 +51,13 @@ from transformers import set_seed as _hf_set_seed
 #   T4  16GB  → EleutherAI/gpt-neo-2.7B (~6GB)  ← default, safe on T4
 #               EleutherAI/gpt-j-6b       (~12GB) ← fits T4 if little else running
 #   A10G 24GB → mistralai/Mistral-7B-v0.1 (~14GB) ← set LLMSYNTH_LLM_MODEL
-LLM_MODEL      = os.environ.get("LLMSYNTH_LLM_MODEL", "EleutherAI/gpt-neo-2.7B")
-WORK_DIR       = os.environ.get("LLMSYNTH_WORK_DIR", "/Workspace/Users/<your-username>/Temp")
-SEEDS          = [42, 123, 7, 2024, 999]
-ALPHAS         = [0.1, 0.2, 0.3, 0.5, 1.0]
-SMALL_NS_SWEEP = [50, 100, 200]   # n values for alpha sweep (shoulder region)
-BATCH_SIZE     = 8                # gpt-neo-2.7B is smaller; increase if OOM reduce to 4
+LLM_MODEL              = os.environ.get("LLMSYNTH_LLM_MODEL", "EleutherAI/gpt-neo-2.7B")
+WORK_DIR               = os.environ.get("LLMSYNTH_WORK_DIR", "/Workspace/Users/<your-username>/Temp")
+SEEDS                  = [42, 123, 7, 2024, 999]
+ALPHAS                 = [0.1, 0.2, 0.3, 0.5, 1.0]
+SMALL_NS_SWEEP         = [50, 100, 200]
+BATCH_SIZE             = 1    # 1 keeps activation memory minimal; optimizer states dominate OOM
+GRADIENT_ACCUM_STEPS   = 8    # effective batch = 1 × 8 = 8; matches original training dynamics
 
 print(f"Model     : {LLM_MODEL}", flush=True)
 print(f"GPU       : {torch.cuda.get_device_name(0) if torch.cuda.is_available() else 'CPU'}", flush=True)
@@ -125,6 +126,7 @@ def fit_and_sample(df_tr, n_samples, llm_model, batch_size, epochs, ckpt_dir):
         batch_size=batch_size,
         epochs=epochs,
         fp16=True,
+        gradient_accumulation_steps=GRADIENT_ACCUM_STEPS,
         experiment_dir=ckpt_dir,
         logging_steps=1,
         logging_strategy="epoch",
