@@ -68,6 +68,11 @@ ALPHAS                 = [0.1, 0.2, 0.3, 0.5, 1.0]
 SMALL_NS_SWEEP         = [50, 100, 200]
 BATCH_SIZE             = 16   # H100 80GB — no memory constraints
 GRADIENT_ACCUM_STEPS   = 1    # no accumulation needed
+# max_length per row — set tight to actual row token length (measured):
+#   Hillstrom: ~62 tokens, German Credit: ~103 tokens, Telco: ~120 tokens
+# GReaT default is 2000 which wastes 30× compute on generation.
+# 200 gives 10× headroom over longest expected row.
+MAX_LENGTH             = 200
 
 print(f"Model     : {LLM_MODEL}", flush=True)
 print(f"GPU       : {torch.cuda.get_device_name(0) if torch.cuda.is_available() else 'CPU'}", flush=True)
@@ -91,7 +96,7 @@ DATASETS = [
         "out_smalln": f"{WORK_DIR}/modernllm_hillstrom_results.csv",
         "out_alpha":  f"{WORK_DIR}/modernllm_alpha_hillstrom_results.csv",
         "holdout_n":  10000,
-        "small_ns":   [50, 100, 200, 500, 1000, 2000],
+        "small_ns":   [50, 100, 200, 500],
         "pos_rate_pct": 0.9,
     },
     {
@@ -100,7 +105,7 @@ DATASETS = [
         "out_smalln": f"{WORK_DIR}/modernllm_telco_results.csv",
         "out_alpha":  f"{WORK_DIR}/modernllm_alpha_telco_results.csv",
         "holdout_n":  2000,
-        "small_ns":   [50, 100, 200, 500, 1000, 2000],
+        "small_ns":   [50, 100, 200, 500],
         "pos_rate_pct": 26.6,
     },
 ]
@@ -169,7 +174,7 @@ def fit_and_sample(df_tr, n_samples, llm_model, batch_size, epochs, ckpt_dir):
     print(f"  [fit]", end="", flush=True)
     model.fit(df_tr)
     print(f"  [sample n={n_samples}]", end="", flush=True)
-    df_syn = model.sample(n_samples, guided_sampling=True, max_length=2000)
+    df_syn = model.sample(n_samples, guided_sampling=True, max_length=MAX_LENGTH)
     if len(df_syn) == 0:
         raise ValueError("Empty sample returned")
     df_syn.columns = df_tr.columns
