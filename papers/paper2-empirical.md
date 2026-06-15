@@ -1,4 +1,4 @@
-# When Class Imbalance Dominates: A Controlled Empirical Study of Synthetic Data Augmentation for Marketing Classification
+# Synthetic Data Augmentation in the Extreme-Imbalance Regime: A Controlled Empirical Study of Marketing Classification
 
 **Author:** Aditya Puttaparthi Tirumala
 **Date:** 2026-06-07
@@ -11,7 +11,15 @@
 
 ## Abstract
 
-Synthetic data augmentation is increasingly recommended as a remedy for class imbalance in tabular classification, but the evidence is fragmented across generators and datasets. We present a controlled empirical study testing the hypothesis that class imbalance is the dominant predictor of augmentation value across datasets and generators. We evaluate five generators (GaussianCopula, CTGAN, SMOTE, TabDDPM, GReaT) on seven datasets spanning positive rates from 0.2% to 30.0%, with 5–10 random seeds and four downstream classifier families. Our principal findings are: (1) a cross-dataset regression of CTGAN gain on log(positive rate) across six datasets yields R²=0.92 — a strong directional relationship, though based on six data points spanning a gap between 0.9% and 11.7% positive rate; on datasets with positive rates above 10%, no generator exceeds +0.27 AUC points; (2) on two real marketing datasets (Hillstrom 0.9%, Criteo 0.2%), CTGAN and SMOTE deliver gains of +5.7 to +12.9 AUC points with medium-to-large effect sizes (Cohen's d_z = 0.62–0.74, n=10 seeds); individual comparisons are directional but underpowered for FDR significance at the available sample size; (3) TabDDPM underperforms CTGAN at both default (N_iter=2k) and extended (N_iter=10k) training budgets — extended training widens the gap on Hillstrom (CTGAN advantage +7.76 pts, d_z=1.25, p=0.049) and the best TabDDPM-10k Hillstrom gain goes uniformly negative; CTGAN runs in ~2 min CPU vs ~29 min GPU for TabDDPM-10k; (4) augmentation rescues MLP convergence on Criteo entirely — 7 of 10 baseline seeds failed to converge at 0.2% positive rate; all 10 seeds converged after CTGAN augmentation; (5) the optimal synthetic-to-real mixing ratio α* lies consistently in {0.1–0.3}. The only individually FDR-significant finding is the GReaT harm at large n (n=2000, d_z=−4.40, p_fdr=0.006). Replacing GPT-2 with Mistral-7B in the GReaT framework does not resolve the failure modes in the extreme-imbalance regime: anonymized features still hurt, CTGAN still dominates on imbalanced data, and generation failures are more frequent at very small n. We conclude that practitioners targeting imbalanced marketing classification should default to CTGAN at α ∈ {0.1–0.3}; neither diffusion-based nor LLM-based generators are justified by the observed effect sizes in this regime.
+**Problem.** When does synthetic data augmentation actually help for tabular classification, and which generator should practitioners use? Existing benchmarks evaluate generators on heterogeneous tasks and report aggregate rankings that do not answer this question for practitioners working in imbalanced marketing classification.
+
+**Setup.** We evaluate five generators — GaussianCopula, CTGAN, SMOTE, TabDDPM, and GReaT (at two LLM scales: GPT-2 and Mistral-7B) — on seven datasets spanning positive rates from 0.2% to 30.0%, with 5–10 random seeds and four downstream classifier families.
+
+**Main finding.** Consistent gains appear only in the extreme-imbalance regime we tested: on two real marketing datasets (Hillstrom 0.9%, Criteo 0.2%), CTGAN and SMOTE deliver +5.7 to +12.9 AUC points. On four balanced benchmark datasets (positive rates 11.7%–30%), no generator exceeds +0.27 AUC points. A cross-dataset regression yields R²=0.92 (directional, n=6). On Criteo, 7 of 10 MLP seeds failed to converge on real data alone; CTGAN augmentation restored convergence in all 10.
+
+**Secondary finding.** CTGAN outperforms TabDDPM at both default and 5× extended training budgets — the gap widens with more training, consistent with a sampling-design interpretation: CTGAN's conditional vector targets the minority class directly; TabDDPM samples unconditionally, producing synthetic rows at the natural (extremely low) positive rate. This conclusion holds across Gradient Boosting, Random Forest, and MLP classifiers. It also holds when GPT-2 in GReaT is replaced by Mistral-7B. CTGAN also outperforms `class_weight='balanced'` reweighting by +7.55 AUC points on both datasets.
+
+**Recommendation and scope.** For practitioners in the positive-rate regime tested here (below 1%), evaluate CTGAN at α ∈ {0.1, 0.3} before more expensive alternatives. Above 10%, augmentation is unlikely to help based on our results. The 1%–10% region is untested and remains an open empirical question.
 
 **Keywords:** synthetic data, class imbalance, marketing classification, CTGAN, TabDDPM, empirical evaluation
 
@@ -23,12 +31,14 @@ Marketing and product data scientists routinely face classification problems wit
 
 This expansion has not been matched by corresponding clarity for practitioners. Existing benchmarks (Erickson et al., 2025; Davila et al., 2025) evaluate generators across heterogeneous tabular tasks and report aggregate rankings. These rankings — under which diffusion-based models such as TabDDPM dominate — are not directly informative for the practitioner asking a simpler question: *given my marketing classification task at this positive rate and this sample size, which generator should I use, and will augmentation help at all?*
 
+One result previews why this matters: on Criteo Display Advertising (0.2% positive rate), 7 of 10 MLP seeds failed to converge using real data alone — the classifier predicted the majority class every time. After CTGAN augmentation, all 10 seeds converged. Augmentation in this regime is not a marginal improvement; it is the difference between a working classifier and a broken one.
+
 This paper addresses that question with a controlled empirical study. We selected seven datasets deliberately to span the practitioner-relevant range of positive rates — from 30.0% (German Credit, a balanced benchmark) down to 0.2% (Criteo Display Advertising, extreme imbalance). We evaluated five generators (GaussianCopula, CTGAN, SMOTE, TabDDPM, GReaT) under a uniform protocol: 80/20 stratified train/test splits, an α-sweep over the synthetic-to-real mixing ratio, 5-seed confidence intervals on the marketing datasets, and 10-seed multi-classifier robustness checks on the two most imbalanced tasks.
 
 Our contributions are:
 
 1. **Multi-generator, multi-classifier confirmation of the imbalance hypothesis, with the first TabDDPM comparator.** Prior work (Chawla et al., 2002; Fonseca & Bacao, 2023; Won et al., 2026) established that augmentation value concentrates under class imbalance. We extend this to five generators and four classifier families, and add the first direct TabDDPM evaluation on real marketing data. A cross-dataset regression of CTGAN gain on log(positive rate) across six datasets yields R²=0.92, providing a directional characterisation of the relationship (n=6; the 1%–10% positive-rate region is unsampled). To our knowledge, no prior work reports a direct CTGAN vs TabDDPM 5-seed CI comparison on Hillstrom or Criteo.
-2. **A direct TabDDPM vs CTGAN head-to-head at two training budgets.** At N_iter=2,000 (default) and N_iter=10,000 (5× extended), CTGAN outperforms TabDDPM on both Hillstrom and Criteo. Extended training widens the gap rather than closing it — TabDDPM at 10k goes uniformly negative on Hillstrom. The CTGAN advantage at N_iter=10,000 reaches d_z=1.25 on Hillstrom (p=0.049). The gap is architectural, not a training budget artifact.
+2. **A direct TabDDPM vs CTGAN head-to-head at two training budgets.** At N_iter=2,000 (default) and N_iter=10,000 (5× extended), CTGAN outperforms TabDDPM on both Hillstrom and Criteo. Extended training widens the gap rather than closing it — TabDDPM at 10k goes uniformly negative on Hillstrom. The CTGAN advantage at N_iter=10,000 reaches d_z=1.25 on Hillstrom (p=0.049). The gap persists across training budgets tested, consistent with an architectural interpretation.
 3. **Multi-classifier robustness verification.** Extending to 10 seeds and four downstream classifiers on Hillstrom and Criteo, we confirm that CTGAN's advantage is not Gradient Boosting–specific: it holds for Random Forest (+9.6 pts on Criteo) and for MLP where augmentation rescues convergence entirely (7/10 baseline seeds failed; all 10 seeds converge post-CTGAN). Findings are scoped to these two datasets.
 4. **GReaT's failure modes are framework-level, not backbone-specific.** We replicate the GReaT protocol with Mistral-7B (a modern, more capable LLM) on all three GReaT datasets. The outcome does not change in the extreme-imbalance regime: Mistral-7B underperforms CTGAN on Hillstrom, still fails on anonymized features, and shows higher generation failure rates than GPT-2 at very small n. GReaT-fit variance (up to 12pp per-seed AUC drift) is documented for GPT-2; the underlying cause (non-deterministic GPU reductions) applies to any LLM fine-tuned on GPU.
 
@@ -60,7 +70,7 @@ Two gaps motivate the present study. First, neither benchmark separates the *imb
 
 ### 2.3 Class Imbalance as a Distinct Regime
 
-Class imbalance, particularly at positive rates below 5%, is qualitatively different from general data scarcity (He & Garcia, 2009; Branco et al., 2016; Fernández et al., 2018). The bottleneck is not total dataset size but the number of minority examples available to the classifier. At a 0.2% positive rate with 8,000 training rows, only 16 minority examples are expected per stratified split — and the variance in that count across splits is the primary driver of classifier instability. Standard remedies include SMOTE (Chawla et al., 2002), ADASYN (He et al., 2008), cost-sensitive learning, and threshold moving. Synthetic augmentation in this regime is not primarily about increasing total dataset size; it is about densifying the minority-class region of feature space. This framing motivates our hypothesis that class imbalance is the dominant driver of augmentation value in the tested regime.
+Class imbalance, particularly at positive rates below 5%, is qualitatively different from general data scarcity (He & Garcia, 2009; Branco et al., 2016; Fernández et al., 2018). The bottleneck is not total dataset size but the number of minority examples available to the classifier. At a 0.2% positive rate with 8,000 training rows, only 16 minority examples are expected per stratified split — and the variance in that count across splits is the primary driver of classifier instability. Standard remedies include SMOTE (Chawla et al., 2002), ADASYN (He et al., 2008), cost-sensitive learning, and threshold moving. Synthetic augmentation in this regime is not primarily about increasing total dataset size; it is about densifying the minority-class region of feature space. This framing motivates our hypothesis that class imbalance is the strongest observed correlate of augmentation value in the tested regime.
 
 ---
 
@@ -132,6 +142,17 @@ Training on synthetic data alone and testing on real data — the TSTR protocol 
 | Telco Churn | 0.837 | 0.803 (GaussianCopula) | −4.1% |
 | Bank Marketing | 0.909 | 0.750 (GaussianCopula) | −17.5% |
 | German Credit | 0.775 | 0.564 (GaussianCopula) | −27.2% |
+
+**Table 1 — Minority example budget per dataset.** The number of minority examples available per training split (80% of n_cap) makes the mechanism intuitive: with 16 minority examples, no classifier can learn a stable boundary. With 1,400+, augmentation adds little to what the real data already provides.
+
+| Dataset | Positive rate | Train rows | Minority examples | Baseline AUC |
+|---|---|---|---|---|
+| Criteo Display | 0.2% | 8,000 | **16** | 0.846 ± 0.228 |
+| Hillstrom Email | 0.9% | 8,000 | **72** | 0.548 ± 0.092 |
+| Bank Marketing | 11.7% | 12,000 | 1,404 | 0.928 ± 0.004 |
+| Telco Churn | 26.6% | 5,626 | 1,497 | 0.844 ± 0.015 |
+| German Credit | 30.0% | 800 | 240 | 0.794 ± 0.044 |
+| Nomao Lead | 28.3% | 8,000 | 2,264 | 0.991 ± 0.001 |
 
 The TSTR gap grows monotonically as the dataset shrinks. German Credit (n = 1,000) shows the largest gap, consistent with the intuition that smaller training sets give the generator less material to learn the joint distribution faithfully. Across all configurations, no generator closes the gap. The implication for practitioners is unambiguous: synthetic data is an augmentation method, not a replacement method. Production models should not be trained on synthetic-only data unless real data is structurally unavailable.
 
@@ -234,7 +255,7 @@ Extended training hurts rather than helps. On Hillstrom, TabDDPM at N_iter=10,00
 
 The paired comparison of CTGAN vs TabDDPM-10k shows: Hillstrom Δ=+7.76 pts (d_z=+1.25, p=0.049); Criteo Δ=+6.41 pts (d_z=+0.73, p=0.179). The Hillstrom result is nominally significant and represents the strongest individual paired test in the study outside of GReaT n=2000.
 
-This addresses the concern that the CTGAN advantage reflects undertrained TabDDPM. More training does not close the gap; it widens it. The architectural explanation in §5.2 — TabDDPM's unconditional sampling produces predominantly negative-class rows under extreme imbalance, while CTGAN's conditional vector explicitly targets the minority class — is consistent with this pattern: no amount of training can compensate for sampling from the wrong class distribution.
+This addresses the concern that the CTGAN advantage reflects undertrained TabDDPM. More training does not close the gap; it widens it. The architectural explanation in §5.2 — TabDDPM's unconditional sampling produces predominantly negative-class rows under extreme imbalance, while CTGAN's conditional vector explicitly targets the minority class — is consistent with this pattern: within the training budgets tested, more compute did not compensate for sampling from the wrong class distribution.
 
 ![Figure 6](../results/plots/paper2/fig7_tabddpm_comparison.png)
 
@@ -342,7 +363,7 @@ The GReaT-fit variance finding documented for GPT-2 (non-deterministic GPU reduc
 
 ### 4.8 Statistical Summary
 
-We report paired t-tests on per-seed AUC differences for all headline comparisons, with Benjamini-Hochberg FDR correction at q=0.10 over the family of 14 tests. Effect sizes are Cohen's d_z. Where both 5-seed and 10-seed data exist (§4.4 vs §4.6), both are reported; the 5-seed test matches the §4.4 confidence interval tables, the 10-seed test uses the multi-classifier GBC data from §4.6.
+**Statistical evidence hierarchy.** The primary evidence is the cross-dataset regime contrast (balanced vs extreme-imbalance datasets) — this is visible in Table 1 and requires no statistical test. The secondary evidence is per-dataset paired comparisons. The exploratory evidence is GReaT-related comparisons. We report paired t-tests on per-seed AUC differences for all headline comparisons, with Benjamini-Hochberg FDR correction at q=0.10 over the family of 14 tests. Effect sizes are Cohen's d_z. Where both 5-seed and 10-seed data exist (§4.4 vs §4.6), both are reported; the 5-seed test matches the §4.4 confidence interval tables, the 10-seed test uses the multi-classifier GBC data from §4.6.
 
 | Comparison | n | Δ mean | d_z | p_raw | p_fdr | Sig |
 |---|---|---|---|---|---|---|
@@ -410,6 +431,20 @@ This explanation is consistent with the §4.6 multi-classifier finding: CTGAN's 
 
 A practical corollary: if TabDDPM is to be made competitive in the extreme-imbalance regime, the relevant modification is a class-conditional sampling extension rather than additional training compute. Several recent variants (TabSyn, TabDiff (Shi et al., 2025)) include such mechanisms; we did not evaluate them and cannot speak to their behavior on this regime.
 
+**Table 2 — Synthetic positive rate by generator.** We measured the fraction of positive-class rows in synthetic samples generated at α=1.0 from the Hillstrom and Criteo training sets.
+
+| Generator | Hillstrom synthetic positive rate | Criteo synthetic positive rate |
+|---|---|---|
+| Real training data | 0.95% | 0.25% |
+| GaussianCopula | 0.96% | 0.25% |
+| **CTGAN** | **6.1%** | **25.4%** |
+| SMOTE | 100% (minority only) | 100% (minority only) |
+| TabDDPM | ~0.95%† | ~0.25%† |
+
+†TabDDPM samples unconditionally; positive rate approximated from training distribution.
+
+GaussianCopula faithfully mirrors the real positive rate — it generates no more minority-class rows than the original data, producing the same class starvation that degrades the classifier. CTGAN's conditional vector generates minority-class rows at 6–100× the natural rate, directly addressing the bottleneck. This table makes the mechanism visible: CTGAN helps because it generates the right class, not because it generates better-quality rows.
+
 The same unconditional-vs-conditional argument applies to GReaT (§4.7). GReaT fine-tunes an LLM to generate full rows from the learned distribution; at 0.9% positive rate, the LLM — whether GPT-2 or Mistral-7B — generates predominantly negative-class rows when sampled unconditionally. CTGAN's conditional vector directly addresses the minority-class scarcity that defines the imbalanced regime. The consistent finding across TabDDPM, GPT-2 GReaT, and Mistral-7B GReaT is that unconditional sampling does not solve the class-imbalance problem regardless of model architecture or capacity; conditional generation is the operative design choice.
 
 ### 5.3 Optimal Mixing Ratio α* ≈ 0.2–0.3
@@ -436,15 +471,26 @@ This study has the following limitations.
 
 **Cost-sensitive alternatives partially benchmarked.** We evaluated `class_weight='balanced'` via sample-weight reweighting on both marketing datasets (§4.4). CTGAN outperforms this baseline by +7.55 pts on both Hillstrom and Criteo. Threshold moving and ADASYN are not benchmarked and may yield different results on other tasks.
 
+**Threats to validity.** Four threats bear explicit statement. (1) *Construct validity:* all generators use library-default hyperparameters; tuned configurations might yield different relative rankings, though the TabDDPM extended-training experiment suggests the gap is not primarily a tuning artifact. (2) *Internal validity:* causal claims about class imbalance driving augmentation value rest on observational comparison across datasets, not a controlled manipulation; the 1%–10% positive-rate gap means the transition region is extrapolated, not directly evidenced. (3) *External validity:* all experiments cap at n=10,000; at full dataset scale (Hillstrom 64K, Criteo 13.9M), marginal value of synthetic rows is expected to diminish. (4) *Statistical validity:* individual per-dataset comparisons are directional but underpowered at 5–10 seeds; the regression across six datasets is the primary statistical support, and it covers a gap between 0.9% and 11.7%.
+
 **Generator reusability and operational costs not characterized.** All generators were fit per (dataset, seed) combination. In production, the question of whether a single fitted generator can be reused across campaigns within the same domain, and how generator quality drifts as the real data evolves, is not addressed here.
 
 ---
 
 ## 6. Conclusion
 
-We tested whether class imbalance is the dominant predictor of synthetic data augmentation value on tabular classification. Across seven datasets, five generators, and up to 10 seeds × 4 downstream classifiers, the evidence is consistent with this hypothesis in the regimes we tested. On the five control datasets with positive rates between 11.7% and 30.0%, no generator delivers a gain above +0.27 AUC points. On the two real marketing datasets at 0.9% and 0.2% positive rates, CTGAN and SMOTE deliver +5.7 to +12.9 AUC points under multi-seed confidence intervals, and the finding holds across multiple downstream classifier families.
+We tested whether class imbalance is the strongest observed correlate of synthetic data augmentation value on tabular classification. Across seven datasets, five generators, and up to 10 seeds × 4 downstream classifiers, the evidence is consistent with this hypothesis in the regimes we tested. On the five control datasets with positive rates between 11.7% and 30.0%, no generator delivers a gain above +0.27 AUC points. On the two real marketing datasets at 0.9% and 0.2% positive rates, CTGAN and SMOTE deliver +5.7 to +12.9 AUC points under multi-seed confidence intervals, and the finding holds across multiple downstream classifier families.
 
-Four secondary findings warrant emphasis. First, TabDDPM underperforms CTGAN on both marketing datasets at library defaults and widens the gap further when trained for 5× longer (N_iter=10k) — the gap is architectural rather than a training-budget artifact. Second, scaling GReaT from GPT-2 (117M) to Mistral-7B (7B) provides marginal improvement on semantic-feature datasets but does not resolve the fundamental failure modes: anonymized features still hurt, CTGAN still dominates on imbalanced data. Third, the optimal synthetic-to-real mixing ratio α* lies consistently in {0.1, 0.3} across generators and datasets. Fourth, GReaT exhibits per-seed AUC drift of up to 12 percentage points across independent fits — an evaluation failure mode that is model-agnostic (rooted in non-deterministic GPU reductions) and likely affects published benchmarks beyond GPT-2.
+Four secondary findings warrant emphasis. First, TabDDPM underperforms CTGAN on both marketing datasets at library defaults and widens the gap further when trained for 5× longer (N_iter=10k) — the gap is consistent with an architectural interpretation rather than a training-budget artifact. Second, scaling GReaT from GPT-2 (117M) to Mistral-7B (7B) provides marginal improvement on semantic-feature datasets but does not resolve the fundamental failure modes: anonymized features still hurt, CTGAN still dominates on imbalanced data. Third, the optimal synthetic-to-real mixing ratio α* lies consistently in {0.1, 0.3} across generators and datasets. Fourth, GReaT exhibits per-seed AUC drift of up to 12 percentage points across independent fits — an evaluation failure mode that is model-agnostic (rooted in non-deterministic GPU reductions) and likely affects published benchmarks beyond GPT-2.
+
+**Table 3 — Practitioner decision guide (based on this study's evidence).**
+
+| Positive rate | Observed pattern | Recommendation |
+|---|---|---|
+| > 10% | No generator exceeded +0.27 pts | Skip augmentation |
+| 1%–10% | **Not tested** | Validate experimentally before committing |
+| 0.5%–1% | CTGAN/SMOTE +5–6 pts (Hillstrom) | Evaluate CTGAN at α ∈ {0.1, 0.3} |
+| < 0.5% | CTGAN/SMOTE +12–13 pts (Criteo) | Strongly consider CTGAN augmentation |
 
 The practitioner-facing recommendation is simple. For data-scarce imbalanced regimes at the positive rates tested here (n_real ≈ 10,000, positive rates of 0.9% and 0.2%), CTGAN consistently achieved the largest gains in this study across datasets, seeds, and classifiers. The precise threshold below which augmentation reliably helps is not established by this study — the 1%–10% range is unsampled. We recommend evaluating it at α ∈ {0.1, 0.3} with a 5-point sweep for validation. Note that the individual per-dataset comparisons are directional but underpowered for FDR significance at 5–10 seeds; the cross-dataset regression (R²=0.92, p=0.0023) is the primary statistical support. For positive rates above 10%, skip augmentation: no generator exceeded +0.27 AUC points in this study. We benchmarked `class_weight='balanced'` on both marketing datasets: it hurts on Hillstrom (−1.80 pts) and underperforms CTGAN by +7.55 pts on both datasets. Synthetic augmentation delivers gains the cost-sensitive alternative cannot. For imbalanced marketing classification within the tested regime, the observed generator ranking is CTGAN ≈ SMOTE > TabDDPM > GaussianCopula > GReaT.
 
