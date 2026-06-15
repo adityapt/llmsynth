@@ -314,7 +314,7 @@ GPT-2 (117M, 2019) was the backbone used in the original GReaT paper. A natural 
 
 | n | Baseline | GPT-2 GReaT | Mistral-7B | GPT-2 gain | Mistral gain |
 |---|---|---|---|---|---|
-| 50 | 0.494 | 0.516 ± 0.047 | 0.473 ± — | +2.25 pts | −2.06 pts† |
+| 50 | 0.494 | 0.516 ± 0.047 | —† | +2.25 pts | —† |
 | 100 | 0.488 | 0.500 ± 0.052 | 0.524 ± 0.060 | +1.15 pts | +3.55 pts |
 | 200 | 0.493 | 0.497 ± 0.091 | 0.500 ± 0.102 | +0.40 pts | +0.69 pts |
 | 500 | 0.512 | 0.512 ± 0.079 | 0.531 ± 0.037 | −0.02 pts | +1.84 pts |
@@ -328,11 +328,13 @@ GPT-2 (117M, 2019) was the backbone used in the original GReaT paper. A natural 
 | 200 | 0.767 | 0.766 ± 0.026 | 0.777 ± 0.030 | −0.07 pts | +0.98 pts |
 | 500 | 0.795 | 0.797 ± 0.007 | 0.803 ± 0.017 | +0.15 pts | +0.76 pts |
 
-†n=50 Mistral-7B on Hillstrom: only 1 valid seed (4/5 sampling failures at extreme imbalance + very small n). CI not reported.
+†n=50 Mistral-7B on Hillstrom excluded: 4 of 5 seeds failed to generate valid rows at 0.2% positive rate + n=50. Larger models appear more brittle than GPT-2 (1/5 failures) at extreme small n under severe imbalance. AUC reported for the 1 successful seed should not be compared to the 5-seed GPT-2 mean.
 
 ![Figure 10](../results/plots/paper2/fig10_modernllm_comparison.png)
 
 **Figure 10.** GPT-2 (117M) vs Mistral-7B (7B) vs Baseline across three datasets. Shaded regions are 95% CI. Mistral-7B shows marginal improvement over GPT-2 on semantic-feature datasets (Hillstrom, Telco) but the fundamental failure modes persist.
+
+**Paired tests: Mistral-7B vs GPT-2.** None of the Mistral-7B vs GPT-2 comparisons reach statistical significance at 5 seeds. Telco n=100 shows the largest effect (Δ=+3.47 pts, d_z=+0.79, p=0.154); Hillstrom comparisons are all smaller and non-significant (Hillstrom n=500: Δ=+1.86 pts, d_z=+0.34, p=0.492). The directional improvement on Telco is consistent but underpowered. Mistral-7B fit time: ~30 min per (n, seed) on H100 GPU, vs ~5 min for GPT-2 on A100.
 
 **Key finding: GReaT's failure modes are framework-level, not backbone-specific.** Switching from GPT-2 to Mistral-7B within the GReaT framework does not change the outcome in the regime that matters for this paper. On anonymized features (German Credit), Mistral-7B still hurts across most n values. On Hillstrom (semantic + extreme imbalance), Mistral-7B's best gain (+3.55 pts at n=100) remains below CTGAN (+5.75 pts), and generation failures are more frequent than with GPT-2 (4/5 seeds failed at n=50 vs 1/5 for GPT-2). On Telco (semantic + balanced), Mistral-7B does consistently outperform GPT-2 across all n values — suggesting that when GReaT's preconditions are met (semantic features, sufficient class balance), a more capable backbone helps. But in the extreme-imbalance regime that is the focus of this paper, backbone choice does not change the conclusion.
 
@@ -407,6 +409,8 @@ TabDDPM samples from the learned joint distribution unconditionally. At 0.2% pos
 This explanation is consistent with the §4.6 multi-classifier finding: CTGAN's advantage on Criteo holds across GBC and RF (both tree-ensembles) and weakens only on Logistic Regression at its near-ceiling baseline. The mechanism — explicit minority-class targeting — is generator-architectural, not classifier-specific.
 
 A practical corollary: if TabDDPM is to be made competitive in the extreme-imbalance regime, the relevant modification is a class-conditional sampling extension rather than additional training compute. Several recent variants (TabSyn, TabDiff) include such mechanisms; we did not evaluate them and cannot speak to their behavior on this regime.
+
+The same unconditional-vs-conditional argument applies to GReaT (§4.7). GReaT fine-tunes an LLM to generate full rows from the learned distribution; at 0.9% positive rate, the LLM — whether GPT-2 or Mistral-7B — generates predominantly negative-class rows when sampled unconditionally. CTGAN's conditional vector directly addresses the minority-class scarcity that defines the imbalanced regime. The consistent finding across TabDDPM, GPT-2 GReaT, and Mistral-7B GReaT is that unconditional sampling does not solve the class-imbalance problem regardless of model architecture or capacity; conditional generation is the operative design choice.
 
 ### 5.3 Optimal Mixing Ratio α* ≈ 0.2–0.3
 
