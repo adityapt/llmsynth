@@ -1,0 +1,91 @@
+n,seed,method,alpha,auc,error,model
+50,7,Baseline,0.0,,single class in sample,—
+50,7,ModernLLM,0.1,,single class in sample,mistralai/Mistral-7B-v0.1
+50,7,ModernLLM,0.2,,single class in sample,mistralai/Mistral-7B-v0.1
+50,7,ModernLLM,0.3,,single class in sample,mistralai/Mistral-7B-v0.1
+50,7,ModernLLM,0.5,,single class in sample,mistralai/Mistral-7B-v0.1
+50,7,ModernLLM,1.0,,single class in sample,mistralai/Mistral-7B-v0.1
+200,42,Baseline,0.0,0.5255488283439848,,—
+200,42,ModernLLM,0.1,0.4835160892476735,,mistralai/Mistral-7B-v0.1
+200,42,ModernLLM,0.2,0.4835160892476735,,mistralai/Mistral-7B-v0.1
+200,42,ModernLLM,0.3,0.4835160892476735,,mistralai/Mistral-7B-v0.1
+200,42,ModernLLM,0.5,0.4835160892476735,,mistralai/Mistral-7B-v0.1
+200,42,ModernLLM,1.0,0.4835160892476735,,mistralai/Mistral-7B-v0.1
+50,123,Baseline,0.0,,single class in sample,—
+50,123,ModernLLM,0.1,,single class in sample,mistralai/Mistral-7B-v0.1
+50,123,ModernLLM,0.2,,single class in sample,mistralai/Mistral-7B-v0.1
+50,123,ModernLLM,0.3,,single class in sample,mistralai/Mistral-7B-v0.1
+50,123,ModernLLM,0.5,,single class in sample,mistralai/Mistral-7B-v0.1
+50,123,ModernLLM,1.0,,single class in sample,mistralai/Mistral-7B-v0.1
+50,2024,Baseline,0.0,0.4976791120080726,,—
+50,2024,ModernLLM,0.1,0.5817042269312703,,mistralai/Mistral-7B-v0.1
+50,2024,ModernLLM,0.2,0.4624391747953806,,mistralai/Mistral-7B-v0.1
+50,2024,ModernLLM,0.3,0.408181410472026,,mistralai/Mistral-7B-v0.1
+50,2024,ModernLLM,0.5,0.4285116044399595,,mistralai/Mistral-7B-v0.1
+50,2024,ModernLLM,1.0,0.4731500168180289,,mistralai/Mistral-7B-v0.1
+100,999,Baseline,0.0,0.5468079381096536,,—
+100,999,ModernLLM,0.1,0.4778405650857719,,mistralai/Mistral-7B-v0.1
+100,999,ModernLLM,0.2,0.4911167171207534,,mistralai/Mistral-7B-v0.1
+100,999,ModernLLM,0.3,0.5408061441865679,,mistralai/Mistral-7B-v0.1
+100,999,ModernLLM,0.5,0.4903279515640766,,mistralai/Mistral-7B-v0.1
+100,999,ModernLLM,1.0,0.5048783495907613,,mistralai/Mistral-7B-v0.1
+50,42,Baseline,0.0,,single class in sample,—
+50,42,ModernLLM,0.1,,single class in sample,mistralai/Mistral-7B-v0.1
+50,42,ModernLLM,0.2,,single class in sample,mistralai/Mistral-7B-v0.1
+50,42,ModernLLM,0.3,,single class in sample,mistralai/Mistral-7B-v0.1
+50,42,ModernLLM,0.5,,single class in sample,mistralai/Mistral-7B-v0.1
+50,42,ModernLLM,1.0,,single class in sample,mistralai/Mistral-7B-v0.1
+200,2024,Baseline,0.0,0.5550919385581343,,—
+200,2024,ModernLLM,0.1,0.3796501849983182,,mistralai/Mistral-7B-v0.1
+200,2024,ModernLLM,0.2,0.4994450050454087,,mistralai/Mistral-7B-v0.1
+200,2024,ModernLLM,0.3,0.6182352281645924,,mistralai/Mistral-7B-v0.1
+200,2024,ModernLLM,0.5,0.3806547819262249,,mistralai/Mistral-7B-v0.1
+200,2024,ModernLLM,1.0,0.4994450050454087,,mistralai/Mistral-7B-v0.1
+100,42,Baseline,0.0,,single class in sample,—
+100,42,ModernLLM,0.1,,single class in sample,mistralai/Mistral-7B-v0.1
+100,42,ModernLLM,0.2,,single class in sample,mistralai/Mistral-7B-v0.1
+100,42,ModernLLM,0.3,,single class in sample,mistralai/Mistral-7B-v0.1
+100,42,ModernLLM,0.5,,single class in sample,mistralai/Mistral-7B-v0.1
+100,42,ModernLLM,1.0,,single class in sample,mistralai/Mistral-7B-v0.1
+50,999,Baseline,0.0,,single class in sample,—
+50,999,ModernLLM,0.1,,single class in sample,mistralai/Mistral-7B-v0.1
+50,999,ModernLLM,0.2,,single class in sample,mistralai/Mistral-7B-v0.1
+50,999,ModernLLM,0.3,,single class in sample,mistralai/Mistral-7B-v0.1
+50,999,ModernLLM,0.5,,single class in sample,mistralai/Mistral-7B-v0.1
+50,999,ModernLLM,1.0,,single class in sample,mistralai/Mistral-7B-v0.1
+100,123,Baseline,0.0,0.5157080390178271,,—
+100,123,ModernLLM,0.1,0.5157080390178271,,mistralai/Mistral-7B-v0.1
+100,123,ModernLLM,0.2,0.5157080390178271,,mistralai/Mistral-7B-v0.1
+100,123,ModernLLM,0.3,0.5157080390178271,,mistralai/Mistral-7B-v0.1
+100,123,ModernLLM,0.5,0.5157080390178271,,mistralai/Mistral-7B-v0.1
+100,123,ModernLLM,1.0,0.5157080390178271,,mistralai/Mistral-7B-v0.1
+100,7,Baseline,0.0,,single class in sample,—
+100,7,ModernLLM,0.1,,single class in sample,mistralai/Mistral-7B-v0.1
+100,7,ModernLLM,0.2,,single class in sample,mistralai/Mistral-7B-v0.1
+100,7,ModernLLM,0.3,,single class in sample,mistralai/Mistral-7B-v0.1
+100,7,ModernLLM,0.5,,single class in sample,mistralai/Mistral-7B-v0.1
+100,7,ModernLLM,1.0,,single class in sample,mistralai/Mistral-7B-v0.1
+100,2024,Baseline,0.0,0.473174122659491,,—
+100,2024,ModernLLM,0.1,0.5325058863101244,,mistralai/Mistral-7B-v0.1
+100,2024,ModernLLM,0.2,0.494853683148335,,mistralai/Mistral-7B-v0.1
+100,2024,ModernLLM,0.3,0.494853683148335,,mistralai/Mistral-7B-v0.1
+100,2024,ModernLLM,0.5,0.473174122659491,,mistralai/Mistral-7B-v0.1
+100,2024,ModernLLM,1.0,0.5510079605336922,,mistralai/Mistral-7B-v0.1
+200,123,Baseline,0.0,0.5157080390178271,,—
+200,123,ModernLLM,0.1,0.5157080390178271,,mistralai/Mistral-7B-v0.1
+200,123,ModernLLM,0.2,0.5101524834622715,,mistralai/Mistral-7B-v0.1
+200,123,ModernLLM,0.3,0.5101524834622715,,mistralai/Mistral-7B-v0.1
+200,123,ModernLLM,0.5,0.4848811525955824,,mistralai/Mistral-7B-v0.1
+200,123,ModernLLM,1.0,0.5855510707478416,,mistralai/Mistral-7B-v0.1
+200,7,Baseline,0.0,,single class in sample,—
+200,7,ModernLLM,0.1,,single class in sample,mistralai/Mistral-7B-v0.1
+200,7,ModernLLM,0.2,,single class in sample,mistralai/Mistral-7B-v0.1
+200,7,ModernLLM,0.3,,single class in sample,mistralai/Mistral-7B-v0.1
+200,7,ModernLLM,0.5,,single class in sample,mistralai/Mistral-7B-v0.1
+200,7,ModernLLM,1.0,,single class in sample,mistralai/Mistral-7B-v0.1
+200,999,Baseline,0.0,0.5374066599394551,,—
+200,999,ModernLLM,0.1,0.5494808835071197,,mistralai/Mistral-7B-v0.1
+200,999,ModernLLM,0.2,0.45612680793810967,,mistralai/Mistral-7B-v0.1
+200,999,ModernLLM,0.3,0.5138597376387488,,mistralai/Mistral-7B-v0.1
+200,999,ModernLLM,0.5,0.4695918824980379,,mistralai/Mistral-7B-v0.1
+200,999,ModernLLM,1.0,0.4304114811077475,,mistralai/Mistral-7B-v0.1

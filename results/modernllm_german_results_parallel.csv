@@ -1,0 +1,49 @@
+n,seed,method,auc,error,model
+50,2024,Baseline,0.5282738095238095,,—
+50,2024,ModernLLM,0.5783333333333334,,mistralai/Mistral-7B-v0.1
+50,42,Baseline,0.5804761904761905,,—
+50,42,ModernLLM,0.6163095238095239,,mistralai/Mistral-7B-v0.1
+50,7,Baseline,0.7283333333333333,,—
+50,7,ModernLLM,0.7003571428571429,,mistralai/Mistral-7B-v0.1
+50,123,Baseline,0.6420238095238096,,—
+50,123,ModernLLM,0.710952380952381,,mistralai/Mistral-7B-v0.1
+50,999,Baseline,0.7438095238095238,,—
+50,999,ModernLLM,0.6965476190476191,,mistralai/Mistral-7B-v0.1
+100,123,Baseline,0.7250000000000001,,—
+100,123,ModernLLM,0.6635714285714286,,mistralai/Mistral-7B-v0.1
+100,42,Baseline,0.6919047619047619,,—
+100,42,ModernLLM,0.6102380952380952,,mistralai/Mistral-7B-v0.1
+100,7,Baseline,0.6770238095238095,,—
+100,7,ModernLLM,0.6097619047619047,,mistralai/Mistral-7B-v0.1
+100,2024,Baseline,0.6867857142857143,,—
+100,2024,ModernLLM,0.6655952380952381,,mistralai/Mistral-7B-v0.1
+100,999,Baseline,0.7589285714285715,,—
+100,999,ModernLLM,0.7108333333333333,,mistralai/Mistral-7B-v0.1
+200,123,Baseline,0.8032142857142858,,—
+200,123,ModernLLM,,Empty after NaN cleaning,mistralai/Mistral-7B-v0.1
+200,42,Baseline,0.7122619047619048,,—
+200,42,ModernLLM,0.7267857142857144,,mistralai/Mistral-7B-v0.1
+200,7,Baseline,0.7563095238095239,,—
+200,7,ModernLLM,0.6847619047619048,,mistralai/Mistral-7B-v0.1
+200,999,Baseline,0.7671428571428572,,—
+200,999,ModernLLM,0.6948809523809524,,mistralai/Mistral-7B-v0.1
+200,2024,Baseline,0.7547619047619049,,—
+200,2024,ModernLLM,0.7361904761904761,,mistralai/Mistral-7B-v0.1
+500,42,Baseline,0.7640476190476191,,—
+500,42,ModernLLM,0.7591666666666667,,mistralai/Mistral-7B-v0.1
+500,123,Baseline,0.7722619047619046,,—
+500,123,ModernLLM,0.785,,mistralai/Mistral-7B-v0.1
+500,7,Baseline,0.7135714285714286,,—
+500,7,ModernLLM,0.7471428571428572,,mistralai/Mistral-7B-v0.1
+500,999,Baseline,0.794404761904762,,—
+500,999,ModernLLM,0.7300000000000001,,mistralai/Mistral-7B-v0.1
+500,2024,Baseline,0.7592857142857143,,—
+500,2024,ModernLLM,0.7630952380952383,,mistralai/Mistral-7B-v0.1
+200,123,Baseline,0.8032142857142858,,—
+200,123,ModernLLM,,Empty after NaN cleaning,mistralai/Mistral-7B-v0.1
+200,123,Baseline,0.8032142857142858,,—
+200,123,ModernLLM,,Empty after NaN cleaning,mistralai/Mistral-7B-v0.1
+200,123,Baseline,0.8032142857142858,,—
+200,123,ModernLLM,,Empty after NaN cleaning,mistralai/Mistral-7B-v0.1
+200,123,Baseline,0.8032142857142858,,—
+200,123,ModernLLM,,Empty after NaN cleaning,mistralai/Mistral-7B-v0.1
