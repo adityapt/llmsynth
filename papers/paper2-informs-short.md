@@ -62,7 +62,24 @@ Table 2 explains why: TabDDPM samples unconditionally at the natural positive ra
 
 ## 5. LLM-Based Synthesis (GReaT)
 
-We evaluate GReaT (Borisov et al., 2023) at two backbone scales: GPT-2 (117M parameters) and Mistral-7B (7B parameters). On German Credit (anonymized features), both models hurt performance across all training sizes. On Hillstrom (semantic features), Mistral-7B is marginally better than GPT-2 at some training sizes (n=100: +3.55 vs +1.15 pts) but neither model approaches CTGAN (+5.75 pts). The finding is framework-level, not backbone-specific: GReaT samples from the learned joint distribution without minority-class conditioning, generating near-natural positive rates regardless of LLM scale. Scaling from GPT-2 to Mistral-7B does not resolve this architectural constraint.
+We evaluate GReaT (Borisov et al., 2023) — which fine-tunes a language model on serialized tabular rows — at two backbone scales: GPT-2 (117M parameters, 2019) and Mistral-7B (7B parameters, 2024). GReaT is tested on three datasets covering two conditions: anonymized features (German Credit) and semantic features under different class balance levels (Hillstrom: extreme imbalance; Telco: balanced).
+
+**Table 3 — GReaT vs CTGAN: AUC gain over baseline, selected training sizes**
+
+| Dataset | Condition | GPT-2 GReaT | Mistral-7B | CTGAN reference |
+|---|---|---|---|---|
+| German Credit | Anonymized, n=100 | −7.02 pts | −5.59 pts | +0.27 pts |
+| German Credit | Anonymized, n=500 | −3.00 pts | −0.38 pts | +0.27 pts |
+| Hillstrom | Semantic + extreme imbalance, n=50 | +2.25 pts | failed† | +5.75 pts |
+| Hillstrom | Semantic + extreme imbalance, n=100 | +1.15 pts | +3.55 pts | +5.75 pts |
+| Hillstrom | Semantic + extreme imbalance, n=2000 | **−6.87 pts** | — | +5.75 pts |
+| Telco | Semantic + balanced, n=100 | −1.38 pts | +2.09 pts | +0.28 pts |
+
+†n=50 Mistral-7B on Hillstrom: 4/5 seeds failed to generate parseable rows at 0.9% positive rate + very small training set.
+
+Three findings emerge. First, on anonymized features (German Credit), both LLM scales hurt consistently — the LLM prior is inapplicable when feature names carry no semantic meaning. Second, on Hillstrom with extreme imbalance, GReaT at large n actively harms performance (GPT-2: −6.87 pts at n=2,000, d_z=−4.40, FDR-significant, p=0.006) — LLM-generated rows at 0.9% positive rate dilute rather than enrich the minority class as n grows. Third, Mistral-7B outperforms GPT-2 only when LLM priors are operative (Telco: semantic + balanced), but still trails CTGAN on the extreme-imbalance datasets that matter for marketing.
+
+The architectural explanation connects to Table 2: GReaT, like TabDDPM, samples from the joint distribution without minority-class conditioning. The observed synthetic positive rate from GReaT would mirror the training distribution (~0.9% on Hillstrom) regardless of whether the backbone is GPT-2 or Mistral-7B. Scaling the LLM does not change this sampling property.
 
 ---
 
