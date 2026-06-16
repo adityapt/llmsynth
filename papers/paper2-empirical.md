@@ -435,13 +435,13 @@ A practical corollary: if TabDDPM is to be made competitive in the extreme-imbal
 
 | Generator | Hillstrom synthetic positive rate | Criteo synthetic positive rate |
 |---|---|---|
-| Real training data | 0.87% | 0.30% |
-| GaussianCopula | 0.96% | 0.25% |
-| **CTGAN** | **6.1%** | **25.4%** |
+| Real training data | 0.90% | 0.30% |
+| GaussianCopula | 0.96% ± 0.12% | 0.32% ± 0.06% |
+| **CTGAN** | **6.34% ± 0.21%** | **26.76% ± 1.18%** |
 | SMOTE | 100% (minority only) | 100% (minority only) |
 | TabDDPM | 0.89% ± 0.05% | 0.33% ± 0.09% |
 
-TabDDPM positive rates measured directly: 5 seeds × 8,000 generated rows per dataset. All values within noise of the real training positive rate.
+All values measured directly: 5 seeds × 8,000 generated rows per dataset.
 
 GaussianCopula faithfully mirrors the real positive rate — it generates no more minority-class rows than the original data, producing the same class starvation that degrades the classifier. TabDDPM also samples near the natural rate (0.89% vs 0.87% real on Hillstrom; 0.33% vs 0.30% real on Criteo) — measured directly from 5 seeds × 8,000 generated rows. CTGAN's conditional vector generates minority-class rows at 6–100× the natural rate, directly addressing the bottleneck. This table makes the mechanism visible without inference: CTGAN helps because it generates the right class, not because it generates better-quality rows. The TabDDPM result closes the reviewer objection to approximation — it is now measured, not assumed.
 
