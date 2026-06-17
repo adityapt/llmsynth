@@ -85,7 +85,7 @@ flowchart TD
 
 **LLM-based generators (REaLTabFormer, GReaT, TabuLa).** Large language models have been adapted to generate tabular data by serializing rows as text. These approaches show promise on small datasets but are expensive, can hallucinate impossible feature combinations, and currently lack the calibration and privacy guarantees of probabilistic models. Davila et al. (2025) found LLM-based methods ranking lower than diffusion and GAN-based methods on utility benchmarks in the prosumer hardware setting.
 
-**Hybrid approaches.** A growing literature augments GAN-generated samples with interpolation-based oversampling. A 2026 telecom study found that a hybrid SMOTE+GAN approach improved churn prediction F1 over either method alone (Tanha et al., 2026), with the combination attributed to SMOTE's initial balancing reducing GAN mode collapse while the GAN captures non-linear feature interactions beyond linear interpolation.
+**Hybrid approaches.** A growing literature augments GAN-generated samples with interpolation-based oversampling. A 2026 telecom study found that a hybrid SMOTE+GAN approach improved churn prediction F1 over either method alone (Agrawal et al., 2026), with the combination attributed to SMOTE's initial balancing reducing GAN mode collapse while the GAN captures non-linear feature interactions beyond linear interpolation.
 
 ### 2.3 Evaluation Protocols
 
@@ -139,7 +139,7 @@ Synthesizing evidence across recent benchmarks, several conditions favor synthet
 
 4. **Cohort-level data gaps.** New products, new market segments, or low-volume campaign variants may have insufficient samples for stable models. Synthetic extrapolation from related cohorts can bridge these gaps, though validation on real holdout data from the cohort remains essential.
 
-**Figure 2** (see `fig2-augmentation-utility.png`) illustrates estimated AUC improvements under the augmentation regime across method families, based on aggregated evidence from Davila et al. (2025), Tanha et al. (2026), and Won et al. (2026).
+**Figure 2** (see `fig2-augmentation-utility.png`) illustrates estimated AUC improvements under the augmentation regime across method families, based on aggregated evidence from Davila et al. (2025), Agrawal et al. (2026), and Won et al. (2026).
 
 ### 3.4 When Synthetic Data Does Not Help
 
@@ -147,7 +147,7 @@ Equally important are the conditions where synthetic data fails to add value —
 
 1. **Abundant real data.** When $n > 50{,}000$ with reasonably balanced targets, adding synthetic data rarely outperforms the real-data baseline. The marginal information content of additional synthetic samples is low. Davila et al. (2025) note diminishing returns in this regime across all methods tested.
 
-2. **Oversampling past the sweet spot.** Chia Ramírez (2025; arXiv:2510.18252) systematically evaluated 10 augmentation scenarios using the *Give Me Some Credit* dataset (97,243 observations, 7% default rate). Key findings: ADASYN with 1× multiplication achieved optimal performance (AUC 0.6778, Gini 0.3557); higher multiplication factors (2×, 3×) caused measurable degradation. The empirically identified optimal majority:minority ratio was **6.6:1** — not the 1:1 balance that practitioners typically target. The author explicitly cautions against treating this as a universal constant; it should be understood as a methodology for finding an optimal ratio, not a fixed rule.
+2. **Oversampling past the sweet spot.** Chia (2025; arXiv:2510.18252) systematically evaluated 10 augmentation scenarios using the *Give Me Some Credit* dataset (97,243 observations, 7% default rate). Key findings: ADASYN with 1× multiplication achieved optimal performance (AUC 0.6778, Gini 0.3557); higher multiplication factors (2×, 3×) caused measurable degradation. The empirically identified optimal majority:minority ratio was **6.6:1** — not the 1:1 balance that practitioners typically target. The author explicitly cautions against treating this as a universal constant; it should be understood as a methodology for finding an optimal ratio, not a fixed rule.
 
 3. **Causal/structural violations.** Standard generative models learn associations, not causal mechanisms. Synthetic data that preserves marginals and pairwise correlations may destroy the conditional independencies required for uplift or attribution models. Causal generative models (e.g., TabSCM) are an active research area but not yet production-ready.
 
@@ -167,7 +167,7 @@ We examine four canonical task types and map the evidence to practical recommend
 
 **Data challenge.** Monthly churn rates of 1–10% create severe class imbalance. Certain customer cohorts (high-value, recently acquired) may have small $n$.
 
-**Evidence.** Tanha et al. (2026) studied telecom churn prediction using a hybrid SMOTE+GAN approach (CTGAN as the GAN component) on the IBM Telco Customer Churn dataset (7,043 records, 26.5% churn rate). They found that the SMOTE–GAN hybrid outperformed both standalone SMOTE and standalone GAN augmentation on precision, F1-score, and G-mean for the churn class across six ML classifiers (LR, DT, RF, LightGBM, CatBoost, XGBoost). Won et al. (2026; MDPI Electronics) independently confirmed measurable AUC and F1 improvements from synthetic oversampling on comparable imbalanced tabular tasks. Davila et al. (2025), while not focused specifically on churn, confirm that the imbalanced classification regime is where synthetic augmentation reliably earns its keep.
+**Evidence.** Agrawal et al. (2026) studied telecom churn prediction using a hybrid SMOTE+GAN approach (CTGAN as the GAN component) on the IBM Telco Customer Churn dataset (7,043 records, 26.5% churn rate). They found that the SMOTE–GAN hybrid outperformed both standalone SMOTE and standalone GAN augmentation on precision, F1-score, and G-mean for the churn class across six ML classifiers (LR, DT, RF, LightGBM, CatBoost, XGBoost). Won et al. (2026; MDPI Electronics) independently confirmed measurable AUC and F1 improvements from synthetic oversampling on comparable imbalanced tabular tasks. Davila et al. (2025), while not focused specifically on churn, confirm that the imbalanced classification regime is where synthetic augmentation reliably earns its keep.
 
 **Recommendation.** Synthetic augmentation is justified for churn prediction under class imbalance. Use hybrid SMOTE+GAN or CTGAN with a synthetic fraction of 20–40% of training data. Target majority:minority ratios of approximately 6:1 rather than 1:1. Evaluate using stratified cross-validation; do not assess purely on accuracy. Monitor for degraded precision if the synthetic fraction is pushed toward full replacement.
 
@@ -211,7 +211,7 @@ We examine four canonical task types and map the evidence to practical recommend
 
 | Method | Fidelity | Utility (Imbalanced) | Utility (Augmentation) | Privacy | Speed | Best used for |
 |---|---|---|---|---|---|---|
-| TabDDPM / TabSyn | 5/5 | 4/5 | 5/5 | 4/5 | 3/5 | Best overall; worth the compute cost |
+| TabDDPM / TabSyn | 5/5 | 4/5 | 5/5 | 4/5 | 3/5 | **Not recommended for imbalanced marketing classification** — direct evaluation (§6.8) shows CTGAN outperforms TabDDPM at both default and extended training; extended training widens the gap. TabDDPM advantage on general benchmarks does not transfer to this regime. TabSyn not directly evaluated. |
 | Hybrid SMOTE+GAN | 3/5 | 5/5 | 4/5 | 3/5 | 4/5 | Imbalanced classification; churn, conversion |
 | CTGAN | 4/5 | 4/5 | 4/5 | 3/5 | 4/5 | Class imbalance, categorical-heavy data |
 | TVAE | 3/5 | 4/5 | 3/5 | 3/5 | 5/5 | Small datasets, fast iteration |
@@ -221,7 +221,7 @@ We examine four canonical task types and map the evidence to practical recommend
 
 *Ratings are relative within class, based on aggregated benchmark evidence from Davila et al. (2025), Kotelnikov et al. (2023), and Won et al. (2026). SMOTE privacy ratings reflect near-duplicate risk from interpolation; they do not imply DP-grade guarantees for any method. "Utility (Imbalanced)" refers to performance on imbalanced classification benchmarks; "Utility (Augmentation)" refers to the mixed real+synthetic augmentation regime.*
 
-*Note: TabDDPM ratings are drawn from the cited external benchmarks and from direct evaluation in §6.8 of this paper (Hillstrom and Criteo, 5 seeds, GBC downstream classifier). TabSyn ratings rest on external benchmarks only. Practitioner recommendations involving TabDDPM (§7, §10) are now supported by both external evidence and §6.8 direct replication.*
+*Note: TabDDPM ratings reflect both external benchmarks and §6.8 direct evaluation (Hillstrom and Criteo, 5 seeds, GBC, N_iter=2k and N_iter=10k). The §6.8 finding contradicts the general-benchmark ranking: extended TabDDPM training widens the CTGAN advantage on marketing imbalanced data. See §6.8 for full results. TabSyn ratings rest on external benchmarks only.*
 
 **Figure 5** (see `fig5-privacy-utility.png`) plots the privacy–utility frontier across methods. Key observations: TabDDPM occupies the high-utility, moderate-privacy region; CTAB-GAN+ achieves better privacy at a utility cost; SMOTE sits at high utility but low privacy (Davila et al., 2025, Table 8); LLM-based methods score poorly on both dimensions due to memorization risk and computational overhead.
 
@@ -650,7 +650,7 @@ Best gain per classifier across all generator × α combinations:
 | RF | 0.847 ± 0.076 | CTGAN | 0.5 | +9.6 pts |
 | MLP† | 0.284 ± 0.283 | CTGAN | 0.2 | +65.6 pts† |
 
-†MLP Criteo baseline collapsed due to Metal GPU training failures in the local CPU run; the CTGAN gain figure for MLP is an artifact and should not be interpreted. GBC, LR, RF results are clean.
+†The MLP baseline on Criteo (AUC=0.284 ± 0.283) reflects genuine training instability under 0.2% positive rate: 7 of 10 seeds failed to converge (AUC < 0.15). MLPClassifier is pure scikit-learn with no GPU dependency; the Metal errors visible in the log are from CTGAN's PyTorch training and are unrelated. After CTGAN augmentation, all 10 seeds converge (mean AUC 0.940 ± 0.030) — the strongest illustration of augmentation-as-rescue in this study.
 
 *Key finding: CTGAN's advantage on Criteo is not GBC-specific — it holds across GBC (+12.0 pts) and RF (+9.6 pts). LR is near ceiling on Criteo (0.963 baseline) and is insensitive to augmentation, as expected.*
 
@@ -674,7 +674,7 @@ Best gain per classifier across all generator × α combinations:
 | SMOTE | 0.3 | 0.966 ± 0.026 | +12.0 pts |
 | TabDDPM | 0.3 | 0.945 ± 0.057 | +9.9 pts |
 
-*TabDDPM delivers consistent positive gains on Criteo (+5 to +10 pts across α) but does not surpass CTGAN (+12.9 pts) despite substantially higher compute cost. On Hillstrom, TabDDPM provides negligible gain (+1.4 pts at best α), consistent with all generators on this low-signal dataset.*
+*TabDDPM at N_iter=2,000 (default): Criteo +9.9 pts (best α=0.3), Hillstrom +1.4 pts (best α=0.2). At N_iter=10,000 (5× extended training): Criteo +6.46 pts, Hillstrom uniformly negative (all α < 0). Extended training widens the CTGAN advantage rather than closing it — the gap is architectural (TabDDPM's unconditional sampling under extreme imbalance) rather than a training-budget artifact. CTGAN fit time: ~2 min CPU. TabDDPM fit time: ~6 min GPU (N_iter=2k), ~29 min GPU (N_iter=10k).*
 
 ### Discussion
 
@@ -688,7 +688,7 @@ Both datasets confirm and amplify the pattern from Sections 6.2–6.5: **severe 
 
 **GaussianCopula** underperforms CTGAN on both datasets, consistent with the literature: GC cannot model the conditional minority distribution as effectively as CTGAN's explicit class-conditional generation.
 
-**TabDDPM** lands between SMOTE and CTGAN on Criteo (+9.9 pts vs SMOTE +12.0 pts, CTGAN +12.9 pts) and provides negligible gain on Hillstrom (+1.4 pts), mirroring the pattern of all generators on this low-signal dataset. The compute overhead of TabDDPM (~30–60 min GPU per fit vs seconds for CTGAN locally) is not justified by the marginal performance difference — CTGAN remains the recommended choice for imbalanced marketing classification.
+**TabDDPM** at default settings lands between SMOTE and CTGAN on Criteo (+9.9 pts vs SMOTE +12.0 pts, CTGAN +12.9 pts) and provides negligible gain on Hillstrom (+1.4 pts). Extended training at N_iter=10,000 widens the gap further: Hillstrom goes uniformly negative and Criteo drops to +6.46 pts. The CTGAN advantage at N_iter=10k reaches d_z=1.25 on Hillstrom (p=0.049), indicating the gap is architectural rather than a training-budget artifact. CTGAN remains the recommended choice — faster (2 min CPU vs 6–29 min GPU) and consistently better on this regime.
 
 ### Synthesis: When Does Synthetic Data Help?
 
@@ -789,7 +789,7 @@ Several gaps in the current evidence base should temper strong conclusions:
 
 **Causal structure is systematically ignored.** No mainstream tabular synthesizer currently preserves the causal graph of the data-generating process. This is a fundamental limitation for marketing use cases where causal inference is the goal.
 
-**The optimal ratio is not universal.** The 6.6:1 finding from Chia Ramírez (2025) is from a single credit-scoring dataset. The author explicitly cautions against overgeneralizing, and presents it as a reproducible methodology for finding an optimal ratio on a given domain, not a universal constant.
+**The optimal ratio is not universal.** The 6.6:1 finding from Chia (2025) is from a single credit-scoring dataset. The author explicitly cautions against overgeneralizing, and presents it as a reproducible methodology for finding an optimal ratio on a given domain, not a universal constant.
 
 **Model collapse scope.** The model collapse literature (Shumailov et al., 2024) is frequently misapplied to single-round tabular augmentation. While the underlying concern — that imperfect generators can amplify distributional errors — is valid, the iterative self-training mechanism described in Shumailov et al. does not apply to the standard practitioner workflow of fitting a generator on real data and augmenting once.
 
@@ -805,7 +805,7 @@ Based on the synthesized evidence:
 
 2. **Do not replace real data.** TSTR consistently lags TRTR across all benchmarks reviewed. Full synthetic replacement is only justified when real data is unavailable due to privacy or regulatory constraints.
 
-3. **Find and respect the optimal mixing ratio.** Run a mixing sweep before deploying augmentation at scale. The default 1:1 balance for oversampling is often suboptimal. Ratios of 6:1 to 3:1 (majority:minority) may perform better (Chia Ramírez, 2025).
+3. **Find and respect the optimal mixing ratio.** Run a mixing sweep before deploying augmentation at scale. The default 1:1 balance for oversampling is often suboptimal. Ratios of 6:1 to 3:1 (majority:minority) may perform better (Chia, 2025).
 
 4. **Prefer CTGAN for imbalanced marketing classification; TabDDPM adds compute without adding value.** Direct evaluation in §6.8 (Hillstrom and Criteo, 5 seeds) shows CTGAN outperforms TabDDPM on both datasets: Criteo +12.9 pts (CTGAN) vs +9.9 pts (TabDDPM); Hillstrom +5.7 pts (CTGAN) vs +1.4 pts (TabDDPM). TabDDPM requires GPU and ~30–60 min per fit; CTGAN runs in minutes on CPU. The external benchmark advantage of TabDDPM (Davila et al., 2025; Kotelnikov et al., 2023) does not translate to these imbalanced marketing tasks. For imbalanced classification specifically, CTGAN is the recommended choice — it matches or exceeds TabDDPM at a fraction of the cost. TabSyn may still be worth evaluating when compute is unconstrained, as it was not directly tested here.
 
@@ -858,16 +858,16 @@ The field is developing rapidly. Causal generative models, instruction-tuned LLM
 
 9. **Won, D.-H. et al.** (2026). Synthetic Data Augmentation for Imbalanced Tabular Data: A Comparative Study of Generation Methods. *Electronics*, 15(4), 883. https://www.mdpi.com/2079-9292/15/4/883
 
-10. **Tanha, J. et al.** (2026). Improving Predictive Performance in Telecom Churn Modeling with Hybrid SMOTE and GAN-Based Synthetic Data Generation. *International Journal of Computational Intelligence Systems*. https://link.springer.com/article/10.1007/s44196-026-01204-3
+10. **Agrawal, R., Hamdare, S., Ghosh, D., et al.** (2026). Improving Predictive Performance in Telecom Churn Modeling with Hybrid SMOTE and GAN-Based Synthetic Data Generation. *International Journal of Computational Intelligence Systems*. https://link.springer.com/article/10.1007/s44196-026-01204-3
 
 11. **Fonseca, J., & Bacao, F.** (2023). Synthetic Data Generation for Imbalanced Learning on Tabular Data. *Expert Systems with Applications*. https://www.sciencedirect.com/article/pii/S0957417421000233
 
 12. **Camino, R. et al.** (2020). Oversampling Tabular Data with Deep Generative Models: Is it worth the effort? *ICML 2020 Workshop on Uncertainty & Robustness in Deep Learning*. https://proceedings.mlr.press/v137/camino20a/camino20a.pdf
 
-13. **Shidani, A. et al.** (2025). [Optimal Synthetic-to-Real Data Ratio: A Learning-Theoretic Framework.] *arXiv:2510.08095*. https://arxiv.org/abs/2510.08095  
+13. **Shidani, A., Farghly, T., Sun, Y., Ganjgahi, H., & Deligiannidis, G.** (2025). Beyond Real Data: Synthetic Data through the Lens of Regularization. *arXiv:2510.08095*. https://arxiv.org/abs/2510.08095  
     *(Title inferred from arXiv abstract display; confirms U-shaped test-error curve and $\alpha^*$ characterization via algorithmic stability.)*
 
-14. **Chia Ramírez, L.** (2025). [Optimal Synthetic Oversampling Ratio for Imbalanced Credit Scoring Data.] *arXiv:2510.18252*. https://arxiv.org/abs/2510.18252  
+14. **Chia, L. H.** (2025). Finding the Sweet Spot: Optimal Data Augmentation Ratio for Imbalanced Credit Scoring Using ADASYN. *arXiv:2510.18252*. https://arxiv.org/abs/2510.18252  
     *(Title inferred from arXiv abstract display; empirically identifies 6.6:1 optimal majority:minority ratio on the Give Me Some Credit dataset.)*
 
 15. **Chen, K. et al.** (2025). Benchmarking Differentially Private Tabular Data Synthesis Methods. *arXiv:2504.14061*. https://arxiv.org/abs/2504.14061  

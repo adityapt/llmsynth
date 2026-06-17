@@ -1,0 +1,115 @@
+n,seed,method,alpha,auc,error,model
+50,42,Baseline,0.0,0.5804761904761905,,—
+50,42,ModernLLM,0.1,0.6105952380952381,,mistralai/Mistral-7B-v0.1
+50,42,ModernLLM,0.2,0.6433333333333334,,mistralai/Mistral-7B-v0.1
+50,42,ModernLLM,0.3,0.6441666666666667,,mistralai/Mistral-7B-v0.1
+50,42,ModernLLM,0.5,0.6051190476190477,,mistralai/Mistral-7B-v0.1
+50,42,ModernLLM,1.0,0.6163095238095239,,mistralai/Mistral-7B-v0.1
+50,7,Baseline,0.0,0.7283333333333333,,—
+50,7,ModernLLM,0.1,0.6970238095238095,,mistralai/Mistral-7B-v0.1
+50,7,ModernLLM,0.2,0.7307142857142856,,mistralai/Mistral-7B-v0.1
+50,7,ModernLLM,0.3,0.7154761904761904,,mistralai/Mistral-7B-v0.1
+50,7,ModernLLM,0.5,0.6959523809523809,,mistralai/Mistral-7B-v0.1
+50,7,ModernLLM,1.0,0.7003571428571429,,mistralai/Mistral-7B-v0.1
+50,123,Baseline,0.0,0.6420238095238096,,—
+50,123,ModernLLM,0.1,0.6085714285714287,,mistralai/Mistral-7B-v0.1
+50,123,ModernLLM,0.2,0.6454166666666667,,mistralai/Mistral-7B-v0.1
+50,123,ModernLLM,0.3,0.6761904761904761,,mistralai/Mistral-7B-v0.1
+50,123,ModernLLM,0.5,0.710952380952381,,mistralai/Mistral-7B-v0.1
+50,123,ModernLLM,1.0,0.710952380952381,,mistralai/Mistral-7B-v0.1
+100,2024,Baseline,0.0,0.6867857142857143,,—
+100,2024,ModernLLM,0.1,0.6497619047619048,,mistralai/Mistral-7B-v0.1
+100,2024,ModernLLM,0.2,0.6582142857142858,,mistralai/Mistral-7B-v0.1
+100,2024,ModernLLM,0.3,0.6578571428571429,,mistralai/Mistral-7B-v0.1
+100,2024,ModernLLM,0.5,0.636547619047619,,mistralai/Mistral-7B-v0.1
+100,2024,ModernLLM,1.0,0.6655952380952381,,mistralai/Mistral-7B-v0.1
+100,999,Baseline,0.0,0.7589285714285715,,—
+100,999,ModernLLM,0.1,0.7447619047619047,,mistralai/Mistral-7B-v0.1
+100,999,ModernLLM,0.2,0.7186904761904762,,mistralai/Mistral-7B-v0.1
+100,999,ModernLLM,0.3,0.6964285714285714,,mistralai/Mistral-7B-v0.1
+100,999,ModernLLM,0.5,0.7164285714285714,,mistralai/Mistral-7B-v0.1
+100,999,ModernLLM,1.0,0.7108333333333333,,mistralai/Mistral-7B-v0.1
+200,42,Baseline,0.0,0.7122619047619048,,—
+200,42,ModernLLM,0.1,0.712857142857143,,mistralai/Mistral-7B-v0.1
+200,42,ModernLLM,0.2,0.7110714285714286,,mistralai/Mistral-7B-v0.1
+200,42,ModernLLM,0.3,0.7139285714285714,,mistralai/Mistral-7B-v0.1
+200,42,ModernLLM,0.5,0.7085714285714286,,mistralai/Mistral-7B-v0.1
+200,42,ModernLLM,1.0,0.7267857142857144,,mistralai/Mistral-7B-v0.1
+50,2024,Baseline,0.0,0.5282738095238095,,—
+50,2024,ModernLLM,0.1,0.5748809523809524,,mistralai/Mistral-7B-v0.1
+50,2024,ModernLLM,0.2,0.6109523809523809,,mistralai/Mistral-7B-v0.1
+50,2024,ModernLLM,0.3,0.6041666666666666,,mistralai/Mistral-7B-v0.1
+50,2024,ModernLLM,0.5,0.6263095238095239,,mistralai/Mistral-7B-v0.1
+50,2024,ModernLLM,1.0,0.5783333333333334,,mistralai/Mistral-7B-v0.1
+50,999,Baseline,0.0,0.7438095238095238,,—
+50,999,ModernLLM,0.1,0.7180952380952381,,mistralai/Mistral-7B-v0.1
+50,999,ModernLLM,0.2,0.7224999999999999,,mistralai/Mistral-7B-v0.1
+50,999,ModernLLM,0.3,0.7419047619047618,,mistralai/Mistral-7B-v0.1
+50,999,ModernLLM,0.5,0.6957142857142856,,mistralai/Mistral-7B-v0.1
+50,999,ModernLLM,1.0,0.6965476190476191,,mistralai/Mistral-7B-v0.1
+100,42,Baseline,0.0,0.6919047619047619,,—
+100,42,ModernLLM,0.1,0.6857142857142857,,mistralai/Mistral-7B-v0.1
+100,42,ModernLLM,0.2,0.6676190476190476,,mistralai/Mistral-7B-v0.1
+100,42,ModernLLM,0.3,0.6748809523809524,,mistralai/Mistral-7B-v0.1
+100,42,ModernLLM,0.5,0.6591666666666667,,mistralai/Mistral-7B-v0.1
+100,42,ModernLLM,1.0,0.6102380952380952,,mistralai/Mistral-7B-v0.1
+100,7,Baseline,0.0,0.6770238095238095,,—
+100,7,ModernLLM,0.1,0.7064285714285714,,mistralai/Mistral-7B-v0.1
+100,7,ModernLLM,0.2,0.6985714285714285,,mistralai/Mistral-7B-v0.1
+100,7,ModernLLM,0.3,0.6966666666666667,,mistralai/Mistral-7B-v0.1
+100,7,ModernLLM,0.5,0.6660714285714286,,mistralai/Mistral-7B-v0.1
+100,7,ModernLLM,1.0,0.6097619047619047,,mistralai/Mistral-7B-v0.1
+100,123,Baseline,0.0,0.7250000000000001,,—
+100,123,ModernLLM,0.1,0.651904761904762,,mistralai/Mistral-7B-v0.1
+100,123,ModernLLM,0.2,0.6363095238095239,,mistralai/Mistral-7B-v0.1
+100,123,ModernLLM,0.3,0.616547619047619,,mistralai/Mistral-7B-v0.1
+100,123,ModernLLM,0.5,0.6601190476190476,,mistralai/Mistral-7B-v0.1
+100,123,ModernLLM,1.0,0.6635714285714286,,mistralai/Mistral-7B-v0.1
+200,123,Baseline,0.0,0.8032142857142858,,—
+200,123,ModernLLM,0.1,,Empty after NaN cleaning,mistralai/Mistral-7B-v0.1
+200,123,ModernLLM,0.2,,Empty after NaN cleaning,mistralai/Mistral-7B-v0.1
+200,123,ModernLLM,0.3,,Empty after NaN cleaning,mistralai/Mistral-7B-v0.1
+200,123,ModernLLM,0.5,,Empty after NaN cleaning,mistralai/Mistral-7B-v0.1
+200,123,ModernLLM,1.0,,Empty after NaN cleaning,mistralai/Mistral-7B-v0.1
+200,7,Baseline,0.0,0.7563095238095239,,—
+200,7,ModernLLM,0.1,0.7228571428571429,,mistralai/Mistral-7B-v0.1
+200,7,ModernLLM,0.2,0.6932142857142857,,mistralai/Mistral-7B-v0.1
+200,7,ModernLLM,0.3,0.6721428571428572,,mistralai/Mistral-7B-v0.1
+200,7,ModernLLM,0.5,0.6954761904761906,,mistralai/Mistral-7B-v0.1
+200,7,ModernLLM,1.0,0.6847619047619048,,mistralai/Mistral-7B-v0.1
+200,2024,Baseline,0.0,0.7547619047619049,,—
+200,2024,ModernLLM,0.1,0.724404761904762,,mistralai/Mistral-7B-v0.1
+200,2024,ModernLLM,0.2,0.7405952380952381,,mistralai/Mistral-7B-v0.1
+200,2024,ModernLLM,0.3,0.7339285714285715,,mistralai/Mistral-7B-v0.1
+200,2024,ModernLLM,0.5,0.7109523809523809,,mistralai/Mistral-7B-v0.1
+200,2024,ModernLLM,1.0,0.7361904761904761,,mistralai/Mistral-7B-v0.1
+200,999,Baseline,0.0,0.7671428571428572,,—
+200,999,ModernLLM,0.1,0.7711904761904762,,mistralai/Mistral-7B-v0.1
+200,999,ModernLLM,0.2,0.7564285714285715,,mistralai/Mistral-7B-v0.1
+200,999,ModernLLM,0.3,0.7358333333333333,,mistralai/Mistral-7B-v0.1
+200,999,ModernLLM,0.5,0.6917857142857142,,mistralai/Mistral-7B-v0.1
+200,999,ModernLLM,1.0,0.6948809523809524,,mistralai/Mistral-7B-v0.1
+200,123,Baseline,0.0,0.8032142857142858,,—
+200,123,ModernLLM,0.1,,Empty after NaN cleaning,mistralai/Mistral-7B-v0.1
+200,123,ModernLLM,0.2,,Empty after NaN cleaning,mistralai/Mistral-7B-v0.1
+200,123,ModernLLM,0.3,,Empty after NaN cleaning,mistralai/Mistral-7B-v0.1
+200,123,ModernLLM,0.5,,Empty after NaN cleaning,mistralai/Mistral-7B-v0.1
+200,123,ModernLLM,1.0,,Empty after NaN cleaning,mistralai/Mistral-7B-v0.1
+200,123,Baseline,0.0,0.8032142857142858,,—
+200,123,ModernLLM,0.1,,Empty after NaN cleaning,mistralai/Mistral-7B-v0.1
+200,123,ModernLLM,0.2,,Empty after NaN cleaning,mistralai/Mistral-7B-v0.1
+200,123,ModernLLM,0.3,,Empty after NaN cleaning,mistralai/Mistral-7B-v0.1
+200,123,ModernLLM,0.5,,Empty after NaN cleaning,mistralai/Mistral-7B-v0.1
+200,123,ModernLLM,1.0,,Empty after NaN cleaning,mistralai/Mistral-7B-v0.1
+200,123,Baseline,0.0,0.8032142857142858,,—
+200,123,ModernLLM,0.1,,Empty after NaN cleaning,mistralai/Mistral-7B-v0.1
+200,123,ModernLLM,0.2,,Empty after NaN cleaning,mistralai/Mistral-7B-v0.1
+200,123,ModernLLM,0.3,,Empty after NaN cleaning,mistralai/Mistral-7B-v0.1
+200,123,ModernLLM,0.5,,Empty after NaN cleaning,mistralai/Mistral-7B-v0.1
+200,123,ModernLLM,1.0,,Empty after NaN cleaning,mistralai/Mistral-7B-v0.1
+200,123,Baseline,0.0,0.8032142857142858,,—
+200,123,ModernLLM,0.1,,Empty after NaN cleaning,mistralai/Mistral-7B-v0.1
+200,123,ModernLLM,0.2,,Empty after NaN cleaning,mistralai/Mistral-7B-v0.1
+200,123,ModernLLM,0.3,,Empty after NaN cleaning,mistralai/Mistral-7B-v0.1
+200,123,ModernLLM,0.5,,Empty after NaN cleaning,mistralai/Mistral-7B-v0.1
+200,123,ModernLLM,1.0,,Empty after NaN cleaning,mistralai/Mistral-7B-v0.1

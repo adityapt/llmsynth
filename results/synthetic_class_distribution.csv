@@ -1,0 +1,9 @@
+dataset,generator,positive_rate,n,note
+Hillstrom,Real data,0.95,8000,
+Hillstrom,SMOTE,100.0,8000,by design (minority only)
+Hillstrom,GaussianCopula,0.9625,8000,
+Hillstrom,CTGAN,6.1375,8000,
+Criteo,Real data,0.25,8000,
+Criteo,SMOTE,100.0,8000,by design (minority only)
+Criteo,GaussianCopula,0.25,8000,
+Criteo,CTGAN,25.45,8000,
