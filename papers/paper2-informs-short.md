@@ -28,8 +28,9 @@ Table 1 makes the bottleneck concrete. Based on the Datasets we considered, the 
 
 We evaluate five generators across seven datasets spanning positive rates from 0.2% to 30%: GaussianCopula (Patki et al., 2016), CTGAN (Xu et al., 2019), SMOTE (Chawla et al., 2002), TabDDPM (Kotelnikov et al., 2023), and GReaT (Borisov et al., 2023) at two LLM scales (GPT-2 117M and Mistral-7B 7B). Protocol: 80/20 stratified split, α-sweep over {0.1, 0.2, 0.3, 0.5, 1.0}, 5, 10 seeds, GradientBoostingClassifier primary downstream model (Friedman, 2001; Pedregosa et al., 2011), extended to four classifier families for robustness. Primary metric: AUC-ROC. AUC-ROC is a metric between 0 to 1. To interpret the AUC-ROC, for example if the gain is 0.974 − 0.846 = 0.1287, we report it a gain of 0.1287 AUC or +12.87 AUC points (AUC multiplied by 100 for readability)
 
-**Add TSTR
-**Give more details as to how the compute is happening to go from dataset -> model inference -> metric
+** Add TSTR
+
+** Give more details as to how the compute is happening to go from dataset -> model inference -> metric
 
 ---
 
