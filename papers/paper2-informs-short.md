@@ -34,11 +34,21 @@ This paper addresses that question through a controlled empirical study on seven
 \* Baseline AUC is calculated using a GradientBoosting classifier approach
 ## 2. Experimental Setup
 
-We evaluate five generators across seven datasets spanning positive rates from 0.2% to 30%: GaussianCopula (Patki et al., 2016), CTGAN (Xu et al., 2019), SMOTE (Chawla et al., 2002), TabDDPM (Kotelnikov et al., 2023), and GReaT (Borisov et al., 2023) at two LLM scales (GPT-2 117M and Mistral-7B 7B). Protocol: 80/20 stratified split, α-sweep over {0.1, 0.2, 0.3, 0.5, 1.0}, 5, 10 seeds, GradientBoostingClassifier primary downstream model (Friedman, 2001; Pedregosa et al., 2011), extended to four classifier families for robustness. Primary metric: AUC-ROC. AUC-ROC is a metric between 0 to 1. To interpret the AUC-ROC, for example if the gain is 0.974 − 0.846 = 0.1287, we report it a gain of 0.1287 AUC or +12.87 AUC points (AUC multiplied by 100 for readability)
+**Generators.** We evaluate five synthetic data generators: GaussianCopula (Patki et al., 2016), CTGAN (Xu et al., 2019), SMOTE (Chawla et al., 2002), TabDDPM (Kotelnikov et al., 2023), and GReaT (Borisov et al., 2023) at two LLM backbone scales (GPT-2 117M and Mistral-7B 7B). All generators use library-default hyperparameters.
 
-** Add TSTR
+**Experimental pipeline.** For each (dataset, generator, seed) combination, we run three evaluation conditions:
 
-** Give more details as to how the compute is happening to go from dataset -> model inference -> metric
+1. *Baseline (TRTR):* Train on 80% real data, evaluate on 20% real holdout. This establishes the no-augmentation performance floor.
+2. *TSTR (Train on Synthetic, Test on Real):* Train on fully synthetic data, evaluate on the same real holdout. This measures how faithfully a generator captures the real distribution. A large TSTR gap indicates synthetic data cannot replace real data.
+3. *Augmentation sweep*†: Fit the generator on the real training set, generate synthetic rows, and train on the combined real+synthetic set. Evaluate on the real holdout and compare to baseline.
+
+†**α (synthetic fraction)** controls how many synthetic rows are added relative to the real training set: α = n_synthetic / n_real. We sweep α ∈ {0.1, 0.2, 0.3, 0.5, 1.0}. For example, α=0.2 adds 20% as many synthetic rows as real rows; α=1.0 doubles the training set. We report the best-α result per generator.
+
+**Downstream model.** Primary: GradientBoostingClassifier with n_estimators=100, max_depth=4 (Friedman, 2001; Pedregosa et al., 2011). Extended to Logistic Regression, Random Forest, and MLP for robustness. Each classifier is re-trained from scratch on the augmented training set; synthetic rows are only used for training, never for evaluation.
+
+**Metric.** Primary metric: AUC-ROC (area under the receiver operating characteristic curve), which measures a classifier's ability to rank positive examples above negative ones, independent of a classification threshold. AUC ranges from 0 to 1; random guessing yields 0.5. We report gains in AUC points (×100 for readability): a gain of +0.1287 AUC is reported as +12.87 AUC points.
+
+**Seeds and statistical inference.** We repeat each experiment across 5–10 independent random seeds. Each seed determines a different train/test split and a different generator sample. We report 95% confidence intervals (t-distribution on per-seed values). For pairwise comparisons (e.g., CTGAN vs. TabDDPM), we use a **paired t-test** on per-seed AUC differences, yielding a t-statistic, p-value, and Cohen's d_z (effect size = mean paired difference / standard deviation of paired differences; d_z ≥ 0.8 is considered large). Multiple comparisons are corrected using the Benjamini-Hochberg FDR procedure at q=0.10. Compute: baseline and augmentation experiments run on a MacBook Pro M1 Pro (32 GB RAM); TabDDPM and GReaT run on an NVIDIA H100 GPU cluster.
 
 ---
 
