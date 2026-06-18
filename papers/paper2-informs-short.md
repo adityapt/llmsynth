@@ -32,7 +32,7 @@ We evaluate five generators across seven datasets spanning positive rates from 0
 
 ## 3. Core Finding: Minority-Example Scarcity Drives Augmentation Value
 
-On the five datasets with 240+ minority examples (positive rate ≥ 11.7%), no generator exceeds +0.27 AUC points across any α value. On the two marketing datasets — Hillstrom (72 examples) and Criteo (16 examples) — CTGAN and SMOTE deliver +5.7 to +12.9 AUC points. A cross-dataset regression of best CTGAN gain on log(positive rate) yields R²=0.92 (directional, n=6). The 1%–10% positive-rate region is not represented in this regression and should not be inferred from it.
+On the five datasets with positive rate ≥ 11.7% (all of them have 240+ minority examples), no generator exceeds +0.27 AUC points across any α value. On the two marketing datasets — Hillstrom (72 examples) and Criteo (16 examples) — CTGAN and SMOTE deliver +5.7 to +12.9 AUC points. The 1%–10% positive-rate region is not represented in this regression and should not be inferred from it.
 
 A striking illustration: on Criteo, 7 of 10 MLP seeds failed to converge using real data alone (AUC < 0.15). After CTGAN augmentation, all 10 seeds converged (mean AUC 0.940). Augmentation in this regime is not a marginal improvement; it is the difference between a working classifier and one that fails to train.
 
