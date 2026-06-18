@@ -7,7 +7,7 @@
 
 ## 1. Problem and Motivation
 
-Marketing classification tasks — conversion prediction, churn, response modeling — routinely operate with positive rates below 1%. At 0.2% positive rate and 8,000 training rows, a classifier trains on roughly 16 positive examples per split. Synthetic data augmentation is widely proposed as a remedy, but practitioners lack evidence on *when* it helps and *which generator* to use. Aggregate benchmarks (Erickson et al., 2025; Davila et al., 2025) rank generators across heterogeneous tasks and provide no guidance for the extreme-imbalance regime specific to marketing.
+Marketing classification tasks — conversion prediction, churn, response modeling — routinely operate with positive rates below 1%. Synthetic data augmentation is widely proposed as a remedy, but practitioners lack evidence on *when* it helps and *which generator* to use. Aggregate benchmarks (Erickson et al., 2025; Davila et al., 2025) rank generators across heterogeneous tasks and provide no guidance for the extreme-imbalance regime specific to marketing.
 
 Table 1 makes the bottleneck concrete. Datasets with fewer than ~100 minority examples show large augmentation gains; those with 200+ show negligible gains. This is not a class-imbalance story per se — it is a **minority-example scarcity** story.
 
