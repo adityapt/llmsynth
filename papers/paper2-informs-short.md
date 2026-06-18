@@ -5,11 +5,19 @@
 
 ---
 
-## 1. Problem and Motivation
+## Abstract
 
-Marketing classification tasks — conversion prediction, churn, response modeling — routinely operate with positive rates below 1%. Synthetic data augmentation is widely proposed as a remedy, but practitioners lack evidence on *when* it helps and *which generator* to use. Aggregate benchmarks (Erickson et al., 2025; Davila et al., 2025) rank generators across heterogeneous tasks and provide no guidance for the extreme-imbalance regime specific to marketing.
+Class imbalance is a pervasive challenge in business classification — conversion rates below 1%, fraud rates below 0.5%, and rare-event prediction across customer cohorts. In these settings, classifiers trained on real data alone frequently fail due to extreme minority-example scarcity. Synthetic data augmentation is widely proposed as a remedy, but practitioners lack actionable guidance on when it helps and which generator to use. We evaluate five generators — GaussianCopula, CTGAN, SMOTE, TabDDPM, and GReaT (at GPT-2 and Mistral-7B scales) — across seven datasets spanning positive rates from 0.2% to 30%, with up to 10 seeds and four downstream classifiers. We find that large, consistent augmentation gains appear only when fewer than ~100 minority examples are available in training. We measure why: CTGAN generates 7–89× more minority-class rows than the natural distribution; TabDDPM and GaussianCopula mirror the real imbalance and provide no enrichment. Neither LLM backbone resolves this architectural limitation. The 1%–10% positive-rate transition region is untested and remains an open empirical question.
 
-Table 1 makes the bottleneck concrete. Based on the Datasets we considered, the ones with fewer than x% minority examples show large augmentation gains; those with lower imbalance rate of more than y% show negligible gains. This is not a class-imbalance story per se — it is a **minority-example scarcity** story.
+---
+
+## 1. Introduction
+
+Class-imbalanced datasets are pervasive across business domains. Fraud detection, medical diagnosis, insurance claims, and customer marketing all operate with rare positive events — sometimes below 1% of the dataset. When minority examples are scarce, standard classifiers default to predicting the majority class, yielding poor recall on the events that matter most. In marketing specifically, the cost of misclassification is direct and measurable: failing to identify a converting customer means lost revenue; missing a churning customer means reactive rather than preventive intervention (Neslin et al., 2006). Across financial services, healthcare, and digital marketing, accurate minority-class modeling has significant operational value.
+
+Synthetic data augmentation — generating artificial training examples and mixing them with real data — is one of the most commonly used remedies for class imbalance (Chawla et al., 2002; He & Garcia, 2009; Johnson & Khoshgoftaar, 2019). The space of available generators has grown substantially: from interpolation-based oversampling (SMOTE), to conditional GANs (CTGAN), diffusion models (TabDDPM), and LLM-based synthesizers (GReaT). Aggregate benchmarks rank these generators on heterogeneous tabular tasks (Erickson et al., 2025; Davila et al., 2025), but do not answer the question practitioners actually face: *given my task at this positive rate, will augmentation help, and which generator should I use?*
+
+This paper addresses that question through a controlled empirical study on seven datasets spanning positive rates from 0.2% to 30%. Table 1 makes the bottleneck concrete: in our experiments, datasets with fewer than ~100 minority training examples (positive rate ≤ 0.9%) show large augmentation gains of up to +12.9 AUC points; datasets with more than ~240 minority examples (positive rate ≥ 11.7%) show negligible gains — no generator exceeded +0.27 AUC points. This is not a class-imbalance story per se; it is a **minority-example scarcity** story. We note explicitly that the 1%–10% positive-rate region is not represented in our evaluation, and general claims about that transition region cannot be drawn from this study.
 
 **Table 1 — Minority-example budget and baseline AUC by dataset**
 
