@@ -7,13 +7,13 @@
 
 ## 1. Problem and Motivation
 
-Marketing classification tasks — conversion prediction, churn, response modeling — routinely operate with positive rates below 1%. At 0.2% positive rate and 8,000 training rows, a classifier trains on roughly 16 positive examples per split. Synthetic data augmentation is widely proposed as a remedy, but practitioners lack evidence on *when* it helps and *which generator* to use. Aggregate benchmarks (Erickson et al., 2025; Davila et al., 2025) rank generators across heterogeneous tasks and provide no guidance for the extreme-imbalance regime specific to marketing.
+Marketing classification tasks — conversion prediction, churn, response modeling — routinely operate with positive rates below 1%. Synthetic data augmentation is widely proposed as a remedy, but practitioners lack evidence on *when* it helps and *which generator* to use. Aggregate benchmarks (Erickson et al., 2025; Davila et al., 2025) rank generators across heterogeneous tasks and provide no guidance for the extreme-imbalance regime specific to marketing.
 
-Table 1 makes the bottleneck concrete. Datasets with fewer than ~100 minority examples show large augmentation gains; those with 200+ show negligible gains. This is not a class-imbalance story per se — it is a **minority-example scarcity** story.
+Table 1 makes the bottleneck concrete. Based on the Datasets we considered, the ones with fewer than x% minority examples show large augmentation gains; those with lower imbalance rate of more than y% show negligible gains. This is not a class-imbalance story per se — it is a **minority-example scarcity** story.
 
 **Table 1 — Minority-example budget and baseline AUC by dataset**
 
-| Dataset | Positive Rate | Train Rows | Minority Examples | Baseline AUC |
+| Dataset | Positive Rate | Train Rows | Minority Examples | Baseline AUC* |
 |---|---|---|---|---|
 | Criteo Display | 0.2% | 8,000 | **16** | 0.846 ± 0.228 |
 | Hillstrom Email | 0.9% | 8,000 | **72** | 0.548 ± 0.092 |
@@ -22,23 +22,27 @@ Table 1 makes the bottleneck concrete. Datasets with fewer than ~100 minority ex
 | Telco Churn | 26.6% | 5,626 | 1,497 | 0.844 ± 0.015 |
 | Nomao Lead | 28.3% | 8,000 | 2,264 | 0.991 ± 0.001 |
 
----
 
+\* Baseline AUC is calculated using a GradientBoosting classifier approach
 ## 2. Experimental Setup
 
-We evaluate five generators across seven datasets spanning positive rates from 0.2% to 30%: GaussianCopula (Patki et al., 2016), CTGAN (Xu et al., 2019), SMOTE (Chawla et al., 2002), TabDDPM (Kotelnikov et al., 2023), and GReaT (Borisov et al., 2023) at two LLM scales (GPT-2 117M and Mistral-7B 7B). Protocol: 80/20 stratified split, α-sweep over {0.1, 0.2, 0.3, 0.5, 1.0}, 5, 10 seeds, GradientBoostingClassifier primary downstream model (Friedman, 2001; Pedregosa et al., 2011), extended to four classifier families for robustness. Primary metric: AUC-ROC.
+We evaluate five generators across seven datasets spanning positive rates from 0.2% to 30%: GaussianCopula (Patki et al., 2016), CTGAN (Xu et al., 2019), SMOTE (Chawla et al., 2002), TabDDPM (Kotelnikov et al., 2023), and GReaT (Borisov et al., 2023) at two LLM scales (GPT-2 117M and Mistral-7B 7B). Protocol: 80/20 stratified split, α-sweep over {0.1, 0.2, 0.3, 0.5, 1.0}, 5, 10 seeds, GradientBoostingClassifier primary downstream model (Friedman, 2001; Pedregosa et al., 2011), extended to four classifier families for robustness. Primary metric: AUC-ROC. AUC-ROC is a metric between 0 to 1. To interpret the AUC-ROC, for example if the gain is 0.974 − 0.846 = 0.1287, we report it a gain of 0.1287 AUC or +12.87 AUC points (AUC multiplied by 100 for readability)
+
+** Add TSTR
+
+** Give more details as to how the compute is happening to go from dataset -> model inference -> metric
 
 ---
 
 ## 3. Core Finding: Minority-Example Scarcity Drives Augmentation Value
 
-On the five datasets with 240+ minority examples (positive rate ≥ 11.7%), no generator exceeds +0.27 AUC points across any α value. On the two marketing datasets — Hillstrom (72 examples) and Criteo (16 examples) — CTGAN and SMOTE deliver +5.7 to +12.9 AUC points. A cross-dataset regression of best CTGAN gain on log(positive rate) yields R²=0.92 (directional, n=6). The 1%–10% positive-rate region is not represented in this regression and should not be inferred from it.
+On the five datasets with positive rate ≥ 11.7% (all of them have 240+ minority examples), no generator exceeds +0.27 AUC points across any α value. On the two marketing datasets — Hillstrom (72 examples) and Criteo (16 examples) — CTGAN and SMOTE deliver +5.7 to +12.9 AUC points. The 1%–10% positive-rate region is not represented in this paper, and should not be inferred from it.
 
-A striking illustration: on Criteo, 7 of 10 MLP seeds failed to converge using real data alone (AUC < 0.15). After CTGAN augmentation, all 10 seeds converged (mean AUC 0.940). Augmentation in this regime is not a marginal improvement; it is the difference between a working classifier and one that fails to train.
+A striking illustration: on Criteo, 7 of 10 MLP seeds failed to converge using real data alone (AUC < 0.15). After CTGAN augmentation, all 10 seeds converged (mean AUC 0.940 +- CI95). Augmentation in this regime is not a marginal improvement; it is the difference between a working classifier and one that fails to train.
 
 **Table 2 — Synthetic positive rate by generator (5 seeds × 8,000 generated rows)**
 
-| Generator | Hillstrom synthetic rate | Criteo synthetic rate | Mechanism |
+| Generator | Hillstrom synthetic rate | Criteo synthetic rate | Observation |
 |---|---|---|---|
 | Real training data | 0.90% | 0.30% | — |
 | GaussianCopula | 0.96% ± 0.12% | 0.32% ± 0.06% | Mirrors real — no enrichment |
@@ -54,9 +58,13 @@ CTGAN also outperforms `class_weight='balanced'` reweighting by +7.55 AUC points
 
 ## 4. TabDDPM vs CTGAN
 
-TabDDPM is the current state-of-the-art generator on general tabular benchmarks (Davila et al., 2025). We evaluate it at two training budgets: N_iter=2,000 (default) and N_iter=10,000 (5× extended). On both Hillstrom and Criteo, CTGAN outperforms TabDDPM at both budgets. Extended training widens the gap: TabDDPM at 10k goes uniformly negative on Hillstrom (all α values below baseline). The CTGAN advantage at extended training reaches d_z=1.25 on Hillstrom (p=0.049).
+TabDDPM is the current state-of-the-art generator on general tabular benchmarks (Davila et al., 2025). We evaluate it at two training budgets: $N_{iter}$=2,000 (default) and $N_{iter}$=10,000 (5× extended). On both Hillstrom and Criteo, CTGAN outperforms TabDDPM at both budgets. Extended training widens the gap: TabDDPM at 10k goes uniformly negative on Hillstrom (all α values below baseline). The CTGAN advantage at extended training reaches Cohen's d, $d_z$=1.25 on Hillstrom (p=0.049).
 
 Table 2 explains why: TabDDPM samples unconditionally at the natural positive rate. Increasing training budget did not alter the observed sampling distribution in our experiments, suggesting that the limitation is architectural rather than optimization-related. Fit time: CTGAN ~2 min CPU; TabDDPM ~6–29 min GPU.
+
+** What CPU (M1 Pro 2022 32GB)
+
+** What GPU (NVIDIA H100 x8)
 
 ---
 
@@ -77,7 +85,7 @@ We evaluate GReaT (Borisov et al., 2023) — which fine-tunes a language model o
 
 †n=50 Mistral-7B on Hillstrom: 4/5 seeds failed to generate parseable rows (extreme imbalance + very small n). ‡Only 3 valid seeds; 2 seeds failed entirely.
 
-Three findings emerge. First, on anonymized features (German Credit), both LLM scales hurt consistently — the LLM prior is inapplicable when feature names carry no semantic meaning. Second, on Hillstrom with extreme imbalance, GReaT at large n actively harms performance (GPT-2: −6.87 pts at n=2,000, d_z=−4.40, FDR-significant, p=0.006) — LLM-generated rows at 0.9% positive rate dilute rather than enrich the minority class as n grows. Third, Mistral-7B is marginally less harmful than GPT-2 on German Credit at large n (−0.38 vs −3.00 pts at n=500), but on Hillstrom and Telco both models underperform the baseline in most conditions. Neither LLM scale approaches CTGAN on the extreme-imbalance datasets that matter for marketing.
+Three findings emerge. First, on anonymized features (German Credit), both LLM scales hurt consistently — the LLM prior is inapplicable when feature names carry no semantic meaning. Second, on Hillstrom with extreme imbalance, GReaT at large n actively harms performance (GPT-2: −6.87 pts at n=2,000, $d_z$=−4.40, FDR-significant, p=0.006) — LLM-generated rows at 0.9% positive rate dilute rather than enrich the minority class as n grows. Third, Mistral-7B is marginally less harmful than GPT-2 on German Credit at large n (−0.38 vs −3.00 pts at n=500), but on Hillstrom and Telco both models underperform the baseline in most conditions. Neither LLM scale approaches CTGAN on the extreme-imbalance datasets that matter for marketing.
 
 The architectural explanation connects to Table 2: GReaT, like TabDDPM, samples from the joint distribution without minority-class conditioning. The observed synthetic positive rate from GReaT would mirror the training distribution (~0.9% on Hillstrom) regardless of whether the backbone is GPT-2 or Mistral-7B. Scaling the LLM does not change this sampling property.
 
@@ -90,11 +98,13 @@ The architectural explanation connects to Table 2: GReaT, like TabDDPM, samples 
 | Positive rate | Observed pattern | Recommendation |
 |---|---|---|
 | > 10% | No generator exceeded +0.27 pts | Skip augmentation |
-| 1%–10% | **Not tested in this study** | Validate experimentally |
-| 0.5%–1% | CTGAN/SMOTE +5–6 pts | Evaluate CTGAN at α ∈ {0.1, 0.3} |
+| 1%–10% | **Not tested in this study** | - |
+| 0.5%–1% | CTGAN/SMOTE +5–6 pts | Validate experimentally |
 | < 0.5% | CTGAN/SMOTE +12–13 pts | Strongly consider CTGAN |
 
 **Limitations:** (1) Only two extreme-imbalance datasets tested (Hillstrom, Criteo); the 1%–10% transition region is unsampled. (2) All experiments cap at n=10,000; at full dataset scale the minority-example budget is larger and gains may diminish. (3) Generator hyperparameters use library defaults; tuned TabDDPM may narrow the CTGAN gap. (4) Privacy and operational costs not evaluated.
+
+**Future direction — context-conditioned LLM synthesis.** Our LLM results use GReaT, which fine-tunes on serialized rows and samples *unconditionally*; the null effect of scaling (GPT-2 → Mistral-7B) suggests added prior knowledge alone cannot overcome unconditional sampling under extreme imbalance. A different lever is untested here: prompting an instruction-tuned LLM to generate **specifically minority-class** rows, supplied in-context with schema-level metadata (marginal statistics, feature correlations, domain semantics, signal sparsity). This reframes the LLM's role from learning the joint to a CTGAN-like conditional generator, and is the form of "context engineering" most likely to close the gap — a hypothesis we leave to future work.
 
 ---
 
