@@ -110,24 +110,24 @@ The architectural explanation connects to Table 2: GReaT, like TabDDPM, samples 
 
 ## References
 
-Borisov, V. et al. (2023). Language Models are Realistic Tabular Data Generators. *ICLR 2023*.
+Borisov, V., et al. (2023). Language models are realistic tabular data generators. Proceedings of ICLR 2023.
 
-Chawla, N. V. et al. (2002). SMOTE. *JAIR*, 16, 321–357.
+Chawla, N. V., et al. (2002). SMOTE: Synthetic minority over-sampling technique. Journal of Artificial Intelligence Research, 16, 321–357.
 
-Davila Restrepo, G. et al. (2025). Benchmarking Tabular Data Synthesis. *Data Science Journal*.
+Dávila Restrepo, G., et al. (2025). Benchmarking tabular data synthesis. Data Science Journal.
 
-Erickson, N. et al. (2025). TabArena. *NeurIPS 2025*.
+Erickson, N., et al. (2025). TabArena. Advances in Neural Information Processing Systems.
 
-Friedman, J. H. (2001). Greedy Function Approximation: A Gradient Boosting Machine. *Annals of Statistics*, 29(5).
+Friedman, J. H. (2001). Greedy function approximation: A gradient boosting machine. The Annals of Statistics, 29(5).
 
-Kotelnikov, A. et al. (2023). TabDDPM. *ICML 2023*.
+Kotelnikov, A., et al. (2023). TabDDPM. Proceedings of ICML 2023.
 
-Patki, N. et al. (2016). The Synthetic Data Vault. *IEEE DSAA*.
+Patki, N., et al. (2016). The Synthetic Data Vault. Proceedings of IEEE DSAA.
 
-Pedregosa, F. et al. (2011). Scikit-learn. *JMLR*, 12, 2825–2830.
+Pedregosa, F., et al. (2011). Scikit-learn: Machine learning in Python. Journal of Machine Learning Research, 12, 2825–2830.
 
-Xu, L. et al. (2019). Modeling Tabular Data using Conditional GAN. *NeurIPS 2019*.
+Xu, L., et al. (2019). Modeling tabular data using conditional GAN. Advances in Neural Information Processing Systems.
 
-Hillstrom, K. (2008). MineThatData E-Mail Analytics Challenge.
+Hillstrom, K. (2008). MineThatData e-mail analytics challenge.
 
-Diemert, E. et al. (2018). A Large Scale Benchmark for Uplift Modeling. *KDD AdKDD Workshop*.
+Diemert, E., et al. (2018). A large scale benchmark for uplift modeling. Proceedings of the KDD AdKDD Workshop.
