@@ -9,11 +9,11 @@
 
 Marketing classification tasks — conversion prediction, churn, response modeling — routinely operate with positive rates below 1%. Synthetic data augmentation is widely proposed as a remedy, but practitioners lack evidence on *when* it helps and *which generator* to use. Aggregate benchmarks (Erickson et al., 2025; Davila et al., 2025) rank generators across heterogeneous tasks and provide no guidance for the extreme-imbalance regime specific to marketing.
 
-Table 1 makes the bottleneck concrete. Datasets with fewer than ~100 minority examples show large augmentation gains; those with 200+ show negligible gains. This is not a class-imbalance story per se — it is a **minority-example scarcity** story.
+Table 1 makes the bottleneck concrete. Based on the Datasets we considered, the ones with fewer than x% minority examples show large augmentation gains; those with lower imbalance rate of more than y% show negligible gains. This is not a class-imbalance story per se — it is a **minority-example scarcity** story.
 
 **Table 1 — Minority-example budget and baseline AUC by dataset**
 
-| Dataset | Positive Rate | Train Rows | Minority Examples | Baseline AUC |
+| Dataset | Positive Rate | Train Rows | Minority Examples | Baseline AUC* |
 |---|---|---|---|---|
 | Criteo Display | 0.2% | 8,000 | **16** | 0.846 ± 0.228 |
 | Hillstrom Email | 0.9% | 8,000 | **72** | 0.548 ± 0.092 |
@@ -22,8 +22,8 @@ Table 1 makes the bottleneck concrete. Datasets with fewer than ~100 minority ex
 | Telco Churn | 26.6% | 5,626 | 1,497 | 0.844 ± 0.015 |
 | Nomao Lead | 28.3% | 8,000 | 2,264 | 0.991 ± 0.001 |
 
----
 
+\* Baseline AUC is calculated using a GradientBoosting classifier approach
 ## 2. Experimental Setup
 
 We evaluate five generators across seven datasets spanning positive rates from 0.2% to 30%: GaussianCopula (Patki et al., 2016), CTGAN (Xu et al., 2019), SMOTE (Chawla et al., 2002), TabDDPM (Kotelnikov et al., 2023), and GReaT (Borisov et al., 2023) at two LLM scales (GPT-2 117M and Mistral-7B 7B). Protocol: 80/20 stratified split, α-sweep over {0.1, 0.2, 0.3, 0.5, 1.0}, 5, 10 seeds, GradientBoostingClassifier primary downstream model (Friedman, 2001; Pedregosa et al., 2011), extended to four classifier families for robustness. Primary metric: AUC-ROC.
