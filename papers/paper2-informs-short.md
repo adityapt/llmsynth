@@ -90,8 +90,8 @@ The architectural explanation connects to Table 2: GReaT, like TabDDPM, samples 
 | Positive rate | Observed pattern | Recommendation |
 |---|---|---|
 | > 10% | No generator exceeded +0.27 pts | Skip augmentation |
-| 1%–10% | **Not tested in this study** | Validate experimentally |
-| 0.5%–1% | CTGAN/SMOTE +5–6 pts | Evaluate CTGAN at α ∈ {0.1, 0.3} |
+| 1%–10% | **Not tested in this study** | - |
+| 0.5%–1% | CTGAN/SMOTE +5–6 pts | Validate experimentally |
 | < 0.5% | CTGAN/SMOTE +12–13 pts | Strongly consider CTGAN |
 
 **Limitations:** (1) Only two extreme-imbalance datasets tested (Hillstrom, Criteo); the 1%–10% transition region is unsampled. (2) All experiments cap at n=10,000; at full dataset scale the minority-example budget is larger and gains may diminish. (3) Generator hyperparameters use library defaults; tuned TabDDPM may narrow the CTGAN gap. (4) Privacy and operational costs not evaluated.
