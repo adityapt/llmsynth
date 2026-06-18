@@ -58,9 +58,13 @@ CTGAN also outperforms `class_weight='balanced'` reweighting by +7.55 AUC points
 
 ## 4. TabDDPM vs CTGAN
 
-TabDDPM is the current state-of-the-art generator on general tabular benchmarks (Davila et al., 2025). We evaluate it at two training budgets: N_iter=2,000 (default) and N_iter=10,000 (5× extended). On both Hillstrom and Criteo, CTGAN outperforms TabDDPM at both budgets. Extended training widens the gap: TabDDPM at 10k goes uniformly negative on Hillstrom (all α values below baseline). The CTGAN advantage at extended training reaches d_z=1.25 on Hillstrom (p=0.049).
+TabDDPM is the current state-of-the-art generator on general tabular benchmarks (Davila et al., 2025). We evaluate it at two training budgets: $N_{iter}$=2,000 (default) and $N_{iter}$=10,000 (5× extended). On both Hillstrom and Criteo, CTGAN outperforms TabDDPM at both budgets. Extended training widens the gap: TabDDPM at 10k goes uniformly negative on Hillstrom (all α values below baseline). The CTGAN advantage at extended training reaches Cohen's d, $d_z$=1.25 on Hillstrom (p=0.049).
 
 Table 2 explains why: TabDDPM samples unconditionally at the natural positive rate. Increasing training budget did not alter the observed sampling distribution in our experiments, suggesting that the limitation is architectural rather than optimization-related. Fit time: CTGAN ~2 min CPU; TabDDPM ~6–29 min GPU.
+
+** What CPU (M1 Pro 2022 32GB)
+
+** What GPU (NVIDIA H100 x8)
 
 ---
 
@@ -81,7 +85,7 @@ We evaluate GReaT (Borisov et al., 2023) — which fine-tunes a language model o
 
 †n=50 Mistral-7B on Hillstrom: 4/5 seeds failed to generate parseable rows (extreme imbalance + very small n). ‡Only 3 valid seeds; 2 seeds failed entirely.
 
-Three findings emerge. First, on anonymized features (German Credit), both LLM scales hurt consistently — the LLM prior is inapplicable when feature names carry no semantic meaning. Second, on Hillstrom with extreme imbalance, GReaT at large n actively harms performance (GPT-2: −6.87 pts at n=2,000, d_z=−4.40, FDR-significant, p=0.006) — LLM-generated rows at 0.9% positive rate dilute rather than enrich the minority class as n grows. Third, Mistral-7B is marginally less harmful than GPT-2 on German Credit at large n (−0.38 vs −3.00 pts at n=500), but on Hillstrom and Telco both models underperform the baseline in most conditions. Neither LLM scale approaches CTGAN on the extreme-imbalance datasets that matter for marketing.
+Three findings emerge. First, on anonymized features (German Credit), both LLM scales hurt consistently — the LLM prior is inapplicable when feature names carry no semantic meaning. Second, on Hillstrom with extreme imbalance, GReaT at large n actively harms performance (GPT-2: −6.87 pts at n=2,000, $d_z$=−4.40, FDR-significant, p=0.006) — LLM-generated rows at 0.9% positive rate dilute rather than enrich the minority class as n grows. Third, Mistral-7B is marginally less harmful than GPT-2 on German Credit at large n (−0.38 vs −3.00 pts at n=500), but on Hillstrom and Telco both models underperform the baseline in most conditions. Neither LLM scale approaches CTGAN on the extreme-imbalance datasets that matter for marketing.
 
 The architectural explanation connects to Table 2: GReaT, like TabDDPM, samples from the joint distribution without minority-class conditioning. The observed synthetic positive rate from GReaT would mirror the training distribution (~0.9% on Hillstrom) regardless of whether the backbone is GPT-2 or Mistral-7B. Scaling the LLM does not change this sampling property.
 
