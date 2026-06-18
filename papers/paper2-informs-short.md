@@ -48,7 +48,13 @@ This paper addresses that question through a controlled empirical study on seven
 
 **Metric.** Primary metric: AUC-ROC (area under the receiver operating characteristic curve), which measures a classifier's ability to rank positive examples above negative ones, independent of a classification threshold. AUC ranges from 0 to 1; random guessing yields 0.5. We report gains in AUC points (×100 for readability): a gain of +0.1287 AUC is reported as +12.87 AUC points.
 
-**Seeds and statistical inference.** We repeat each experiment across 5–10 independent random seeds. Each seed determines a different train/test split and a different generator sample. We report 95% confidence intervals (t-distribution on per-seed values). For pairwise comparisons (e.g., CTGAN vs. TabDDPM), we use a **paired t-test** on per-seed AUC differences, yielding a t-statistic, p-value, and Cohen's d_z (effect size = mean paired difference / standard deviation of paired differences; d_z ≥ 0.8 is considered large). Multiple comparisons are corrected using the Benjamini-Hochberg FDR procedure at q=0.10. Compute: baseline and augmentation experiments run on a MacBook Pro M1 Pro (32 GB RAM); TabDDPM and GReaT run on an NVIDIA H100 GPU cluster.
+**Seeds and holdout design.** We use two holdout strategies depending on the experiment:
+
+- *Augmentation sweep (CTGAN, SMOTE, TabDDPM):* Each seed determines an independent 80/20 stratified split — both the training set and the test set vary per seed. This standard approach estimates generalization across different data partitions and is appropriate when the full dataset (8,000–12,000 rows) provides a reliable holdout regardless of split.
+
+- *GReaT small-n experiments:* The holdout is fixed once (random_state=42) before the seed loop and does not change across seeds or training sizes. Only the small training sample (n ∈ {50, 100, 200, 500, 1000, 2000}) varies per seed. This design is necessary because at n=50 training rows, a variable holdout would yield ~12 test rows — far too small for stable AUC estimation at 0.9% positive rate. A fixed holdout of 10,000 rows guarantees ~90 positive test examples, enabling reliable comparison across all training sizes and seeds on the same evaluation surface.
+
+We report 95% confidence intervals (t-distribution on per-seed AUC values). For pairwise comparisons, we use a **paired t-test** on per-seed AUC differences — pairs are matched by seed, so the same random partition is used for both methods being compared. This removes cross-seed variability and isolates the generator effect. Effect size is reported as Cohen's d_z (mean paired difference / standard deviation of paired differences; d_z ≥ 0.8 is large). Multiple comparisons are corrected with Benjamini-Hochberg FDR at q=0.10. Compute: augmentation experiments run on a MacBook Pro M1 Pro 32 GB (CPU); TabDDPM and GReaT run on an NVIDIA H100 GPU cluster.
 
 ---
 
