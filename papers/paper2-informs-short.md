@@ -60,9 +60,9 @@ We report 95% confidence intervals (t-distribution on per-seed AUC values). For 
 
 ## 3. Core Finding: Minority-Example Scarcity Drives Augmentation Value
 
-On the five datasets with positive rate ≥ 11.7% (all of them have 240+ minority examples), no generator exceeds +0.27 AUC points across any α value. On the two marketing datasets — Hillstrom (72 examples) and Criteo (16 examples) — CTGAN and SMOTE deliver +5.7 to +12.9 AUC points. The 1%–10% positive-rate region is not represented in this paper, and should not be inferred from it.
+Across the five datasets with a positive rate of 11.7% or higher, each of which contains at least 240 minority examples, we find that no generator improves on the baseline by more than +0.27 AUC points at any value of α. The picture changes on the two marketing datasets. On Hillstrom (72 minority examples) and Criteo (16 minority examples), CTGAN and SMOTE recover between +5.7 and +12.9 AUC points. We did not evaluate datasets in the 1%–10% positive-rate range, and we caution against extrapolating our results into that region.
 
-A striking illustration: on Criteo, 7 of 10 MLP seeds failed to converge using real data alone (AUC < 0.15). After CTGAN augmentation, all 10 seeds converged (mean AUC 0.940 +- CI95). Augmentation in this regime is not a marginal improvement; it is the difference between a working classifier and one that fails to train.
+Criteo offers a useful illustration of what is at stake in this regime. Trained on real data alone, 7 of 10 MLP seeds failed to converge (AUC < 0.15). After CTGAN augmentation, all 10 seeds converged, with a mean AUC of 0.940 (95% CI). In this setting, augmentation is not a marginal refinement of an already-working model; it is what separates a classifier that trains from one that does not.
 
 **Table 2 — Synthetic positive rate by generator (5 seeds × 8,000 generated rows)**
 
@@ -74,17 +74,17 @@ A striking illustration: on Criteo, 7 of 10 MLP seeds failed to converge using r
 | **CTGAN** | **6.34% ± 0.21%** | **26.76% ± 1.18%** | **7–89× minority enrichment** |
 | SMOTE | 100% (minority only) | 100% (minority only) | Minority targeted by design |
 
-Table 2 directly explains the performance gap. GaussianCopula and TabDDPM sample at the natural positive rate — at 0.2% positive rate, this means 99.8% of generated rows are negative class, providing no minority enrichment. CTGAN's conditional vector generates 7–89× more positive-class rows than the training distribution. The mechanism is measurable and not inferred.
+Table 2 points to a direct explanation for this performance gap. GaussianCopula and TabDDPM both sample at the natural positive rate of the data, so at a 0.2% positive rate roughly 99.8% of the rows they generate belong to the negative class, and the minority class is left no better represented than before. CTGAN behaves differently: its conditional vector produces 7–89× more positive-class rows than the training distribution contains. Because we observe these synthetic positive rates directly, the mechanism is measured rather than inferred.
 
-CTGAN also outperforms `class_weight='balanced'` reweighting by +7.55 AUC points on both datasets (measured directly under the same 5-seed protocol).
+For comparison, we also evaluated simple class reweighting (`class_weight='balanced'`) under the same 5-seed protocol, and CTGAN outperforms it by +7.55 AUC points on both datasets.
 
 ---
 
 ## 4. TabDDPM vs CTGAN
 
-TabDDPM is the current state-of-the-art generator on general tabular benchmarks (Davila et al., 2025). We evaluate it at two training budgets: $N_{iter}$=2,000 (default) and $N_{iter}$=10,000 (5× extended). On both Hillstrom and Criteo, CTGAN outperforms TabDDPM at both budgets. Extended training widens the gap: TabDDPM at 10k goes uniformly negative on Hillstrom (all α values below baseline). The CTGAN advantage at extended training reaches Cohen's d, $d_z$=1.25 on Hillstrom (p=0.049).
+TabDDPM is currently the state-of-the-art generator on general tabular benchmarks (Davila et al., 2025), which makes it a natural point of comparison. We evaluated it at two training budgets: $N_{iter}$=2,000, the library default, and $N_{iter}$=10,000, a fivefold increase. On both Hillstrom and Criteo, CTGAN outperformed TabDDPM at each budget. Extending the training budget did not help TabDDPM and in fact widened the gap: at 10,000 iterations its performance on Hillstrom fell below baseline at every value of α. At this extended budget the CTGAN advantage on Hillstrom reaches an effect size of $d_z$=1.25 (p=0.049).
 
-Table 2 explains why: TabDDPM samples unconditionally at the natural positive rate. Increasing training budget did not alter the observed sampling distribution in our experiments, suggesting that the limitation is architectural rather than optimization-related. Fit time: CTGAN ~2 min CPU; TabDDPM ~6–29 min GPU.
+Table 2 again suggests why. TabDDPM samples unconditionally, at the natural positive rate of the data, and increasing the training budget did not change the sampling distribution we observed. This leads us to suspect that the limitation is architectural rather than a matter of insufficient optimization. The two generators also differ substantially in cost: CTGAN fits in roughly 2 minutes on CPU, whereas TabDDPM requires between 6 and 29 minutes on GPU.
 
 ** What CPU (M1 Pro 2022 32GB)
 
@@ -94,7 +94,7 @@ Table 2 explains why: TabDDPM samples unconditionally at the natural positive ra
 
 ## 5. LLM-Based Synthesis (GReaT)
 
-We evaluate GReaT (Borisov et al., 2023) — which fine-tunes a language model on serialized tabular rows — at two backbone scales: GPT-2 (117M parameters, 2019) and Mistral-7B (7B parameters, 2024). GReaT is tested on three datasets covering two conditions: anonymized features (German Credit) and semantic features under different class balance levels (Hillstrom: extreme imbalance; Telco: balanced).
+We next turn to GReaT (Borisov et al., 2023), which takes a different approach by fine-tuning a language model on serialized tabular rows. We evaluated it at two backbone scales, GPT-2 (117M parameters) and Mistral-7B (7B parameters), in order to ask whether a larger language model helps. We tested GReaT on three datasets chosen to separate two conditions: anonymized features, where feature names carry no meaning (German Credit), and semantic features at different levels of class balance (Hillstrom, with extreme imbalance, and Telco, which is balanced).
 
 **Table 3 — GReaT vs CTGAN: AUC gain over baseline ± 95% CI (5 seeds)**
 
@@ -109,9 +109,9 @@ We evaluate GReaT (Borisov et al., 2023) — which fine-tunes a language model o
 
 †n=50 Mistral-7B on Hillstrom: 4/5 seeds failed to generate parseable rows (extreme imbalance + very small n). ‡Only 3 valid seeds; 2 seeds failed entirely.
 
-Three findings emerge. First, on anonymized features (German Credit), both LLM scales hurt consistently — the LLM prior is inapplicable when feature names carry no semantic meaning. Second, on Hillstrom with extreme imbalance, GReaT at large n actively harms performance (GPT-2: −6.87 pts at n=2,000, $d_z$=−4.40, FDR-significant, p=0.006) — LLM-generated rows at 0.9% positive rate dilute rather than enrich the minority class as n grows. Third, Mistral-7B is marginally less harmful than GPT-2 on German Credit at large n (−0.38 vs −3.00 pts at n=500), but on Hillstrom and Telco both models underperform the baseline in most conditions. Neither LLM scale approaches CTGAN on the extreme-imbalance datasets that matter for marketing.
+Three findings emerge from Table 3. First, on the anonymized dataset (German Credit), both backbone scales hurt performance consistently. This is what we would expect if the value of a language-model prior comes from the meaning of feature names, since that meaning is absent here. Second, on Hillstrom, where imbalance is extreme, GReaT does not merely fail to help but actively harms performance as n grows (GPT-2: −6.87 points at n=2,000, $d_z$=−4.40, FDR-significant, p=0.006). The most plausible reading is that, at a 0.9% positive rate, additional LLM-generated rows dilute the minority class rather than enrich it. Third, the larger backbone offers little: Mistral-7B is marginally less harmful than GPT-2 on German Credit at large n (−0.38 vs −3.00 points at n=500), but on Hillstrom and Telco both models fall below baseline in most conditions. On the extreme-imbalance datasets that matter for marketing, neither scale comes close to CTGAN.
 
-The architectural explanation connects to Table 2: GReaT, like TabDDPM, samples from the joint distribution without minority-class conditioning. The observed synthetic positive rate from GReaT would mirror the training distribution (~0.9% on Hillstrom) regardless of whether the backbone is GPT-2 or Mistral-7B. Scaling the LLM does not change this sampling property.
+We read this result through the same lens as Table 2. Like TabDDPM, GReaT samples from the joint distribution without any conditioning on the minority class, so the synthetic positive rate it produces tends to mirror the training distribution (about 0.9% on Hillstrom) whether the backbone is GPT-2 or Mistral-7B. Scaling up the language model leaves this sampling behavior unchanged, which is consistent with the null effect we observe.
 
 ---
 
