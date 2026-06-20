@@ -77,7 +77,19 @@ For the augmentation sweep, we controlled the synthetic fraction using **α = n_
 
 ## 3. Core Finding: Minority-Example Scarcity Drives Augmentation Value
 
-Across the five datasets with a positive rate of 11.7% or higher, each of which contains at least 240 minority examples, we find that no generator improves on the baseline by more than +0.27 AUC points at any value of α. The picture changes on the two marketing datasets. On Hillstrom (72 minority examples), CTGAN delivers +5.75 AUC points and SMOTE delivers +5.84 AUC points at best α. On Criteo (16 minority examples), CTGAN delivers +12.87 AUC points and SMOTE delivers +11.99 AUC points. Both generators achieve similar gains; the choice between them is discussed in §6. We did not evaluate datasets in the 1%–10% positive-rate range, and we caution against extrapolating our results into that region.
+Across the five datasets with a positive rate of 11.7% or higher, each of which contains at least 240 minority examples, no generator improves on the baseline by more than +0.27 AUC points at any α. The picture changes on the two marketing datasets. Table 2a shows results for both a fixed pre-specified α=0.3 and the oracle best-α, so readers can assess how much the best-α selection inflates the reported gains.
+
+**Table 2a — Augmentation gains on marketing datasets (5-seed CI, GBC downstream)**
+
+| Generator | Hillstrom α=0.3 | Hillstrom best-α | Criteo α=0.3 | Criteo best-α |
+|---|---|---|---|---|
+| GaussianCopula | −2.40 pts | +0.44 pts (α=0.1) | −6.80 pts | +6.61 pts (α=0.1) |
+| **CTGAN** | **+2.05 pts** | **+5.75 pts (α=1.0)** | **+11.77 pts** | **+12.87 pts (α=0.2)** |
+| **SMOTE** | **+5.50 pts** | **+5.84 pts (α=0.1)** | **+11.99 pts** | **+11.99 pts (α=0.3)** |
+
+Baseline: Hillstrom 0.548 ± 0.092; Criteo 0.846 ± 0.228. All gains reported as AUC points (×100).
+
+CTGAN and SMOTE both deliver substantial gains on Criteo at fixed α=0.3. On Hillstrom, SMOTE is more robust to α choice (+5.50 pts at α=0.3 vs its best +5.84), while CTGAN's gains are more α-sensitive (+2.05 pts at α=0.3 vs its best +5.75 at α=1.0). The qualitative conclusion holds at fixed α: both generators help substantially when minority examples are scarce; neither helps when they are not. We did not evaluate datasets in the 1%–10% positive-rate range, and we caution against extrapolating our results into that region.
 
 ![Figure 1](../results/plots/paper2/fig11_minority_budget_vs_gain.png)
 
@@ -99,7 +111,7 @@ Table 2 points to a direct explanation for this performance gap, but it must be 
 
 Enrichment alone, however, cannot explain why one should prefer CTGAN to SMOTE — SMOTE enriches to 100% minority, the most aggressive enrichment possible, yet the two recover comparable gains in our experiments. The distinction lies not in *how much* minority data each adds but in *how* each constructs it. SMOTE interpolates: every synthetic point is a convex combination of an observed minority example and one of its minority nearest neighbors, so it falls within the convex hull of the minority examples already present, and the majority class is never consulted (Chawla et al., 2002). This makes SMOTE **boundary-blind** — it can place synthetic minority points inside dense majority regions, the over-generalization problem that motivated Borderline-SMOTE, ADASYN, and Geometric-SMOTE (Han et al., 2005; He et al., 2008; Douzas & Bacao, 2019) — and it tends to produce low-diversity, near-duplicate samples when only a handful of minority seeds exist. CTGAN instead estimates the full joint distribution and conditions on the class label, so its minority samples preserve cross-feature correlations and are informed by where the class boundary actually lies; interpolation-based oversampling is known to degrade precisely where the data are high-dimensional and the distribution is complex (Blagus & Lusa, 2013; Engelmann & Lessmann, 2021). In principle this yields higher-quality minority data. In our extreme regime, where CTGAN must estimate that conditional density from as few as 16 minority rows, the theoretical advantage does not open a measured AUC gap — so we read enrichment as *necessary for any gain* and the generation mechanism as the axis that should guide generator choice when data permit.
 
-One note on how we report gains: all results show the **best gain across the α sweep** (maximum over α ∈ {0.1, 0.2, 0.3, 0.5, 1.0}). This is the best-case result, not the average. To give a sense of robustness, at a pre-specified fixed α=0.3 the gains are: Hillstrom CTGAN +2.1 pts / SMOTE +5.5 pts; Criteo CTGAN +11.8 pts / SMOTE +12.0 pts. Criteo results are robust to α choice; Hillstrom CTGAN is more sensitive (its best α is 1.0). Across both datasets and generators, the qualitative finding — large gains in the extreme-scarcity regime — holds at fixed α.
+Note: Table 2a reports gains at both a fixed pre-specified α=0.3 and the oracle best-α. Best-α is the maximum over the sweep and represents an upper bound on gains a practitioner could achieve with perfect α selection.
 
 For comparison, we also evaluated simple class reweighting (`class_weight='balanced'`) under the same 5-seed protocol, and CTGAN outperforms it by +7.55 AUC points on both datasets.
 
