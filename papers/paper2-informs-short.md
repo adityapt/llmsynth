@@ -101,6 +101,10 @@ One note on how we report gains: all results show the **best gain across the α 
 
 For comparison, we also evaluated simple class reweighting (`class_weight='balanced'`) under the same 5-seed protocol, and CTGAN outperforms it by +7.55 AUC points on both datasets.
 
+![Figure 2](../results/plots/paper2/fig5_marketing_ci.png)
+
+**Figure 2 — Augmentation U-curves for Hillstrom (left) and Criteo (right) with 95% CI bands.** CTGAN and SMOTE gains peak at α ≈ 0.2–0.3 and degrade toward α=1.0. The shaded baseline CI band (wide on both datasets due to minority-example variance) narrows substantially after augmentation — synthetic data stabilizes learning, not just improves it on average. GaussianCopula stays near baseline throughout.
+
 ---
 
 ## 4. TabDDPM vs CTGAN
