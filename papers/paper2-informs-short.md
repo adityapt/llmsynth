@@ -95,7 +95,9 @@ Criteo offers a useful illustration of what is at stake in this regime. Trained 
 | **CTGAN** | **6.34% ± 0.21%** | **26.76% ± 1.18%** | **7–89× minority enrichment** |
 | SMOTE | 100% (minority only) | 100% (minority only) | Minority targeted by design |
 
-Table 2 points to a direct explanation for this performance gap. GaussianCopula and TabDDPM both sample at the natural positive rate of the data, so at a 0.2% positive rate roughly 99.8% of the rows they generate belong to the negative class, and the minority class is left no better represented than before. CTGAN behaves differently: during training, it conditions on each class using a log-frequency reweighted conditional vector, which causes it to learn — and sample — a much higher proportion of minority-class rows at inference time. This is why CTGAN generates 6.34% positive on Hillstrom (vs 0.90% real) and 26.76% on Criteo (vs 0.30% real). Because we observe these synthetic positive rates directly, the mechanism is measured rather than inferred.
+Table 2 points to a direct explanation for this performance gap, but it must be read in two parts. The first is **enrichment**. GaussianCopula and TabDDPM both sample at the natural positive rate of the data, so at a 0.2% positive rate roughly 99.8% of the rows they generate belong to the negative class, and the minority class is left no better represented than before. CTGAN behaves differently: during training it conditions on each class through a log-frequency-reweighted conditional vector (training-by-sampling), which raises the probability that minority modes are drawn and so causes it to learn — and sample — a much higher proportion of minority-class rows at inference time (Xu et al., 2019). This is why CTGAN generates 6.34% positive on Hillstrom (vs 0.90% real) and 26.76% on Criteo (vs 0.30% real). Because we observe these synthetic positive rates directly, the mechanism is measured rather than inferred.
+
+Enrichment alone, however, cannot explain why one should prefer CTGAN to SMOTE — SMOTE enriches to 100% minority, the most aggressive enrichment possible, yet the two recover comparable gains in our experiments. The distinction lies not in *how much* minority data each adds but in *how* each constructs it. SMOTE interpolates: every synthetic point is a convex combination of an observed minority example and one of its minority nearest neighbors, so it falls within the convex hull of the minority examples already present, and the majority class is never consulted (Chawla et al., 2002). This makes SMOTE **boundary-blind** — it can place synthetic minority points inside dense majority regions, the over-generalization problem that motivated Borderline-SMOTE, ADASYN, and Geometric-SMOTE (Han et al., 2005; He et al., 2008; Douzas & Bacao, 2019) — and it tends to produce low-diversity, near-duplicate samples when only a handful of minority seeds exist. CTGAN instead estimates the full joint distribution and conditions on the class label, so its minority samples preserve cross-feature correlations and are informed by where the class boundary actually lies; interpolation-based oversampling is known to degrade precisely where the data are high-dimensional and the distribution is complex (Blagus & Lusa, 2013; Engelmann & Lessmann, 2021). In principle this yields higher-quality minority data. In our extreme regime, where CTGAN must estimate that conditional density from as few as 16 minority rows, the theoretical advantage does not open a measured AUC gap — so we read enrichment as *necessary for any gain* and the generation mechanism as the axis that should guide generator choice when data permit.
 
 One note on how we report gains: all results show the **best gain across the α sweep** (maximum over α ∈ {0.1, 0.2, 0.3, 0.5, 1.0}). This is the best-case result for each generator, not the average. The actual gain at a randomly chosen α will typically be lower.
 
@@ -111,7 +113,7 @@ For comparison, we also evaluated simple class reweighting (`class_weight='balan
 
 TabDDPM is currently the state-of-the-art generator on general tabular benchmarks (Davila et al., 2025), which makes it a natural point of comparison. We evaluated it at two training budgets: $N_{iter}$=2,000, the library default, and $N_{iter}$=10,000, a fivefold increase. On both Hillstrom and Criteo, CTGAN outperformed TabDDPM at each budget. Extending the training budget did not help TabDDPM and in fact widened the gap: at 10,000 iterations its performance on Hillstrom fell below baseline at every value of α. At this extended budget the CTGAN advantage on Hillstrom reaches an effect size of $d_z$=1.25 (p=0.049).
 
-Table 2 again suggests why. TabDDPM samples unconditionally, at the natural positive rate of the data, and increasing the training budget did not change the sampling distribution we observed. This leads us to suspect that the limitation is architectural rather than a matter of insufficient optimization. The two generators also differ substantially in cost: CTGAN fits in roughly 2 minutes on CPU, whereas TabDDPM requires between 6 and 29 minutes on GPU.
+Table 2 again suggests why, and the reason fits the two-part reading above. TabDDPM samples unconditionally, at the natural positive rate of the data, so it fails at the *first* step — enrichment — regardless of how good its individual samples are; increasing the training budget did not change the sampling distribution we observed. This leads us to suspect that the limitation is architectural rather than a matter of insufficient optimization: added capacity cannot help a generator that never conditions on the minority class. The two generators also differ substantially in cost: CTGAN fits in roughly 2 minutes on CPU, whereas TabDDPM requires between 6 and 29 minutes on GPU. The broader point is that model sophistication is orthogonal to the property that matters here. TabDDPM is the stronger generator on balanced benchmarks (Davila et al., 2025), yet it loses in our regime because it lacks the conditioning step, not because it lacks capacity — a fivefold budget increase made it *worse*, not better.
 
 
 ---
@@ -135,7 +137,7 @@ We next turn to GReaT (Borisov et al., 2023), which takes a different approach: 
 
 Three findings emerge from Table 3. First, on the anonymized dataset (German Credit), both backbone scales hurt performance consistently. This is what we would expect if the value of a language-model prior comes from the meaning of feature names, since that meaning is absent here. Second, on Hillstrom, where imbalance is extreme, GReaT does not merely fail to help but actively harms performance as n grows (GPT-2: −6.87 points at n=2,000, $d_z$=−4.40, FDR-significant, p=0.006). The most plausible reading is that, at a 0.9% positive rate, additional LLM-generated rows dilute the minority class rather than enrich it. Third, the larger backbone offers little: Mistral-7B is marginally less harmful than GPT-2 on German Credit at large n (−0.38 vs −3.00 points at n=500), but on Hillstrom and Telco both models fall below baseline in most conditions. On the extreme-imbalance datasets that matter for marketing, neither scale comes close to CTGAN.
 
-We read this result through the same lens as Table 2. Like TabDDPM, GReaT samples from the joint distribution without any conditioning on the minority class, so the synthetic positive rate it produces tends to mirror the training distribution (about 0.9% on Hillstrom) whether the backbone is GPT-2 or Mistral-7B. Scaling up the language model leaves this sampling behavior unchanged, which is consistent with the null effect we observe.
+We read this result through the same lens as Table 2. Like TabDDPM, GReaT samples from the joint distribution without any conditioning on the minority class, so the synthetic positive rate it produces tends to mirror the training distribution (about 0.9% on Hillstrom) whether the backbone is GPT-2 or Mistral-7B. Scaling the language model from 117M to 7B parameters leaves this sampling behavior unchanged, which is consistent with the null effect we observe. This is the clearest evidence in our study that *capability is not the bottleneck*: a roughly 60-fold increase in model size cannot compensate for the absence of a conditioning step, just as the extended training budget could not rescue TabDDPM. The failure is structural — GReaT, in effect, lacks CTGAN's conditional vector — and no amount of backbone scale supplies it.
 
 ---
 
@@ -161,11 +163,13 @@ For practitioners choosing between CTGAN and SMOTE: both achieve similar gains i
 - **We used default hyperparameters for all generators.** A well-tuned TabDDPM might close some of the gap with CTGAN.
 - **Privacy and cost not evaluated.** SMOTE generates near-duplicates of real minority examples, which creates membership inference risk in regulated environments (GDPR, CCPA). CTGAN and TabDDPM have moderate risk. Evaluate this before deploying in a production marketing system.
 
-**Where we think LLM-based synthesis goes next.** GReaT and Mistral-7B both fail because they sample from the full joint distribution without targeting the minority class. The natural next step is context-conditioned synthesis: prompt an instruction-tuned LLM to generate specifically minority-class rows, with metadata about class distributions and feature semantics provided in-context. That reframes the LLM as a conditional generator — closer to how CTGAN works — and is the direction most likely to close the performance gap. We haven't tested this, but it's the obvious follow-on.
+**Where we think LLM-based synthesis goes next.** GReaT and Mistral-7B both fail because they sample from the full joint distribution without targeting the minority class. The natural next step is context-conditioned synthesis: prompt an instruction-tuned LLM to generate specifically minority-class rows, with metadata about class distributions and feature semantics provided in-context. But the mechanism is what matters, not the model. An LLM pointed only at the minority examples and asked for more of them is **SMOTE with a larger parameter count** — it will interpolate within the observed minority support and inherit the same boundary-blindness. An LLM that first conditions on the full joint distribution and then targets the minority class is doing what CTGAN does, and is the version most likely to close the gap. Our GReaT results are the cautionary case: scale without conditioning buys nothing. We haven't tested the conditioned variant, but it's the obvious follow-on.
 
 ---
 
 ## References
+
+Blagus, R., & Lusa, L. (2013). SMOTE for high-dimensional class-imbalanced data. BMC Bioinformatics, 14, 106.
 
 Borisov, V., et al. (2023). Language models are realistic tabular data generators. Proceedings of ICLR 2023.
 
@@ -173,9 +177,17 @@ Chawla, N. V., et al. (2002). SMOTE: Synthetic minority over-sampling technique.
 
 Dávila Restrepo, G., et al. (2025). Benchmarking tabular data synthesis. Data Science Journal.
 
+Douzas, G., & Bacao, F. (2019). Geometric SMOTE: A geometrically enhanced drop-in replacement for SMOTE. Information Sciences, 501, 118–135.
+
+Engelmann, J., & Lessmann, S. (2021). Conditional Wasserstein GAN-based oversampling of tabular data for imbalanced learning. Expert Systems with Applications, 174, 114582.
+
 Erickson, N., et al. (2025). TabArena. Advances in Neural Information Processing Systems.
 
 Friedman, J. H. (2001). Greedy function approximation: A gradient boosting machine. The Annals of Statistics, 29(5).
+
+Han, H., Wang, W.-Y., & Mao, B.-H. (2005). Borderline-SMOTE: A new over-sampling method in imbalanced data sets learning. Advances in Intelligent Computing (ICIC 2005), 878–887.
+
+He, H., Bai, Y., Garcia, E. A., & Li, S. (2008). ADASYN: Adaptive synthetic sampling approach for imbalanced learning. IEEE International Joint Conference on Neural Networks (IJCNN), 1322–1328.
 
 Kotelnikov, A., et al. (2023). TabDDPM. Proceedings of ICML 2023.
 
