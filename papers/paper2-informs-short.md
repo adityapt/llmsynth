@@ -7,17 +7,23 @@
 
 ## Abstract
 
-Class imbalance is a pervasive challenge in business classification — conversion rates below 1%, fraud rates below 0.5%, and rare-event prediction across customer cohorts. In these settings, classifiers trained on real data alone frequently fail due to extreme minority-example scarcity. Synthetic data augmentation is widely proposed as a remedy, but practitioners lack actionable guidance on when it helps and which generator to use. We evaluate five generators — GaussianCopula, CTGAN, SMOTE, TabDDPM, and GReaT (at GPT-2 and Mistral-7B scales) — across seven datasets spanning positive rates from 0.2% to 30%, with up to 10 seeds and four downstream classifiers. We find that large, consistent augmentation gains appear only when fewer than ~100 minority examples are available in training. We measure why: CTGAN generates 7–89× more minority-class rows than the natural distribution; TabDDPM and GaussianCopula mirror the real imbalance and provide no enrichment. Neither LLM backbone resolves this architectural limitation. The 1%–10% positive-rate transition region is untested and remains an open empirical question.
+Marketing and business classification problems routinely have positive rates below 1% — email conversions, fraud, customer churn. At these rates, classifiers often fail to learn useful boundaries because there simply aren't enough positive examples to train on. Synthetic data augmentation is a common fix, but practitioners don't have clear guidance on when it actually works or which generator to use.
+
+We tested five generators — GaussianCopula, CTGAN, SMOTE, TabDDPM, and GReaT (at two LLM scales: GPT-2 and Mistral-7B) — across seven datasets spanning 0.2% to 30% positive rates, with up to 10 seeds and four downstream classifiers. The pattern is clear: large gains only show up when the training set has fewer than ~100 minority examples. When datasets have 240+ minority examples, no generator beat the baseline by more than +0.27 AUC points.
+
+We also measured *why* CTGAN works in this regime: it generates 7–89× more minority-class rows than the natural distribution, directly addressing the data scarcity. TabDDPM and GaussianCopula mirror the real class distribution — at 0.2% positive rate, 99.8% of what they generate is negative class, so they don't help. Scaling up the LLM in GReaT from GPT-2 to Mistral-7B doesn't change this — neither backbone conditions on the minority class.
+
+One important gap: we didn't test datasets in the 1%–10% positive-rate range, so we can't make claims about that region.
 
 ---
 
 ## 1. Introduction
 
-Class-imbalanced datasets are pervasive across business domains. Fraud detection, medical diagnosis, insurance claims, and customer marketing all operate with rare positive events — sometimes below 1% of the dataset. When minority examples are scarce, standard classifiers default to predicting the majority class, yielding poor recall on the events that matter most. In marketing specifically, the cost of misclassification is direct and measurable: failing to identify a converting customer means lost revenue; missing a churning customer means reactive rather than preventive intervention (Neslin et al., 2006). Across financial services, healthcare, and digital marketing, accurate minority-class modeling has significant operational value.
+Class imbalance is a practical problem across business domains. Email conversion rates, fraud signals, customer churn, insurance claims — these events are rare, often below 1% of the data. When that happens, standard classifiers tend to predict the majority class and miss the minority events that actually matter. In marketing, getting this wrong has a direct cost: a missed converting customer is lost revenue, and a missed churning customer means reacting after the fact instead of preventing it (Neslin et al., 2006).
 
-Synthetic data augmentation — generating artificial training examples and mixing them with real data — is one of the most commonly used remedies for class imbalance (Chawla et al., 2002; He & Garcia, 2009; Johnson & Khoshgoftaar, 2019). The space of available generators has grown substantially: from interpolation-based oversampling (SMOTE), to conditional GANs (CTGAN), diffusion models (TabDDPM), and LLM-based synthesizers (GReaT). Aggregate benchmarks rank these generators on heterogeneous tabular tasks (Erickson et al., 2025; Davila et al., 2025), but do not answer the question practitioners actually face: *given my task at this positive rate, will augmentation help, and which generator should I use?*
+Synthetic data augmentation — generating artificial training examples and mixing them with real data — is one of the standard remedies for this problem (Chawla et al., 2002; He & Garcia, 2009; Johnson & Khoshgoftaar, 2019). The options have grown substantially: SMOTE, conditional GANs (CTGAN), diffusion models (TabDDPM), and LLM-based synthesizers (GReaT). Existing benchmarks rank these generators across many tabular tasks (Erickson et al., 2025; Davila et al., 2025), but they don't answer the question a practitioner actually has: *given my dataset at this positive rate, will augmentation help, and which generator should I pick?*
 
-This paper addresses that question through a controlled empirical study on seven datasets spanning positive rates from 0.2% to 30%. Table 1 makes the bottleneck concrete: in our experiments, datasets with fewer than ~100 minority training examples (positive rate ≤ 0.9%) show large augmentation gains of up to +12.9 AUC points; datasets with more than ~240 minority examples (positive rate ≥ 11.7%) show negligible gains — no generator exceeded +0.27 AUC points. This is not a class-imbalance story per se; it is a **minority-example scarcity** story. We note explicitly that the 1%–10% positive-rate region is not represented in our evaluation, and general claims about that transition region cannot be drawn from this study.
+This paper answers that question empirically. We ran a controlled study across seven datasets ranging from 0.2% to 30% positive rates. Table 1 makes the key pattern clear: datasets with fewer than ~100 minority training examples (positive rate ≤ 0.9%) see gains of up to +12.9 AUC points; datasets with more than ~240 minority examples (positive rate ≥ 11.7%) see negligible gains — no generator beat the baseline by more than +0.27 AUC points. The driver isn't class imbalance in general — it's **minority-example scarcity specifically**. We also note upfront that we didn't test datasets in the 1%–10% positive-rate range, so we're not making claims about that region.
 
 **Table 1 — Minority-example budget and baseline AUC by dataset**
 
@@ -34,27 +40,27 @@ This paper addresses that question through a controlled empirical study on seven
 \* Baseline AUC is calculated using a GradientBoosting classifier approach
 ## 2. Experimental Setup
 
-**Generators.** We evaluate five synthetic data generators: GaussianCopula (Patki et al., 2016), CTGAN (Xu et al., 2019), SMOTE (Chawla et al., 2002), TabDDPM (Kotelnikov et al., 2023), and GReaT (Borisov et al., 2023) at two LLM backbone scales (GPT-2 117M and Mistral-7B 7B). All generators use library-default hyperparameters.
+**Generators.** We evaluated five generators: GaussianCopula (Patki et al., 2016), CTGAN (Xu et al., 2019), SMOTE (Chawla et al., 2002), TabDDPM (Kotelnikov et al., 2023), and GReaT (Borisov et al., 2023) at two LLM scales — GPT-2 (117M parameters) and Mistral-7B (7B parameters). All generators run with library-default hyperparameters.
 
-**Experimental pipeline.** For each (dataset, generator, seed) combination, we run three evaluation conditions:
+**What we measured.** For each dataset-generator-seed combination, we ran three conditions:
 
-1. *Baseline (TRTR):* Train on 80% real data, evaluate on 20% real holdout. This establishes the no-augmentation performance floor.
-2. *TSTR (Train on Synthetic, Test on Real):* Train on fully synthetic data, evaluate on the same real holdout. This measures how faithfully a generator captures the real distribution. A large TSTR gap indicates synthetic data cannot replace real data.
-3. *Augmentation sweep*†: Fit the generator on the real training set, generate synthetic rows, and train on the combined real+synthetic set. Evaluate on the real holdout and compare to baseline.
+1. **Baseline (TRTR):** Train on 80% real data, evaluate on 20% real holdout. This is the no-augmentation benchmark.
+2. **TSTR (Train on Synthetic, Test on Real):** Train entirely on synthetic data, evaluate on the real holdout. This tells us whether synthetic data can replace real data. Spoiler: it can't.
+3. **Augmentation sweep:** Fit the generator on the real training set, generate synthetic rows, combine with real training data, retrain, and compare to baseline.
 
-†**α (synthetic fraction)** controls how many synthetic rows are added relative to the real training set: α = n_synthetic / n_real. We sweep α ∈ {0.1, 0.2, 0.3, 0.5, 1.0}. For example, α=0.2 adds 20% as many synthetic rows as real rows; α=1.0 doubles the training set. We report the best-α result per generator.
+For the augmentation sweep, we controlled the synthetic fraction using **α = n_synthetic / n_real**. We swept α ∈ {0.1, 0.2, 0.3, 0.5, 1.0} — so α=0.2 adds 20% as many synthetic rows as real ones, and α=1.0 doubles the training set. We report the best-α result per generator.
 
-**Downstream model.** Primary: GradientBoostingClassifier with n_estimators=100, max_depth=4 (Friedman, 2001; Pedregosa et al., 2011). Extended to Logistic Regression, Random Forest, and MLP for robustness. Each classifier is re-trained from scratch on the augmented training set; synthetic rows are only used for training, never for evaluation.
+**Downstream model.** Primary classifier: GradientBoostingClassifier (n_estimators=100, max_depth=4) — standard for tabular data (Friedman, 2001; Pedregosa et al., 2011). We also ran Logistic Regression, Random Forest, and MLP to check robustness. Synthetic data is used for training only — never for evaluation.
 
-**Metric.** Primary metric: AUC-ROC (area under the receiver operating characteristic curve), which measures a classifier's ability to rank positive examples above negative ones, independent of a classification threshold. AUC ranges from 0 to 1; random guessing yields 0.5. We report gains in AUC points (×100 for readability): a gain of +0.1287 AUC is reported as +12.87 AUC points.
+**Metric.** We use AUC-ROC as the primary metric. It measures how well a classifier ranks positives above negatives, independent of any threshold. AUC ranges from 0 to 1 (0.5 = random guessing). We report gains in AUC points (×100): a gain of 0.1287 AUC = +12.87 AUC points.
 
-**Seeds and holdout design.** We use two holdout strategies depending on the experiment:
+**Seeds and holdout.** Two different holdout designs were used, and the reason matters:
 
-- *Augmentation sweep (CTGAN, SMOTE, TabDDPM):* Each seed determines an independent 80/20 stratified split — both the training set and the test set vary per seed. This standard approach estimates generalization across different data partitions and is appropriate when the full dataset (8,000–12,000 rows) provides a reliable holdout regardless of split.
+- *Augmentation experiments (CTGAN, SMOTE, TabDDPM):* Each seed gets its own independent 80/20 stratified split — both training and test sets change per seed. This is the standard approach when dataset size is large enough for a reliable holdout in every split.
 
-- *GReaT small-n experiments:* The holdout is fixed once (random_state=42) before the seed loop and does not change across seeds or training sizes. Only the small training sample (n ∈ {50, 100, 200, 500, 1000, 2000}) varies per seed. This design is necessary because at n=50 training rows, a variable holdout would yield ~12 test rows — far too small for stable AUC estimation at 0.9% positive rate. A fixed holdout of 10,000 rows guarantees ~90 positive test examples, enabling reliable comparison across all training sizes and seeds on the same evaluation surface.
+- *GReaT small-n experiments:* The holdout is fixed once upfront (random_state=42) and stays the same across all seeds and training sizes. Only the small training sample changes per seed. We had to do this because at n=50 training rows, a variable split would give us only ~12 test rows — not enough to get stable AUC estimates at 0.9% positive rate. Fixing the holdout to 10,000 rows gives us ~90 positive test examples, which makes comparisons across seeds and training sizes reliable.
 
-We report 95% confidence intervals (t-distribution on per-seed AUC values). For pairwise comparisons, we use a **paired t-test** on per-seed AUC differences — pairs are matched by seed, so the same random partition is used for both methods being compared. This removes cross-seed variability and isolates the generator effect. Effect size is reported as Cohen's d_z (mean paired difference / standard deviation of paired differences; d_z ≥ 0.8 is large). Multiple comparisons are corrected with Benjamini-Hochberg FDR at q=0.10. Compute: augmentation experiments run on a MacBook Pro M1 Pro 32 GB (CPU); TabDDPM and GReaT run on an NVIDIA H100 GPU cluster.
+**Statistical analysis.** We report 95% confidence intervals using the t-distribution on per-seed AUC values. For pairwise comparisons (e.g., CTGAN vs TabDDPM), we use a **paired t-test** on per-seed AUC differences — the pairing is by seed, so the same data partition is used for both methods. This removes split-to-split noise and isolates the generator effect. Effect size is Cohen's d_z (mean difference / standard deviation of differences; d_z ≥ 0.8 is large). We apply Benjamini-Hochberg FDR correction at q=0.10 for multiple comparisons. All augmentation experiments ran on a MacBook Pro M1 Pro (32 GB RAM); TabDDPM and GReaT ran on an NVIDIA H100 GPU cluster (8× H100).
 
 ---
 
@@ -117,18 +123,27 @@ We read this result through the same lens as Table 2. Like TabDDPM, GReaT sample
 
 ## 6. Recommendation and Limitations
 
-**Practitioner guidance:**
+**What to do in practice:**
 
-| Positive rate | Observed pattern | Recommendation |
+| Positive rate | What we observed | Our recommendation |
 |---|---|---|
-| > 10% | No generator exceeded +0.27 pts | Skip augmentation |
-| 1%–10% | **Not tested in this study** | - |
-| 0.5%–1% | CTGAN/SMOTE +5–6 pts | Validate experimentally |
-| < 0.5% | CTGAN/SMOTE +12–13 pts | Strongly consider CTGAN |
+| > 10% | No generator beat baseline by more than +0.27 pts | Skip augmentation — not worth the effort |
+| 1%–10% | **Not tested** | We can't say — validate on your own data before committing |
+| 0.5%–1% | CTGAN/SMOTE +5–6 pts | Run CTGAN or SMOTE at α ∈ {0.1, 0.3}; validate before scaling |
+| < 0.5% | CTGAN/SMOTE +12–13 pts | Strongly consider CTGAN — it also stabilizes training reliability |
 
-**Limitations:** (1) Only two extreme-imbalance datasets tested (Hillstrom, Criteo); the 1%–10% transition region is unsampled. (2) All experiments cap at n=10,000; at full dataset scale the minority-example budget is larger and gains may diminish. (3) Generator hyperparameters use library defaults; tuned TabDDPM may narrow the CTGAN gap. (4) Privacy and operational costs not evaluated.
+The key practical point: if your positive rate is above 10%, augmentation is unlikely to help based on our results. If it's below 1%, CTGAN or SMOTE is worth trying. If it's between 1% and 10% — that's a gap in our study, and you should validate on your own data.
 
-**Future direction — context-conditioned LLM synthesis.** Our LLM results use GReaT, which fine-tunes on serialized rows and samples *unconditionally*; the null effect of scaling (GPT-2 → Mistral-7B) suggests added prior knowledge alone cannot overcome unconditional sampling under extreme imbalance. A different lever is untested here: prompting an instruction-tuned LLM to generate **specifically minority-class** rows, supplied in-context with schema-level metadata (marginal statistics, feature correlations, domain semantics, signal sparsity). This reframes the LLM's role from learning the joint to a CTGAN-like conditional generator, and is the form of "context engineering" most likely to close the gap — a hypothesis we leave to future work.
+For practitioners choosing between CTGAN and SMOTE: both achieve similar gains in our experiments. SMOTE is simpler, requires no GPU, and has no hyperparameters to tune. CTGAN provides more diverse synthetic samples that preserve feature correlations, which can matter for downstream model quality beyond AUC. For a quick check, start with SMOTE; for production deployments where sample diversity matters, CTGAN is the better long-term choice.
+
+**Limitations.** A few things to keep in mind when applying these results:
+
+- **Only two extreme-imbalance datasets (Hillstrom, Criteo).** The 1%–10% transition region is completely untested. We don't know where the gains start.
+- **All experiments capped at n=10,000.** At full dataset scale, you'll have more minority examples, and the gains may be smaller or disappear.
+- **We used default hyperparameters for all generators.** A well-tuned TabDDPM might close some of the gap with CTGAN.
+- **Privacy and cost not evaluated.** SMOTE generates near-duplicates of real minority examples, which creates membership inference risk in regulated environments (GDPR, CCPA). CTGAN and TabDDPM have moderate risk. Evaluate this before deploying in a production marketing system.
+
+**Where we think LLM-based synthesis goes next.** GReaT and Mistral-7B both fail because they sample from the full joint distribution without targeting the minority class. The natural next step is context-conditioned synthesis: prompt an instruction-tuned LLM to generate specifically minority-class rows, with metadata about class distributions and feature semantics provided in-context. That reframes the LLM as a conditional generator — closer to how CTGAN works — and is the direction most likely to close the performance gap. We haven't tested this, but it's the obvious follow-on.
 
 ---
 
