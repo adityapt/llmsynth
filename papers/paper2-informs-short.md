@@ -1,8 +1,6 @@
 # Synthetic Data Augmentation in the Extreme-Imbalance Regime: Evidence from Marketing Classification
 
 *Complete paper submitted to INFORMS Workshop on Data Science 2026*
-*[BLINDED FOR REVIEW — remove this line before submission]*
-
 ---
 
 ## Abstract
@@ -39,10 +37,6 @@ This paper answers that question empirically. We ran a controlled study across s
 
 \* Baseline AUC is calculated using a GradientBoostingClassifier (n_estimators=100, max_depth=4)
 
-![Figure 1](../results/plots/paper2/fig11_minority_budget_vs_gain.png)
-
-**Figure 1 — Minority example budget vs. best augmentation gain (CTGAN).** Each point is one dataset. Gains collapse once minority examples exceed ~200. The two marketing datasets (Criteo: 16 examples, Hillstrom: 72 examples) sit in the regime where augmentation consistently helps.
-
 ## 2. Experimental Setup
 
 **Generators.** We evaluated five generators: GaussianCopula (Patki et al., 2016), CTGAN (Xu et al., 2019), SMOTE (Chawla et al., 2002), TabDDPM (Kotelnikov et al., 2023), and GReaT (Borisov et al., 2023) at two LLM scales — GPT-2 (117M parameters) and Mistral-7B (7B parameters). All generators run with library-default hyperparameters.
@@ -53,7 +47,7 @@ This paper answers that question empirically. We ran a controlled study across s
 2. **TSTR (Train on Synthetic, Test on Real):** Train entirely on synthetic data, evaluate on the real holdout. This tells us whether synthetic data can replace real data. Spoiler: it can't.
 3. **Augmentation sweep:** Fit the generator on the real training set, generate synthetic rows, combine with real training data, retrain, and compare to baseline.
 
-**Table 0 — TSTR gap: synthetic-only training always underperforms (single seed)**
+**TSTR Results — synthetic-only training always underperforms (single-seed point estimates)**
 
 | Dataset | Baseline AUC | Best TSTR AUC | TSTR gap |
 |---|---|---|---|
@@ -81,7 +75,11 @@ For the augmentation sweep, we controlled the synthetic fraction using **α = n_
 
 ## 3. Core Finding: Minority-Example Scarcity Drives Augmentation Value
 
-Across the five datasets with a positive rate of 11.7% or higher, each of which contains at least 240 minority examples, we find that no generator improves on the baseline by more than +0.27 AUC points at any value of α. The picture changes on the two marketing datasets. On Hillstrom (72 minority examples) and Criteo (16 minority examples), CTGAN and SMOTE recover between +5.7 and +12.9 AUC points. We did not evaluate datasets in the 1%–10% positive-rate range, and we caution against extrapolating our results into that region.
+Across the five datasets with a positive rate of 11.7% or higher, each of which contains at least 240 minority examples, we find that no generator improves on the baseline by more than +0.27 AUC points at any value of α. The picture changes on the two marketing datasets. On Hillstrom (72 minority examples), CTGAN delivers +5.75 AUC points and SMOTE delivers +5.84 AUC points at best α. On Criteo (16 minority examples), CTGAN delivers +12.87 AUC points and SMOTE delivers +11.99 AUC points. Both generators achieve similar gains; the choice between them is discussed in §6. We did not evaluate datasets in the 1%–10% positive-rate range, and we caution against extrapolating our results into that region.
+
+![Figure 1](../results/plots/paper2/fig11_minority_budget_vs_gain.png)
+
+**Figure 1 — Minority example budget vs. best augmentation gain (CTGAN).** Each point is one dataset. Gains collapse once minority examples exceed ~200. The two marketing datasets (Criteo: 16 examples, Hillstrom: 72 examples) sit in the regime where augmentation consistently helps.
 
 Criteo offers a useful illustration of what is at stake in this regime. Trained on real data alone, 7 of 10 MLP seeds failed to converge (AUC < 0.15). After CTGAN augmentation, all 10 seeds converged, with a mean AUC of 0.940 ± 0.030 (95% CI). In this setting, augmentation is not a marginal refinement of an already-working model; it is what separates a classifier that trains from one that does not.
 
@@ -137,7 +135,7 @@ We next turn to GReaT (Borisov et al., 2023), which takes a different approach: 
 
 Three findings emerge from Table 3. First, on the anonymized dataset (German Credit), both backbone scales hurt performance consistently. This is what we would expect if the value of a language-model prior comes from the meaning of feature names, since that meaning is absent here. Second, on Hillstrom, where imbalance is extreme, GReaT does not merely fail to help but actively harms performance as n grows (GPT-2: −6.87 points at n=2,000, $d_z$=−4.40, FDR-significant, p=0.006). The most plausible reading is that, at a 0.9% positive rate, additional LLM-generated rows dilute the minority class rather than enrich it. Third, the larger backbone offers little: Mistral-7B is marginally less harmful than GPT-2 on German Credit at large n (−0.38 vs −3.00 points at n=500), but on Hillstrom and Telco both models fall below baseline in most conditions. On the extreme-imbalance datasets that matter for marketing, neither scale comes close to CTGAN.
 
-We read this result through the same lens as Table 2. Like TabDDPM, GReaT samples from the joint distribution without any conditioning on the minority class, so the synthetic positive rate it produces tends to mirror the training distribution (about 0.9% on Hillstrom) whether the backbone is GPT-2 or Mistral-7B. Scaling the language model from 117M to 7B parameters leaves this sampling behavior unchanged, which is consistent with the null effect we observe. This is the clearest evidence in our study that *capability is not the bottleneck*: a roughly 60-fold increase in model size cannot compensate for the absence of a conditioning step, just as the extended training budget could not rescue TabDDPM. The failure is structural — GReaT, in effect, lacks CTGAN's conditional vector — and no amount of backbone scale supplies it.
+We read this result through the same lens as Table 2. Like TabDDPM, GReaT samples from the joint distribution without any conditioning on the minority class, so the synthetic positive rate it produces should tend to mirror the training distribution (about 0.9% on Hillstrom) whether the backbone is GPT-2 or Mistral-7B — we did not directly measure GReaT's synthetic positive rate, but this is the expected behavior from its unconditional sampling design. An alternative explanation worth noting: the higher failure rates at very small n (4/5 seeds failing at n=50) could reflect training instability at small dataset sizes rather than the sampling mechanism alone. Both explanations are consistent with the data; we present the sampling account as the more parsimonious reading given its consistency with Table 2. Scaling the language model from 117M to 7B parameters leaves this sampling behavior unchanged, which is consistent with the null effect we observe. This is the clearest evidence in our study that *capability is not the bottleneck*: a roughly 60-fold increase in model size cannot compensate for the absence of a conditioning step, just as the extended training budget could not rescue TabDDPM. The failure is structural — GReaT, in effect, lacks CTGAN's conditional vector — and no amount of backbone scale supplies it.
 
 ---
 
@@ -152,7 +150,7 @@ We read this result through the same lens as Table 2. Like TabDDPM, GReaT sample
 | 0.5%–1% | CTGAN/SMOTE +5–6 pts | Run CTGAN or SMOTE at α ∈ {0.1, 0.3}; validate before scaling |
 | < 0.5% | CTGAN/SMOTE +12–13 pts | Strongly consider CTGAN — it also stabilizes training reliability |
 
-The key practical point: if your positive rate is above 10%, augmentation is unlikely to help based on our results. If it's below 1%, CTGAN or SMOTE is worth trying. If it's between 1% and 10% — that's a gap in our study, and you should validate on your own data.
+The key practical point: if your positive rate is above 10%, augmentation is unlikely to help based on our results. Figure 2 shows why α ∈ {0.1, 0.3} is the right starting range — gains peak at these values and degrade toward α=1.0 on both marketing datasets. If it's below 1%, CTGAN or SMOTE is worth trying. If it's between 1% and 10% — that's a gap in our study, and you should validate on your own data.
 
 For practitioners choosing between CTGAN and SMOTE: both achieve similar gains in our experiments. SMOTE is simpler, requires no GPU, and has no hyperparameters to tune. CTGAN provides more diverse synthetic samples that preserve feature correlations, which can matter for downstream model quality beyond AUC. For a quick check, start with SMOTE; for production deployments where sample diversity matters, CTGAN is the better long-term choice.
 
