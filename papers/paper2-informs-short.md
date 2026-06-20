@@ -61,7 +61,7 @@ For the augmentation sweep, we controlled the synthetic fraction using **α = n_
 
 **Downstream model.** Primary classifier: GradientBoostingClassifier (n_estimators=100, max_depth=4) — standard for tabular data (Friedman, 2001; Pedregosa et al., 2011). We also ran Logistic Regression, Random Forest, and MLP to check robustness. Synthetic data is used for training only — never for evaluation.
 
-**Metric.** We use AUC-ROC as the primary metric. It measures how well a classifier ranks positives above negatives, independent of any threshold. AUC ranges from 0 to 1 (0.5 = random guessing). We report gains in AUC points (×100): a gain of 0.1287 AUC = +12.87 AUC points.
+**Metric.** We use AUC-ROC as the primary metric. We report AUC-ROC for comparability with prior synthetic data benchmarks; F1-minority and average precision are available but less stable at these positive rates due to small holdout minority counts." That pre-empts the reviewer question without adding new analysis. It measures how well a classifier ranks positives above negatives, independent of any threshold. AUC ranges from 0 to 1 (0.5 = random guessing). We report gains in AUC points (×100): a gain of 0.1287 AUC = +12.87 AUC points. 
 
 **Seeds and holdout.** Two different holdout designs were used, and the reason matters:
 
