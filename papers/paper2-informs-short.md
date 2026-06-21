@@ -186,38 +186,42 @@ For practitioners choosing between CTGAN and SMOTE: both achieve similar gains i
 
 ## References
 
-Blagus, R., & Lusa, L. (2013). SMOTE for high-dimensional class-imbalanced data. BMC Bioinformatics, 14, 106.
 
-Borisov, V., et al. (2023). Language models are realistic tabular data generators. Proceedings of ICLR 2023.
+Blagus, R., & Lusa, L. (2013). SMOTE for high-dimensional class-imbalanced data. BMC Bioinformatics, 14(106). https://doi.org/10.1186/1471-2105-14-106
 
-Chawla, N. V., et al. (2002). SMOTE: Synthetic minority over-sampling technique. Journal of Artificial Intelligence Research, 16, 321–357.
+Borisov, V., Seßler, K., Leemann, T., Pawelczyk, M., & Kasneci, G. (2023). Language models are realistic tabular data generators. Proceedings of International Conference on Learning Representations 2023. 
+https://doi.org/10.48550/arXiv.2210.06280
 
-Dávila Restrepo, G., et al. (2025). Benchmarking tabular data synthesis. Data Science Journal.
+Chawla, N. V., Bowyer, K. W., Hall, L. O., & Kegelmeyer, W. P. (2002). SMOTE: Synthetic minority over-sampling technique. Journal of Artificial Intelligence Research, 16, 321–357. https://doi.org/10.1613/jair.953
 
-Douzas, G., & Bacao, F. (2019). Geometric SMOTE: A geometrically enhanced drop-in replacement for SMOTE. Information Sciences, 501, 118–135.
+Davila Restrepo, M. F., Wollmer, B., Panse, F., & Wingerath, W. (2025). Benchmarking tabular data synthesis: Evaluating tools, metrics, and datasets on prosumer hardware for end-users. Data Science Journal, 24, 37. https://doi.org/10.5334/dsj-2025-037 
 
-Engelmann, J., & Lessmann, S. (2021). Conditional Wasserstein GAN-based oversampling of tabular data for imbalanced learning. Expert Systems with Applications, 174, 114582.
+Diemert, E., Betlei, A., Renaudin, C., Amini, M. (2018). A large scale benchmark for uplift modeling. Proceedings of the AdKDD 2018.
 
-Erickson, N., et al. (2025). TabArena. Advances in Neural Information Processing Systems.
+Douzas, G., & Bacao, F. (2019). Geometric SMOTE: A geometrically enhanced drop-in replacement for SMOTE. Information Sciences, 501, 118–135. https://doi.org/10.1016/j.ins.2019.06.007
 
-Friedman, J. H. (2001). Greedy function approximation: A gradient boosting machine. The Annals of Statistics, 29(5).
+Engelmann, J., & Lessmann, S. (2021). Conditional wasserstein GAN-based oversampling of tabular data for imbalanced learning. Expert Systems with Applications: An International Journal, 174 (C). 114582. https://doi.org/10.1016/j.eswa.2021.114582
 
-Han, H., Wang, W.-Y., & Mao, B.-H. (2005). Borderline-SMOTE: A new over-sampling method in imbalanced data sets learning. Advances in Intelligent Computing (ICIC 2005), 878–887.
+Erickson, N., Purucker, L., Tschalzev, A., Holzmüller, D., Desai, P. M., Salinas, A. D., & Hutter, F. (2025). TabArena: A living benchmark for machine learning on tabular data. 39th Conference on Neural Information Processing Systems (NeurIPS 2025).16791. https://doi.org/10.48550/arXiv.2506.16791
 
-He, H., Bai, Y., Garcia, E. A., & Li, S. (2008). ADASYN: Adaptive synthetic sampling approach for imbalanced learning. IEEE International Joint Conference on Neural Networks (IJCNN), 1322–1328.
+Friedman, J. H. (2001). Greedy function approximation: A gradient boosting machine. The Annals of Statistics, 29(5). 1189-1232. https://doi.org/10.1214/aos/1013203451 
 
-Kotelnikov, A., et al. (2023). TabDDPM. Proceedings of ICML 2023.
+Han, H., Wang, W. Y., & Mao, B. H. (2005). Borderline-SMOTE: A new over-sampling method in imbalanced data sets learning. Advances in Intelligent Computing (ICIC 2005), 3644. 878–887. https://doi.org/10.1007/11538059_91 
 
-Patki, N., et al. (2016). The Synthetic Data Vault. Proceedings of IEEE DSAA.
+He, H., Bai, Y., Garcia, E. A., & Li, S. (2008). ADASYN: Adaptive synthetic sampling approach for imbalanced learning. IEEE International Joint Conference on Neural Networks (IJCNN). 1322–1328. http://doi.org/10.1109/IJCNN.2008.4633969 
 
-Pedregosa, F., et al. (2011). Scikit-learn: Machine learning in Python. Journal of Machine Learning Research, 12, 2825–2830.
+Hillstrom, K. (2008, March 20). The MineThatData e-mail analytics and data mining challenge. MineThatData. https://blog.minethatdata.com/2008/03/minethatdata-e-mail-analytics-and-data.html 
 
-Xu, L., et al. (2019). Modeling tabular data using conditional GAN. Advances in Neural Information Processing Systems.
+Kotelnikov, A., Baranchuk, D., Rubachev, I., & Babenko, A. (2023). TabDDPM: Modelling tabular data with diffusion models. Proceedings of the 40th International Conference on Machine Learning, 202:17564-17579. https://doi.org/10.48550/arXiv.2209.15421
 
-Hillstrom, K. (2008). MineThatData e-mail analytics challenge.
+Patki, N., Wedge, R., & Veeramachaneni, K. (2016). The synthetic data vault. Proceedings of 2016 IEEE International Conference on Data Science and Advanced Analytics (DSAA). 399-410. https://doi.org/10.1109/DSAA.2016.49 
 
-Diemert, E., et al. (2018). A large scale benchmark for uplift modeling. Proceedings of the KDD AdKDD Workshop.
+Pedregosa, F., Varoquaux, G., Gramfort, A., Michel, V., Thirion, B., Grisel, O., Blondel, M., Prettenhofer, P., Weiss, R., Dubourg, V., Vanderplas, J., Passos, A., Cournapeau, D., Brucher, M., Perrot, M., & Duchesnay, E. (2011). Scikit-Learn: Machine learning in python. Journal of Machine Learning Research, 12, 2825-2830. https://doi.org/10.48550/arXiv.1201.0490
 
-Zhao, Z., Kunar, A., Birke, R., & Chen, L. Y. (2021). CTAB-GAN: Effective Table Data Synthesizing. Proceedings of the Asian Conference on Machine Learning (ACML 2021). arXiv:2102.08369.
+Shi, J., Xu, M., Hua, H., Zhang, H., Ermon, S., & Leskovec, J. (2025). TabDiff: A mixed-type diffusion model for tabular data generation. International Conference on Learning Representations 2025 (ICLR 2025). https://doi.org/10.48550/arXiv.2410.20626 
 
-Shi, J., Xu, M., Hua, W., Zhang, H., Ermon, S., & Leskovec, J. (2025). TabDiff: a Mixed-type Diffusion Model for Tabular Data Generation. ICLR 2025. arXiv:2410.20626.
+Xu, L., Skoularidou, M., Cuesta-Infante, A., & Veeramachaneni, K. (2019). Modeling tabular data using conditional GAN. Neural Information Processing Systems. 7333-7343. https://doi.org/10.48550/arXiv.1907.00503
+
+Zhao, Z., Kunar, A., Van der Scheer, H., Birke, R., & Chen, L. Y. (2021). CTAB-GAN: Effective table data synthesizing. Proceedings of the Asian Conference on Machine Learning (ACML 2021). https://doi.org/10.48550/arXiv.2102.08369 
+
+
