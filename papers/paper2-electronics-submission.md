@@ -40,7 +40,9 @@ Marketing and product data scientists routinely face classification problems wit
 
 This expansion has not been matched by corresponding clarity for practitioners. Existing benchmarks [Erickson et al., 2025; Davila et al., 2025] evaluate generators across heterogeneous tabular tasks and report aggregate rankings that do not answer the practitioner's actual question: *given my classification task at this positive rate and this sample size, which generator should I use, and will augmentation help at all?*
 
-**This paper is a direct extension of the study closest to this question at the target venue: Won et al. [2026], published in Electronics, which compares SMOTE, GaussianCopula, TVAE, and CTGAN on a single banking dataset (UCI Bank Marketing, 7.88:1 imbalance) across statistical fidelity and machine learning utility, and reports a weak negative correlation between the two.** Won et al.'s own Limitations section (§5.6) identifies six specific gaps in their study. This paper directly addresses five of them:
+**This paper extends the broader benchmark literature, including the study closest to this question at the target venue: Won et al. [2026], published in Electronics, which compares SMOTE, GaussianCopula, TVAE, and CTGAN on a single banking dataset (UCI Bank Marketing, 7.88:1 imbalance) across statistical fidelity and machine learning utility, and reports a weak negative correlation between the two.** Won et al.'s own Limitations section (§5.6) identifies six specific gaps in their study; this paper directly addresses five of them along the dimensions of dataset breadth, generator coverage, and dose-response methodology. It does **not** extend Won et al.'s fidelity-measurement axis — the multi-dimensional statistical fidelity battery (marginal similarity, correlation preservation, KS tests) that their own study centers on is a distinct question (does statistical realism predict downstream utility?) from the one this paper asks (under what conditions does augmentation help, and why?). We measure one targeted fidelity quantity directly relevant to our own question (§2.4.2) rather than replicate their fidelity framework, and state this explicitly rather than leave it as an unexplained omission (§4.7).
+
+The five gaps addressed:
 
 1. *"the evaluation was conducted on a single dataset from the banking domain"* — we evaluate seven datasets spanning telecom, finance, lead-generation, and real marketing/advertising domains.
 2. *"diffusion-based models (TabDDPM, TabSyn) and LLM-based generation (GReaT)... were not included"* — we include both TabDDPM and GReaT (at two LLM scales, GPT-2 and Mistral-7B).
@@ -176,13 +178,51 @@ GaussianCopula and TabDDPM both mirror the natural (rare) positive rate — they
 
 **Benchmark datasets (positive rate ≥ 10%).** Best gain from any generator at any α is consistently below +0.5 AUC points across Telco (+0.21), Bank Marketing (−0.17), German Credit (+0.27), and Nomao (−0.06) — all within the baseline confidence interval.
 
+![Figure 1](../results/plots/paper2/fig1_summary_comparison.png)
+
+**Figure 1.** Cross-dataset summary: augmentation gains concentrate on the two imbalanced marketing datasets; all generators are within noise on the four balanced benchmarks. This is the single clearest visual answer to "which range shows value and which doesn't."
+
+![Figure 2](../results/plots/paper2/fig2_ucurves_benchmark.png)
+
+**Figure 2.** U-shaped augmentation curves for all four benchmark datasets — gains peak at α ∈ {0.1–0.3} and degrade toward α=1.0 on every dataset, but stay within noise of baseline throughout (see §4.3 for the α* discussion this motivates).
+
+**Sparsity stress test.** A secondary control — Nomao with 70% of feature values simulated missing (n=500) — tests whether augmentation helps when the baseline is degraded by *feature*-information starvation rather than minority-class starvation. It does not: the sparse baseline (0.897 ± 0.062) recovers only +0.50 pts from the best generator (CTGAN, α=0.1), against a dense-data reference of 0.9716 ± 0.0103 (a 7.46-point gap augmentation does not close). This confirms the mechanism in §4.1 is specific to minority-class data scarcity, not data scarcity generally.
+
+![Figure 3](../results/plots/paper2/fig3_ucurve_sparse.png)
+
+**Figure 3.** Augmentation U-curve for the sparsity stress test — flat across all α, confirming sparsity-driven performance gaps are not recoverable through synthetic augmentation.
+
+![Figure 4](../results/plots/paper2/fig4_lowdata_regime.png)
+
+**Figure 4.** Low-data regime: AUC vs. real training set size for benchmark datasets. Augmentation recovers 30–60% of the performance gap at n=250, narrowing rapidly by n≥1,000 — a second, independent line of evidence that augmentation value is a function of how much real data (specifically minority-class data) is available, not a fixed generator property.
+
 **Marketing datasets (extreme imbalance).** Hillstrom: baseline 0.548 ± 0.092; CTGAN 0.605 ± 0.073 (+5.75 pts); SMOTE 0.606 ± 0.087 (+5.84 pts). Criteo: baseline 0.846 ± 0.228; CTGAN 0.974 ± 0.036 (+12.87 pts); SMOTE 0.966 ± 0.026 (+11.99 pts). Augmented confidence intervals are substantially narrower than baseline — synthetic augmentation under extreme imbalance stabilizes learning, not just improves its mean.
+
+![Figure 5](../results/plots/paper2/fig5_marketing_ci.png)
+
+**Figure 5.** Augmentation U-curves for Hillstrom and Criteo with 95% CI bands — the steep rise from α=0 to α≈0.2 and the narrower augmented-vs-baseline CI bands are the primary visual evidence for both the headline gain and the variance-stabilization finding.
 
 **Multi-classifier robustness (10-seed).** On Criteo, MLP fails to converge on real data alone in 7 of 10 seeds (AUC < 0.15); CTGAN augmentation rescues all 10 (AUC 0.865–0.985). The CTGAN advantage holds across Gradient Boosting (+12.04 pts) and Random Forest (+9.55 pts); Logistic Regression is insensitive due to a near-ceiling baseline (0.963).
 
+![Figure 6](../results/plots/paper2/fig8_mlp_rescue.png)
+
+**Figure 6.** MLP per-seed AUC on Criteo, baseline vs. CTGAN-augmented — seeds that failed to converge on real data alone (AUC<0.15) all reach AUC>0.86 after augmentation.
+
+![Figure 7](../results/plots/paper2/fig9_multiclassifier.png)
+
+**Figure 7.** Multi-classifier robustness on Criteo across all four classifier families — the CTGAN advantage is not an artifact of the primary (Gradient Boosting) classifier choice.
+
 **TabDDPM vs. CTGAN at two training budgets.** At N_iter=2,000 (default) and N_iter=10,000 (5× extended), CTGAN outperforms TabDDPM on both datasets; extended training widens the gap rather than closing it (TabDDPM at 10k goes uniformly negative on Hillstrom). Paired comparison: Hillstrom Δ=+7.76 pts (d_z=1.25, p=0.049); Criteo Δ=+6.41 pts (d_z=0.73, p=0.179).
 
-**GReaT (GPT-2 and Mistral-7B).** A directional positive signal at small n on Hillstrom (n=50, 4/5 seeds win) decays and inverts to a robustly negative effect at n=2,000 (0/5 seeds win, p=0.001, the only FDR-significant individual comparison in the study, p_fdr=0.007). Replicating with Mistral-7B (7B parameters vs. GPT-2's 117M) does not change the outcome once gain is computed against each backbone's own seed-matched baseline: Mistral-7B underperforms its own baseline at every n tested on Telco (−4.70 to −1.99 pts), still hurts on anonymized features (German Credit), and its best Hillstrom gain (+1.20 pts, 3/5 valid seeds) remains well below CTGAN. Scaling the backbone 60-fold does not rescue GReaT on any of the three datasets tested.
+![Figure 8](../results/plots/paper2/fig7_tabddpm_comparison.png)
+
+**Figure 8.** CTGAN vs. TabDDPM at two training budgets — extended training (dashed) widens rather than closes the CTGAN advantage; all five TabDDPM-10k α values fall below baseline on Hillstrom.
+
+**GReaT (GPT-2 and Mistral-7B) — does augmentation help here at all?** A directional positive signal at small n on Hillstrom (n=50, 4/5 seeds win) decays and inverts to a robustly negative effect at n=2,000 (0/5 seeds win, p=0.001, the only FDR-significant individual comparison in the study, p_fdr=0.007) — GReaT actively hurts as training size grows, the opposite of every other method tested. Replicating with Mistral-7B (7B parameters vs. GPT-2's 117M) does not change the outcome once gain is computed against each backbone's own seed-matched baseline: Mistral-7B underperforms its own baseline at every n tested on Telco (−4.70 to −1.99 pts), still hurts on anonymized features (German Credit), and its best Hillstrom gain (+1.20 pts, 3/5 valid seeds) remains well below CTGAN. Scaling the backbone 60-fold does not rescue GReaT on any of the three datasets tested — the failure mode is that GReaT samples unconditionally (like TabDDPM and GaussianCopula), so it dilutes rather than enriches the minority class regardless of the language model's raw capability.
+
+![Figure 9](../results/plots/paper2/fig10_modernllm_comparison.png)
+
+**Figure 9.** GPT-2 vs. Mistral-7B vs. baseline across three datasets, each backbone plotted against its own seed-matched baseline. Backbone scaling does not rescue GReaT on any dataset tested — the clearest single figure for "how GReaT helps or doesn't."
 
 ### 3.4. Method-Wise Average Performance and the Missing-Baseline Comparison
 
@@ -201,9 +241,17 @@ GaussianCopula and TabDDPM both mirror the natural (rare) positive rate — they
 
 A direct paired comparison confirms ADASYN and CTGAN are statistically indistinguishable (Hillstrom p=0.970, Criteo p=0.212) — this is precisely the outcome a prior reviewer of this work predicted was likely, given that a free heuristic already matching a GPU-trained generator "is decisive for the paper's deliverable": *if a cheap method recovers most of the reported gain at zero cost, recommending the expensive one is the wrong advice.*
 
+![Figure 10](../results/plots/paper2/fig15_missing_baselines.png)
+
+**Figure 10.** All evaluated methods on both marketing datasets, sorted by gain. ADASYN sits within noise of CTGAN on both; Borderline-SMOTE and random undersampling deliver smaller but real, zero-cost gains.
+
 ### 3.5. Statistical Significance Analysis
 
 We report paired t-tests with Benjamini-Hochberg FDR correction (q=0.10) over a family of 14 headline comparisons. Individual per-dataset comparisons show medium-to-large effect sizes (d_z = 0.62–1.18) but none reach FDR significance at 5–10 seeds (80% power at 5 seeds requires d_z ≥ 2.0). The cross-dataset regression of CTGAN gain on log(positive rate) across six datasets is the primary statistical support for the regime-level claim (R²=0.92, p=0.0023), robust to leave-one-out refitting (R² 0.90–0.96, all p<0.05 across all six LOO fits). The only individually FDR-significant comparison is GReaT harm at Hillstrom n=2,000 (p_fdr=0.007).
+
+![Figure 11](../results/plots/paper2/fig6_regression_hypothesis.png)
+
+**Figure 11.** Cross-dataset regression of CTGAN gain on log(positive rate) across six datasets (slope=−0.024, R²=0.92, p=0.0023) — the primary statistical support for the regime-level claim, since individual per-dataset comparisons are underpowered on their own.
 
 ### 3.6. Precision–Recall Trade-Off and the Dose-Response Curve
 
@@ -222,7 +270,23 @@ We report paired t-tests with Benjamini-Hochberg FDR correction (q=0.10) over a 
 | Random undersampling | **0.022** / 0.011 / **0.572** / 51.1% | **0.032** / 0.016 / **0.960** / 80.9% |
 | `class_weight='balanced'` | 0.018 / 0.010 / 0.094 / 90.3% | 0.094 / 0.067 / 0.167 / 99.1% |
 
-**The dose-response curve (Table 9, Figure 12–14)** directly tests whether the extreme-scarcity effect reflects minority count or dataset identity, by fixing total sample size and varying minority count alone. On Bank Marketing, gains are positive only at the lowest count tested (16; SMOTE +5.31 pts, p=0.033) and turn significantly negative from count=64 onward (up to −3.62 pts, p<0.01). On Nomao — chosen for a different domain and 119 features vs. Bank Marketing's 17 — the same direction holds, but the magnitude is an order of magnitude smaller (−0.09 to −0.31 pts), because Nomao's baseline is already near ceiling (AUC>0.97 by count=256), leaving little room to move. Overlaying both curves on the original six-dataset cross-dataset comparison (Figure 14) shows each curve's endpoint converges toward that dataset's own cross-dataset point — an internal consistency check between two independently run analyses.
+**The dose-response curve directly tests whether the extreme-scarcity effect reflects minority count or dataset identity**, by fixing total sample size and varying minority count alone. On Bank Marketing, gains are positive only at the lowest count tested (16; SMOTE +5.31 pts, p=0.033) and turn significantly negative from count=64 onward (up to −3.62 pts, p<0.01).
+
+![Figure 12](../results/plots/paper2/fig12_dose_response.png)
+
+**Figure 12.** Bank Marketing dose-response: AUC and gain vs. minority count. Positive gain only at the lowest count tested; augmentation significantly hurts from count=64 onward, holding smoothly across the whole range with no reversal (the count=512 point was added specifically to check for a reversal partway through — there is none).
+
+On Nomao — chosen for a different domain and 119 features vs. Bank Marketing's 17 — the same direction holds, but the magnitude is an order of magnitude smaller (−0.09 to −0.31 pts), because Nomao's baseline is already near ceiling (AUC>0.97 by count=256), leaving little room to move.
+
+![Figure 13](../results/plots/paper2/fig13_dose_response_combined.png)
+
+**Figure 13.** Dose-response replication side by side: Bank Marketing vs. Nomao. Same qualitative direction (gains shrink as count rises), different threshold and severity — Nomao's near-ceiling baseline leaves little room to move in either direction.
+
+Overlaying both curves on the original six-dataset cross-dataset comparison shows each curve's endpoint converges toward that dataset's own cross-dataset point — an internal consistency check between two independently run analyses.
+
+![Figure 14](../results/plots/paper2/fig14_gain_vs_positive_rate.png)
+
+**Figure 14.** CTGAN gain vs. positive rate: sparse cross-dataset points (diamonds, one per dataset) overlaid with the two dense within-dataset dose-response curves. This is the paper's central "which range shows value and which doesn't" figure — diminishing and reversing returns as positive rate rises, replicated within two datasets, not just inferred from six sparse cross-dataset points.
 
 **Table 9 — Dose-response summary (CTGAN gain vs. minority count, both datasets).**
 
@@ -249,6 +313,8 @@ TabDDPM, the strongest generator on general benchmarks [Davila et al., 2025], un
 ### 4.3. Evaluation Metrics and Operational Considerations
 
 AUC-ROC and threshold-based metrics (F1/Precision/Recall) diverge sharply in this regime (§3.6), and the divergence itself is informative: augmentation improves the classifier's ability to *rank* positives above negatives without necessarily shifting enough probability mass across a fixed 0.5 threshold to change count-based predictions. We did not tune the decision threshold; threshold-moving remains a promising, untested, zero-cost extension. Compute cost varies by three orders of magnitude across evaluated methods (SMOTE/ADASYN: seconds; CTGAN: ~2 min/seed CPU; TabDDPM: 6–29 min/seed GPU; GReaT: ~5–30 min/seed GPU) — a dimension the ranking in Table 7 does not capture on its own and that should weigh heavily in a practitioner's choice given how close the top three methods are on raw gain.
+
+**Which mixing ratio α is best?** A consistent secondary observation across every augmentation sweep (Figures 2, 5) is the location of the α* peak: on the four benchmark datasets, the best gain — to the extent any gain is observable at all — occurs at α ∈ {0.1, 0.2, 0.3} on every dataset, and degrades toward α=1.0. On the marketing datasets, CTGAN peaks at α=1.0 on Hillstrom but α=0.2 on Criteo; SMOTE peaks at α=0.1 on Hillstrom and α=0.3 on Criteo — so the exact optimum is dataset- and generator-specific, but it never exceeds α=1.0, and an exhaustive grid search is unnecessary: a 5-point sweep over α ∈ {0.1, 0.2, 0.3, 0.5, 1.0} is sufficient to locate the optimum within a 0.1 step in every case tested. We interpret the U-shape as a quality-quantity trade-off: moderate synthetic volume densifies the minority-class region without overwhelming the real-data signal; at high volume, the synthetic rows' imperfect fidelity begins to bias the decision boundary. **Practical guidance: start at α=0.1–0.3, not α=1.0**, regardless of which generator is chosen.
 
 ### 4.4. Model-Specific Observations
 
@@ -310,6 +376,8 @@ All datasets used are publicly available: Hillstrom (MineThatData), Criteo (Crit
 ## Appendix A. Experimental Configuration
 
 See Table 2 (generator hyperparameters) and Table 3 (classifier hyperparameters) in the companion analysis document (`paper2-empirical.md` §3.2–3.4) for the complete configuration table; reproduced in full detail there rather than duplicated here to avoid drift between the two documents.
+
+**Note on figure numbering.** Figure numbers in this document (1–14) follow this document's own presentation order and do not match the numeric suffix in each PNG's filename (e.g., this document's Figure 6 is `fig8_mlp_rescue.png`) — filenames reflect the original analysis order in `paper2-empirical.md`, which itself has a similar, separately-documented numbering mismatch. Stated here explicitly rather than left for a reader to discover while cross-referencing the repository.
 
 ## Appendix B. Evaluation Metrics Definitions
 
