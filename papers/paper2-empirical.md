@@ -659,9 +659,9 @@ The practitioner-facing recommendation has changed from an earlier version of th
 
 23. **He, H., Bai, Y., Garcia, E. A., & Li, S.** (2008). ADASYN: Adaptive Synthetic Sampling Approach for Imbalanced Learning. *Proceedings of IJCNN 2008*. https://doi.org/10.1109/IJCNN.2008.4633969
 
-24. **Zhao, T., Lala, D., Sawada, T., & Watanabe, T.** (2023). TabuLa: Harnessing Language Models for Tabular Data Synthesis. *arXiv:2310.12746*. https://arxiv.org/abs/2310.12746
+24. **Zhao, Z., Birke, R., & Chen, L.** (2023). TabuLa: Harnessing Language Models for Tabular Data Synthesis. *arXiv:2310.12746*. https://arxiv.org/abs/2310.12746
 
-25. **Gulati, A., & Roysdon, P.** (2023). TabMT: Generating Tabular Data with Masked Transformers. *NeurIPS 2023*. arXiv:2312.06089. https://arxiv.org/abs/2312.06089
+25. **Gulati, M. S., & Roysdon, P. F.** (2023). TabMT: Generating Tabular Data with Masked Transformers. *NeurIPS 2023*. arXiv:2312.06089. https://arxiv.org/abs/2312.06089
 
 26. **Fernández, A., García, S., Galar, M., Prati, R. C., Krawczyk, B., & Herrera, F.** (2018). *Learning from Imbalanced Data Sets*. Springer. https://doi.org/10.1007/978-3-319-98074-4
 
@@ -683,7 +683,7 @@ The practitioner-facing recommendation has changed from an earlier version of th
 
 35. **Grinsztajn, L., Oyallon, E., & Varoquaux, G.** (2022). Why Tree-Based Models Still Outperform Deep Learning on Tabular Data. *NeurIPS 2022*. arXiv:2207.08815. https://arxiv.org/abs/2207.08815
 
-*All references 1–20 verified against DOI/arXiv pages. References 21–35 should be verified before submission.*
+*All 35 references verified against Crossref/arXiv records. Two errors were found and corrected in this pass: reference 24 (TabuLa) had a fabricated author list (corrected to Zhao, Z., Birke, R., & Chen, L., per arXiv:2310.12746) and reference 25 (TabMT) had an incorrect first initial (corrected to Gulati, M. S., per arXiv:2312.06089).*
 
 ---
 
