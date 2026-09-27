@@ -19,7 +19,7 @@
 
 **Secondary finding.** CTGAN outperforms TabDDPM at both default and 5× extended training budgets — the gap widens with more training, consistent with a sampling-design interpretation: CTGAN's conditional vector targets the minority class directly; TabDDPM samples unconditionally, producing synthetic rows at the natural (extremely low) positive rate. This conclusion holds across Gradient Boosting, Random Forest, and MLP classifiers. It also holds when GPT-2 in GReaT is replaced by Mistral-7B. CTGAN also outperforms `class_weight='balanced'` reweighting by +7.55 AUC points on both datasets.
 
-**Dose-response finding.** To address whether the extreme-scarcity effect reflects minority count or dataset identity, we additionally run a controlled within-dataset sweep (Bank Marketing, fixed N=10,000, minority count varied 16→1,024, spanning the untested 1%–10% region directly). Augmentation gains are positive only at the lowest count tested (16; SMOTE significant, p=0.033) and turn significantly *negative* at counts of 64 and above (p<0.05 in most cases) — confirming minority count is a real, independent driver, while also showing the transition threshold is dataset-specific rather than universal (§4.9).
+**Dose-response finding.** To address whether the extreme-scarcity effect reflects minority count or dataset identity, we additionally run a controlled within-dataset sweep (Bank Marketing, fixed N=10,000, minority count varied 16→1,024, spanning the untested 1%–10% region directly), replicated on a second, feature-richer dataset (Nomao, 119 features). Both datasets show the same qualitative shape — gains largest at extreme scarcity, shrinking monotonically as count rises, with no rebound — confirming minority count is a real, independent driver. But the threshold and severity differ sharply: Bank Marketing turns significantly and substantially negative by count=64 (up to −3.6 pts), while Nomao's near-ceiling baseline (already AUC>0.97 by count=256) leaves gains positive through count=256 and any subsequent harm is statistically real but an order of magnitude smaller (§4.9). The threshold is not a portable constant.
 
 **Recommendation and scope.** For practitioners in the positive-rate regime tested here (below 1%), evaluate CTGAN at α ∈ {0.1, 0.3} before more expensive alternatives. Above 10%, augmentation is unlikely to help based on our results, and our dose-response result suggests it may actively hurt in a 1%–10% middle band on at least one dataset — this region should be validated on a practitioner's own data before committing to augmentation, not assumed neutral.
 
@@ -441,6 +441,26 @@ We do this on Bank Marketing (the dataset with the most headroom for this design
 
 **This finding cuts both ways on the confounding question it was designed to address.** On one hand, it directly demonstrates that minority count alone — independent of dataset identity — drives a real, statistically detectable dose-response relationship: this is exactly the controlled test the earlier critique asked for, and it confirms the direction of the hypothesis. On the other hand, the *threshold* location is dataset-specific: Bank Marketing's gains vanish (and flip negative) somewhere between 16 and 64 minority examples, while the cross-dataset comparison (§4.4) shows Hillstrom still gaining at approximately 72 minority examples. If minority count alone fully explained the effect, these thresholds should roughly agree; they do not. The honest reading is that minority-example scarcity is a real, causally-implicated driver (confirmed here in a design that cannot be explained away by cross-dataset confounding), but it is not a sufficient predictor on its own — dataset-specific factors (feature signal-to-noise, baseline separability, domain) also modulate exactly where the transition occurs. This is a more nuanced conclusion than either "it's just minority count" or "it's just dataset differences," and it directly answers Tier 1 future-work item (2) below with a real result rather than leaving it open.
 
+**Replication on a second dataset (Nomao).** To check whether the Bank Marketing pattern is idiosyncratic, we replicate the identical design (fixed N=10,000, same minority-count grid) on Nomao — chosen for headroom (full source: 34,465 rows, 9,844 positives, vs. the 10,000-row/28.3% subsample used elsewhere in this paper) and for being a genuinely different test bed: lead-generation domain, 119 features vs. Bank Marketing's 17.
+
+**Table 5 — Dose-response replication on Nomao (fixed N=10,000, 5-seed paired t-test).**
+
+| Minority count | Positive rate | Baseline AUC | GaussianCopula gain | CTGAN gain | SMOTE gain |
+|---|---|---|---|---|---|
+| 16 | 0.16% | 0.774 ± 0.100 | +4.44 pts (p=0.380) | **+11.21 pts (p=0.016)** | **+16.83 pts (p=0.015)** |
+| 64 | 0.64% | 0.947 ± 0.015 | +0.76 pts (p=0.077) | **+1.81 pts (p=0.029)** | **+2.18 pts (p=0.002)** |
+| 256 | 2.56% | 0.977 ± 0.008 | +0.34 pts (p=0.206) | +0.40 pts (p=0.169) | **+0.51 pts (p=0.017)** |
+| 512 | 5.12% | 0.986 ± 0.002 | **−0.09 pts (p=0.017)** | −0.16 pts (p=0.059) | **+0.10 pts (p=0.041)** |
+| 1,024 | 10.24% | 0.989 ± 0.001 | **−0.24 pts (p=0.001)** | **−0.31 pts (p=0.001)** | −0.04 pts (p=0.466) |
+
+![Figure 13](../results/plots/paper2/fig13_dose_response_combined.png)
+
+**Figure 13.** Dose-response gain curves side by side, Bank Marketing vs. Nomao. Same qualitative shape (gains largest at the lowest count, shrinking as count rises), but the curves land in very different places.
+
+**The qualitative direction replicates; the magnitude does not, and the reason is directly visible in the data.** Nomao's baseline AUC is already very high even at the lowest count tested (0.774 at 16 examples, rising to 0.989 by 1,024) — compare Bank Marketing's baseline over the same range (0.691 to 0.914). Nomao's 119 features apparently provide enough signal that the classifier is close to ceiling almost immediately, leaving little room for augmentation to move the needle in either direction: the "significant" negative effects at 512 and 1,024 on Nomao are real (p=0.001–0.017) but tiny in absolute terms (−0.09 to −0.31 pts), an order of magnitude smaller than Bank Marketing's corresponding harm (−1.3 to −3.6 pts) — likely statistical significance from very low baseline variance at near-ceiling performance, not practically meaningful harm. Nomao's positive-gain region also extends further before crossing zero (through count=256, i.e. 2.56%) than Bank Marketing's (which turns negative already by count=64).
+
+**Combined interpretation.** Both datasets confirm the same qualitative dose-response shape — gains are largest at extreme scarcity and shrink monotonically as minority count rises, with no evidence of a rebound partway through. But neither the *threshold* (where gains cross zero) nor the *severity* of what happens after crossing it is a fixed, portable number — both are shaped by dataset-specific factors, plausibly baseline separability (how much "room" a dataset has to move at all) as much as minority count per se. This is the honest, two-dataset-strength answer to whether minority-example scarcity is *the* driver of augmentation value: it is *a* real, replicated driver, but practitioners cannot port a specific threshold (e.g., "above 5% positive rate, skip augmentation") from one dataset to another without validating on their own data first.
+
 ---
 
 ## 5. Discussion
@@ -526,7 +546,7 @@ Four secondary findings warrant emphasis. First, TabDDPM underperforms CTGAN on 
 | Positive rate | Observed pattern | Recommendation |
 |---|---|---|
 | > 10% | No generator exceeded +0.27 pts | Skip augmentation |
-| 1%–10% | Single-dataset dose-response (§4.9) shows *significant harm*, not just no-gain, at 0.64%–10.24% on Bank Marketing | Do not assume neutral — validate on your own data before committing, since augmentation may actively hurt in this band |
+| 1%–10% | Two-dataset dose-response (§4.9) confirms gains shrink with rising minority count on both, but the zero-crossing and severity of harm past it are dataset-specific (large, significant harm on Bank Marketing from 0.64%; only near-ceiling, practically-negligible effects on Nomao) | Do not assume neutral — validate on your own data before committing; do not port a specific threshold from either dataset tested here |
 | 0.5%–1% | CTGAN/SMOTE +5–6 pts (Hillstrom) | Evaluate CTGAN at α ∈ {0.1, 0.3} |
 | < 0.5% | CTGAN/SMOTE +12–13 pts (Criteo) | Evaluate CTGAN augmentation — largest observed effect, nominally significant before FDR correction |
 
@@ -536,7 +556,7 @@ The practitioner-facing recommendation is simple. For data-scarce imbalanced reg
 
 **Tier 1 — Direct extensions (most important).**
 *(1) Characterizing the 1%–10% transition region.* The present study observes substantial gains at 0.2% and 0.9% positive rates and negligible gains at 11.7% and above. Future work should establish where augmentation becomes beneficial by evaluating datasets in the currently unsampled 1%–10% range — ideally datasets where the positive rate can be controlled independently of total dataset size.
-*(2) Minority-example scarcity vs class imbalance — now partially addressed (§4.9).* The dose-response experiment on Bank Marketing (fixed N, minority count varied 16→1,024) confirms a real, statistically significant relationship between minority count and augmentation gain independent of dataset identity, but also shows the transition threshold is not universal — it falls between 16 and 64 minority examples on Bank Marketing, versus approximately 72 on Hillstrom. Future work should replicate this design on additional datasets to establish whether the threshold is a stable per-domain property or continues to vary.
+*(2) Minority-example scarcity vs class imbalance — now addressed with a two-dataset replication (§4.9).* The dose-response experiment (fixed N, minority count varied 16→1,024) on Bank Marketing and Nomao confirms a real, statistically significant relationship between minority count and augmentation gain independent of dataset identity on both. The transition threshold is not universal, however — it falls between 16 and 64 minority examples on Bank Marketing but extends through 256 on Nomao, and the severity of harm past the threshold differs by an order of magnitude between the two (large on Bank Marketing, near-negligible on Nomao, plausibly because Nomao's baseline is already near ceiling). Future work should replicate this design on additional datasets, ideally varying baseline separability directly, to test whether "room to improve" (rather than minority count per se) is the more fundamental moderator.
 *(3) Full-scale industrial datasets.* The present work focuses on the data-scarce regime (n ≤ 10k). Future work should evaluate whether augmentation remains beneficial on full-scale industrial datasets where the minority-class budget is substantially larger.
 
 **Tier 2 — Generator research.**
@@ -639,6 +659,7 @@ All experiments are reproducible from the companion repository (`experiments/` d
 | Fig 10 (GPT-2 vs Mistral-7B vs Baseline) | `make_plot_fig10_modernllm.py` | `plots/paper2/fig10_modernllm_comparison.png` |
 | Full secondary metrics for base generators (Accuracy/Precision/Recall, §3.3) | `run_full_metrics_hillstrom_criteo.py` | `ci_hillstrom_fullmetrics.csv`, `ci_criteo_fullmetrics.csv` |
 | Dose-response sweep (§4.9) | `run_dose_response_bank_marketing.py`, `make_plot_dose_response.py` | `dose_response_bank_marketing.csv`, `plots/paper2/fig12_dose_response.png` |
+| Dose-response replication on Nomao (§4.9) | `run_dose_response_nomao.py` (or the memory-constrained equivalent, `_dose_response_nomao_worker.py` + `run_dose_response_nomao_driver.sh`), `make_plot_dose_response_combined.py` | `dose_response_nomao.csv`, `plots/paper2/fig13_dose_response_combined.png` |
 
 Hardware: benchmark and CI experiments run on CPU (Apple M1 Pro); TabDDPM and GReaT experiments run on Databricks GPU clusters (NVIDIA T4 or A10G). Total compute: approximately 60 GPU-hours and 80 CPU-hours.
 
