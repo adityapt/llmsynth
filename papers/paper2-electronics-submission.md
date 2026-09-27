@@ -171,19 +171,39 @@ The generators evaluated span five design families.
 
 #### 2.3.1. SMOTE, ADASYN, and Borderline-SMOTE (Interpolation-Based Oversampling)
 
-**SMOTE** [Chawla et al., 2002] generates synthetic minority examples by linear interpolation between a minority example and one of its k-nearest neighbors; it has no separate fit step and operates only on the minority class. **ADASYN** [He et al., 2008] extends this by weighting minority examples adaptively toward harder-to-learn regions of the feature space. **Borderline-SMOTE** [Han et al., 2005] restricts interpolation to minority examples near the decision boundary. All three are free (no GPU, no training step beyond nearest-neighbor search) and are evaluated at the same α-sweep as the deep generative methods.
+**SMOTE** [Chawla et al., 2002] generates synthetic minority examples by linear interpolation between a minority example $x_i$ and one of its $k$-nearest minority neighbors $x_{nn}$:
+
+$$x_{new} = x_i + \lambda \cdot (x_{nn} - x_i), \qquad \lambda \sim \mathcal{U}(0,1).$$
+
+It has no separate fit step and operates only on the minority class. **ADASYN** [He et al., 2008] extends this by weighting each minority example $x_i$ by the local density of majority neighbors,
+
+$$r_i = \frac{1}{k}\Big|\{x_j \in kNN(x_i) : y_j = 0\}\Big|, \qquad \hat{r}_i = r_i \,\Big/\, \sum_{i'} r_{i'},$$
+
+then generates $g_i = \mathrm{round}(\hat{r}_i \cdot n_{syn})$ synthetic points at $x_i$ using the same interpolation rule as SMOTE — examples in harder-to-learn (more majority-surrounded) regions receive proportionally more synthetic neighbors. **Borderline-SMOTE** [Han et al., 2005] applies the identical SMOTE interpolation formula but restricts the base points $x_i$ to minority examples classified as "in danger" (a majority of their $k$-NN are majority-class). All three are free (no GPU, no training step beyond nearest-neighbor search) and are evaluated at the same α-sweep as the deep generative methods.
 
 #### 2.3.2. Gaussian Copula
 
-**GaussianCopula** [Patki et al., 2016] models the joint distribution of tabular features by fitting parametric marginals and a Gaussian copula on the rank-transformed values. It is fast and interpretable but assumes the dependency structure is well captured by a Gaussian copula on the marginals, and — critically for the imbalanced regime — samples unconditionally at the natural class rate (§3.2).
+**GaussianCopula** [Patki et al., 2016] models the joint CDF of the $d$ features via a copula $C$ applied to fitted per-feature marginals $F_1, \dots, F_d$:
+
+$$F(x_1, \dots, x_d) = C\big(F_1(x_1), \dots, F_d(x_d)\big), \qquad C = \Phi_\Sigma\big(\Phi^{-1}(F_1(x_1)), \dots, \Phi^{-1}(F_d(x_d))\big),$$
+
+where $\Phi_\Sigma$ is the multivariate Gaussian CDF with correlation matrix $\Sigma$ estimated from the rank-transformed training data, and $\Phi$ the standard normal CDF. Sampling draws directly from this fitted joint distribution — no class label conditioning enters the generative process at all, which is why it samples unconditionally at the natural class rate regardless of $\alpha$ (§3.2, Table 6).
 
 #### 2.3.3. CTGAN (Conditional Tabular GAN)
 
-**CTGAN** [Xu et al., 2019] is a conditional generative adversarial network for tabular data with mixed types and class imbalance, using mode-specific normalization for continuous columns and a conditional vector during training that enables class-conditional generation at sampling time — measured directly in this study to generate minority-class rows at 7–89× the natural rate (Table 6).
+**CTGAN** [Xu et al., 2019] is a conditional generative adversarial network trained with the standard minimax objective
+
+$$\min_G \max_D\; \mathbb{E}_{x \sim p_{data}}\big[\log D(x \mid c)\big] + \mathbb{E}_{z \sim p_z}\big[\log\big(1 - D(G(z, c) \mid c)\big)\big],$$
+
+but critically, the conditional vector $c$ encodes a target discrete-column value drawn during training by **training-by-sampling**: at each step, $c$ is drawn log-frequency-weighted across that column's categories (rather than at their natural empirical frequency), so the generator learns to condition on — and at inference time can be asked to target — the minority class specifically. This is the exact mechanism absent from GaussianCopula and TabDDPM's unconditional formulations, and it is what produces the 7–89× minority-class enrichment measured directly in this study (Table 6) rather than inferred from downstream performance alone.
 
 #### 2.3.4. TabDDPM and GReaT
 
-**TabDDPM** [Kotelnikov et al., 2023] applies denoising diffusion probabilistic models to tabular data and is reported as the strongest single-table generator on general augmentation benchmarks [Davila et al., 2025], but samples unconditionally. **GReaT** [Borisov et al., 2023] serializes tabular rows as natural-language strings and fine-tunes a pretrained language model (GPT-2, 117M; and Mistral-7B, 7B parameters) on the resulting text.
+**TabDDPM** [Kotelnikov et al., 2023] applies a Gaussian forward diffusion process to continuous features,
+
+$$q(x_t \mid x_{t-1}) = \mathcal{N}\big(x_t;\ \sqrt{1-\beta_t}\, x_{t-1},\ \beta_t I\big),$$
+
+(with an analogous multinomial diffusion process for categorical columns) and trains a network $\epsilon_\theta$ to reverse it, sampling by iterative denoising from $x_T \sim \mathcal{N}(0, I)$ back to $x_0$. It is reported as the strongest single-table generator on general augmentation benchmarks [Davila et al., 2025], but the reverse process here samples unconditionally over the joint feature-label distribution — no class-conditioning term enters $\epsilon_\theta$'s objective, the same structural limitation as GaussianCopula, just via a different generative mechanism. **GReaT** [Borisov et al., 2023] serializes each tabular row as a natural-language string and fine-tunes a pretrained causal language model (GPT-2, 117M; and Mistral-7B, 7B parameters) with the standard autoregressive objective $\mathcal{L} = -\sum_t \log p_\theta(w_t \mid w_{<t})$ over the serialized token sequence — sampling is likewise unconditional on the label unless explicitly prompted, which the default `guided_sampling` configuration used here does not enforce class-balanced generation.
 
 #### 2.3.5. Random Undersampling and Cost-Sensitive Reweighting (Non-Generative Baselines)
 
