@@ -228,20 +228,23 @@ GaussianCopula and TabDDPM both mirror the natural (rare) positive rate — they
 
 ### 3.4. Method-Wise Average Performance and the Missing-Baseline Comparison
 
-**Table 7 — All evaluated methods, mean gain across Hillstrom and Criteo (best-α, 5-seed CI).**
+**Table 7 — All evaluated methods, best-α gain with 95% CI on each dataset separately (5-seed CI; a single blended average across datasets is avoided here since it would discard the uncertainty on each estimate).**
 
-| Method | Cost | Mean gain |
-|---|---|---|
-| CTGAN | GPU/CPU, ~2 min/seed | +9.31 pts |
-| ADASYN | Free, instant | +9.07 pts |
-| SMOTE | Free, instant | +8.91 pts |
-| Borderline-SMOTE | Free, instant | +6.23 pts |
-| TabDDPM (2k) | GPU, ~6 min/seed | +5.63 pts |
-| Random undersampling | Free, instant | +4.67 pts |
-| GaussianCopula | CPU, ~seconds | +3.53 pts |
-| `class_weight='balanced'` | Free, instant | +1.76 pts |
+| Method | Cost | Hillstrom gain (95% CI) | Criteo gain (95% CI) |
+|---|---|---|---|
+| CTGAN | GPU/CPU, ~2 min/seed | +5.75 ± 7.32 pts | +12.87 ± 3.58 pts |
+| ADASYN | Free, instant | +5.80 ± 6.70 pts | +12.35 ± 2.82 pts |
+| SMOTE | Free, instant | +5.84 ± 8.72 pts | +11.99 ± 2.57 pts |
+| Borderline-SMOTE | Free, instant | +1.13 ± 14.95 pts | +11.34 ± 5.02 pts |
+| TabDDPM (2k) | GPU, ~6 min/seed | +1.35 ± 9.72 pts | +9.91 ± 5.69 pts |
+| Random undersampling | Free, instant | +2.11 ± 6.05 pts | +7.24 ± 5.76 pts |
+| GaussianCopula | CPU, ~seconds | +0.44 ± 10.68 pts | +6.61 ± 8.65 pts |
+| `class_weight='balanced'` | Free, instant | −1.80 ± 7.33 pts | +5.32 ± 8.55 pts |
+| **GReaT (GPT-2), n=2,000*** | GPU, ~5 min/seed | **−6.87 pts** (0/5 seeds win, p_fdr=0.007) | *not evaluated on Criteo* |
 
-A direct paired comparison confirms ADASYN and CTGAN are statistically indistinguishable (Hillstrom p=0.970, Criteo p=0.212) — this is precisely the outcome a prior reviewer of this work predicted was likely, given that a free heuristic already matching a GPU-trained generator "is decisive for the paper's deliverable": *if a cheap method recovers most of the reported gain at zero cost, recommending the expensive one is the wrong advice.*
+*GReaT's protocol varies training-set size n at fixed α=1.0, not α at fixed n=10,000 like every other method — its number here is not on the same axis as the rest of the table and is included for visibility, not direct ranking. At its largest tested n (2,000, the condition most comparable in spirit to the other methods' full-data condition), GReaT is the only method in this entire study to deliver a *statistically significant, FDR-corrected* effect — and it is significantly harmful, not helpful. At every other n tested on Hillstrom, GReaT's gain ranges from +2.25 pts (n=50) down through this point, never exceeding TabDDPM's or GaussianCopula's performance at any n (§3.3).
+
+Confidence intervals overlap substantially at the top of Table 7 — the wide CIs on Hillstrom in particular (a consequence of only ~72 real minority examples per split, §4.1) mean CTGAN, ADASYN, and SMOTE cannot be distinguished from each other by eye, and a direct paired comparison confirms this is not just an eyeballing artifact: ADASYN and CTGAN are statistically indistinguishable (Hillstrom p=0.970, Criteo p=0.212). This is precisely the outcome a prior reviewer of this work predicted was likely, given that a free heuristic already matching a GPU-trained generator "is decisive for the paper's deliverable": *if a cheap method recovers most of the reported gain at zero cost, recommending the expensive one is the wrong advice.*
 
 ![Figure 10](../results/plots/paper2/fig15_missing_baselines.png)
 
@@ -336,6 +339,8 @@ Unlike TabDDPM and GReaT (both of which seed PyTorch/CUDA via a `seed_everything
 | 1%–10% | Tested directly on two datasets: significantly harmful on one, negligible on the other | Validate on your own data — the two datasets tested here disagree |
 | 0.5%–1% | ADASYN/SMOTE/CTGAN tied, +5–6 pts | Try ADASYN or SMOTE first (free) |
 | < 0.5% | ADASYN/SMOTE/CTGAN tied, +12–13 pts | Try ADASYN or SMOTE first; reserve CTGAN for cases where they underperform on your data |
+
+**GReaT is not recommended in any positive-rate band tested.** It never wins at any n tested against CTGAN/ADASYN/SMOTE, its best-case gain is small and non-significant, and its worst case (large n) is the only *statistically significant harm* in the entire study. Scaling the backbone from GPT-2 to Mistral-7B does not change this. GReaT is included in this study to answer whether LLM-based synthesis is competitive in this regime, not because it is a candidate recommendation — the answer, directly, is that it is not (§3.3, §4.2).
 
 ### 4.7. Limitations
 
