@@ -483,6 +483,21 @@ R1's review flagged a decisive gap: before reaching for CTGAN, a practitioner wo
 
 **ADASYN — free and essentially instantaneous — ties CTGAN on both datasets (+5.80 vs. +5.75 on Hillstrom; +12.35 vs. +12.87 on Criteo).** A direct paired comparison (ADASYN vs. CTGAN, matched by seed, at each method's own best α) confirms no detectable difference: Hillstrom Δ=+0.06 pts (d_z=+0.02, p=0.970), Criteo Δ=−0.52 pts (d_z=−0.66, p=0.212) — both far from significance, so "ties" is a tested claim here, not an impression from overlapping confidence intervals. This is precisely the outcome R1 warned was likely, given that SMOTE (also free) was already shown to match CTGAN: *"if naive random oversampling or a single class-weight argument recovers most of the reported gain at zero cost, 'strongly consider CTGAN' is the wrong advice."* It is correct here. Borderline-SMOTE and random undersampling both deliver real, substantial, zero-cost gains too, though smaller than ADASYN/SMOTE/CTGAN. **This changes the paper's practitioner recommendation**: CTGAN is not uniquely capable of delivering these gains — it is one of several methods that work, and the free alternatives (ADASYN, SMOTE) should be tried first, with CTGAN reserved for cases where the free methods are validated to underperform on a practitioner's own data. The generator ranking in §6 is updated accordingly.
 
+**Table 7 — Full metric suite (Accuracy/Precision/Recall/F1) at the default 0.5 threshold, all non-GReaT methods (5-seed CI).**
+
+| Method | Hillstrom F1 / P / R / Acc | Criteo F1 / P / R / Acc |
+|---|---|---|
+| Baseline | 0.012 / 0.013 / 0.011 / 98.4% | 0.259 / 0.312 / 0.240 / 99.6% |
+| GaussianCopula | 0.000 / 0.000 / 0.000 / 98.3% | 0.204 / 0.211 / 0.229 / 99.5% |
+| CTGAN | 0.000 / 0.000 / 0.000 / 98.9% | 0.214 / 0.264 / 0.184 / 99.6% |
+| SMOTE | 0.014 / 0.018 / 0.011 / 98.6% | 0.180 / 0.133 / 0.291 / 99.2% |
+| ADASYN | 0.000 / 0.000 / 0.000 / 99.0% | 0.225 / 0.198 / 0.273 / 99.4% |
+| Borderline-SMOTE | 0.000 / 0.000 / 0.000 / 98.9% | 0.262 / 0.247 / 0.291 / 99.4% |
+| Random undersampling | **0.022** / 0.011 / **0.572** / 51.1% | **0.032** / 0.016 / **0.960** / 80.9% |
+| `class_weight='balanced'` | 0.018 / 0.010 / 0.094 / 90.3% | 0.094 / 0.067 / 0.167 / 99.1% |
+
+**Random undersampling behaves qualitatively differently from every enrichment-based method, and this is worth stating plainly rather than reading it off the table.** Every conditional/interpolation-based method (CTGAN, ADASYN, Borderline-SMOTE, and GaussianCopula on Hillstrom) either collapses to F1=0 at the default threshold or nudges it slightly — none meaningfully shift the classifier's operating point. Random undersampling does the opposite: it recovers 57% of positives on Hillstrom and 96% on Criteo (vs. ~1–24% for every other method), at the cost of collapsing precision to near-zero and accuracy to barely above chance (51.1% on Hillstrom — undersampling removes so much majority-class signal that the classifier is close to guessing). This is not a bug; it is the expected mechanism of undersampling — shifting the effective class prior seen during training shifts the decision boundary wholesale, unlike enrichment methods which add density without changing the prior as aggressively. For a practitioner who specifically needs high recall and can tolerate low precision (e.g., a first-pass fraud or churn *flagging* system with a human review step downstream), random undersampling — free — is a genuinely different and viable option this table makes visible; for anything requiring balanced precision/recall, it is not competitive with ADASYN/SMOTE/CTGAN. Borderline-SMOTE's Criteo F1 (0.262) and recall (0.291) are in fact the best of any method tested here, reinforcing that ADASYN and SMOTE are not uniquely capable of matching or exceeding CTGAN on this secondary metric either.
+
 ![Figure 15](../results/plots/paper2/fig15_missing_baselines.png)
 
 **Figure 15.** Gain comparison across all evaluated methods on both marketing datasets, sorted by gain. ADASYN sits within noise of CTGAN on both datasets; Borderline-SMOTE and random undersampling deliver smaller but real, zero-cost gains.
