@@ -108,9 +108,54 @@ An 80/20 stratified train/test split is used for all main experiments. For the G
 
 #### 2.2.5. Synthetic Data Generation Protocol
 
-For each (dataset, generator, seed) triple we generate synthetic rows at a synthetic-to-real mixing ratio α ∈ {0.1, 0.2, 0.3, 0.5, 1.0}. GaussianCopula and CTGAN are refit independently at each α (no fit-once-and-subsample caching in this implementation); SMOTE/ADASYN/Borderline-SMOTE re-call per α (no separate fit step); TabDDPM fits once at max(α) and subsamples for smaller α; GReaT fits once per (n, seed).
+**Notation.** Let $D = (X, y)$ denote a labeled dataset with $y \in \{0,1\}$, $N = |D|$ the total row count, and $m = \sum_i y_i$ the minority (positive-class) count, so the positive rate is $\pi = m/N$. For a generator $G_\theta$ fit on training split $D_{tr}$, let $S \sim G_\theta(\cdot \mid D_{tr}, n_{syn})$ denote $n_{syn}$ synthetic rows sampled from the fitted generator. The augmented training set at mixing ratio $\alpha$ is
 
-**Dose-response design.** To disentangle minority-class count from dataset identity, we fix total training size at N=10,000 and vary only the minority-class count — 16, 64, 256, 512, 1,024 — on two datasets chosen for headroom beyond their capped versions in Table 1: Bank Marketing (full source 45,211 rows / 5,289 positives) and Nomao (full source 34,465 rows / 9,844 positives, chosen additionally for its different domain and higher dimensionality — 119 vs. 17 features). GaussianCopula, CTGAN, and SMOTE are evaluated at each level; TabDDPM and GReaT are excluded from this sweep to keep it CPU-only.
+$$D_{tr}^{(\alpha)} = D_{tr} \cup S, \qquad n_{syn} = \lfloor \alpha \cdot |D_{tr}| \rfloor, \qquad \alpha \in \{0.1, 0.2, 0.3, 0.5, 1.0\}.$$
+
+For a classifier $f$ trained on $D_{tr}^{(\alpha)}$ and evaluated on a fixed real holdout $D_{ho}$, the **gain** of generator $G$ at $\alpha$, seed $s$, is
+
+$$\Delta_G(\alpha, s) = \mathrm{AUC}\big(f_{D_{tr}^{(\alpha)}, s},\ D_{ho}\big) - \mathrm{AUC}\big(f_{D_{tr}, s},\ D_{ho}\big),$$
+
+i.e., always measured against that same seed's own real-only baseline, never a blended or cross-seed baseline (the exact bookkeeping error identified and corrected in an earlier revision of this study, §4.5). We report $\bar\Delta_G(\alpha) = \tfrac{1}{|S|}\sum_{s \in S} \Delta_G(\alpha, s)$ with a t-distribution 95% CI across seeds $S$, and take $\alpha^\* = \arg\max_\alpha \bar\Delta_G(\alpha)$ as the reported best-$\alpha$ gain.
+
+**Enrichment ratio.** Let $\hat\pi_{syn}(G) = \tfrac{1}{n_{syn}}\sum_{j} \mathbb{1}[S_j \text{ is positive-class}]$ be the measured positive rate within a generator's own synthetic output at $\alpha=1$ (Table 6). The enrichment ratio
+
+$$\rho(G) = \hat\pi_{syn}(G) \,/\, \pi$$
+
+is the paper's core mechanism statistic: $\rho(G) \approx 1$ for unconditional samplers (GaussianCopula, TabDDPM, GReaT — they reproduce the training distribution's own rate), while $\rho(\text{CTGAN}) \in [7, 89]$ across the two marketing datasets (Table 6) — a direct, measured quantity, not inferred from downstream performance.
+
+For each (dataset, generator, seed) triple we generate synthetic rows at $\alpha \in \{0.1, 0.2, 0.3, 0.5, 1.0\}$. GaussianCopula and CTGAN are refit independently at each α (no fit-once-and-subsample caching in this implementation); SMOTE/ADASYN/Borderline-SMOTE re-call per α (no separate fit step); TabDDPM fits once at max(α) and subsamples for smaller α; GReaT fits once per (n, seed).
+
+**Dose-response design.** To disentangle minority-class count $m$ from dataset identity, we fix $N=10{,}000$ and vary only $m \in \{16, 64, 256, 512, 1{,}024\}$ (equivalently $\pi \in \{0.16\%, 0.64\%, 2.56\%, 5.12\%, 10.24\%\}$) on two datasets chosen for headroom beyond their capped versions in Table 1: Bank Marketing (full source 45,211 rows / 5,289 positives) and Nomao (full source 34,465 rows / 9,844 positives, chosen additionally for its different domain and higher dimensionality — 119 vs. 17 features). GaussianCopula, CTGAN, and SMOTE are evaluated at each level; TabDDPM and GReaT are excluded from this sweep to keep it CPU-only. Algorithm 1 specifies the full procedure.
+
+**Algorithm 1: Minority-Count Dose-Response Sweep**
+
+```
+Input:  full source pool P (positives P⁺, negatives P⁻), N = 10,000,
+        minority-count grid M = {16, 64, 256, 512, 1024},
+        seeds S = {42, 123, 7, 2024, 999}, generators G = {GaussianCopula, CTGAN, SMOTE}
+Output: gain estimate Δ̄_G(m) with 95% CI, for every G ∈ G, m ∈ M
+
+1:  D_ho ← StratifiedSample(P, size=3000, seed=42)        // drawn ONCE, fixed for all conditions
+2:  P' ← P \ D_ho                                          // remaining pool after holdout removal
+3:  for m in M:
+4:      n_neg ← N − m
+5:      for s in S:
+6:          D_tr ← Shuffle( Sample(P'⁺, m, seed=s) ∪ Sample(P'⁻, n_neg, seed=s) )
+7:          f_base ← Fit(GradientBoostingClassifier, D_tr, seed=s)
+8:          Δ_base ← AUC(f_base, D_ho)
+9:          for G in G:
+10:             S_syn ← Fit-and-Sample(G, D_tr, n_syn = |D_tr|, seed=s)   // α = 1.0
+11:             D_aug ← D_tr ∪ S_syn
+12:             f_aug ← Fit(GradientBoostingClassifier, D_aug, seed=s)
+13:             Δ_G(m, s) ← AUC(f_aug, D_ho) − Δ_base       // seed-matched, never cross-seed
+14:         end for
+15:     end for
+16:     for G in G: report mean_s Δ_G(m, s) ± t-CI95         // Table 4 / Table 5 / Figure 12–14
+17: end for
+```
+
+The two features that make this design answer the confounding critique it was built for (§1) are line 1 (one holdout, reused unchanged across every $m$ and $G$, so no condition ever sees a different evaluation surface) and line 13 (gain is always computed against that exact seed's own baseline fit on the same draw, never a baseline averaged or borrowed from elsewhere — the discipline whose absence caused the GPT-2/Mistral-7B bookkeeping bug this study found and corrected, §4.5).
 
 #### 2.2.6. Experimental Workflow
 
@@ -391,11 +436,23 @@ See Table 2 (generator hyperparameters) and Table 3 (classifier hyperparameters)
 
 ## Appendix B. Evaluation Metrics Definitions
 
-- **AUC-ROC**: area under the receiver operating characteristic curve; threshold-independent measure of ranking quality.
-- **Average Precision (AP)**: area under the precision-recall curve; more sensitive than AUC-ROC to performance on the minority class under extreme imbalance.
-- **F1 (minority class)**: harmonic mean of precision and recall for the positive class at the classifier's default 0.5 threshold.
-- **Cohen's d_z**: paired-samples effect size (mean of per-seed differences / standard deviation of per-seed differences).
-- **Minority-class count**: absolute number of positive-class training examples in a given split, as distinct from positive rate (proportion).
+Let $TP, FP, TN, FN$ denote confusion-matrix counts at the classifier's default 0.5 decision threshold, and let $\hat{y} \in [0,1]$ be the classifier's predicted probability for the positive class.
+
+**Precision, Recall, Accuracy, F1 (minority class):**
+
+$$P = \frac{TP}{TP+FP}, \qquad R = \frac{TP}{TP+FN}, \qquad \mathrm{Acc} = \frac{TP+TN}{TP+FP+TN+FN}, \qquad F_1 = \frac{2PR}{P+R}.$$
+
+**AUC-ROC** (threshold-independent): the probability that a randomly drawn positive example is ranked above a randomly drawn negative example,
+
+$$\mathrm{AUC} = \Pr(\hat{y}_i > \hat{y}_j \mid y_i = 1,\ y_j = 0).$$
+
+**Average Precision (AP)**: the area under the precision-recall curve, $\mathrm{AP} = \sum_k (R_k - R_{k-1})\, P_k$, summed over the ranking-induced sequence of thresholds $k$. Note $F_1$ is a single-threshold quantity while AP is threshold-aggregated — the two are not interchangeable (§3.6), and neither can be algebraically recovered from the other or from AUC alone (F1's defining identity has two degrees of freedom, $P$ and $R$; AUC and AP each supply only one aggregate constraint across all thresholds, not a value at the specific 0.5 cut point).
+
+**Cohen's $d_z$** (paired-samples effect size): for per-seed differences $\delta_s = \Delta_G(\alpha, s)$ across seeds $s=1,\dots,k$,
+
+$$d_z = \frac{\bar\delta}{\mathrm{sd}(\delta)}, \qquad \bar\delta = \tfrac{1}{k}\sum_s \delta_s, \qquad \mathrm{sd}(\delta) = \sqrt{\tfrac{1}{k-1}\sum_s (\delta_s - \bar\delta)^2}.$$
+
+**Minority-class count** $m$: absolute number of positive-class training examples in a split, as distinct from positive rate $\pi = m/N$ (proportion) — the distinction the dose-response design (Algorithm 1) is built to isolate.
 
 ---
 
