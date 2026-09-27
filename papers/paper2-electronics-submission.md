@@ -14,7 +14,7 @@ Statement, Informed Consent, Conflicts of Interest) are marked TODO and
 need Aditya's/coauthors' actual input -- not something to fabricate.
 -->
 
-# Synthetic Data Augmentation in the Extreme-Imbalance Regime: A Dose-Response Extension of Fidelity-Utility Benchmarking
+# Synthetic Data Augmentation in the Extreme-Imbalance Regime: A Dose-Response Study and a Missing-Baseline Reassessment
 
 **Authors:** Aditya Puttaparthi Tirumala [, coauthors TBD]
 
@@ -86,7 +86,7 @@ We selected seven publicly available classification datasets spanning the practi
 | **Hillstrom Email Marketing** | **10,000** | **0.9%** | **Marketing** | MineThatData | **Treatment** |
 | **Criteo Display Advertising** | **10,000** | **0.2%** | **Advertising** | Criteo AI Lab | **Treatment** |
 
-Datasets larger than 10,000 rows are subsampled to the listed cap, defining the data-scarce minority-class regime this paper studies; at full dataset scale the marginal value of synthetic rows is expected to be smaller (see §4.6, Limitations). Two supplementary datasets — Bank Marketing's full UCI source (45,211 rows, 5,289 positives) and Nomao's full OpenML source (34,465 rows, 9,844 positives) — provide additional headroom for the dose-response design in §2.2.5 and are described there.
+Datasets larger than 10,000 rows are subsampled to the listed cap, defining the data-scarce minority-class regime this paper studies; at full dataset scale the marginal value of synthetic rows is expected to be smaller (see §4.7, Limitations). Two supplementary datasets — Bank Marketing's full UCI source (45,211 rows, 5,289 positives) and Nomao's full OpenML source (34,465 rows, 9,844 positives) — provide additional headroom for the dose-response design in §2.2.5 and are described there.
 
 ### 2.2. Experimental Setup
 
@@ -148,11 +148,11 @@ The generators evaluated span five design families.
 
 #### 2.4.1. Classification Utility
 
-The primary metric is AUC-ROC (threshold-independent, standard in the benchmark literature this paper compares against). Secondary metrics are Average Precision throughout, and — for Hillstrom and Criteo specifically — Accuracy, Precision, Recall, and F1 (minority class) at the classifier's default 0.5 threshold, computed for every method except GReaT (see §4.6 for why GReaT is scoped out of this secondary-metric set). The primary downstream classifier is `GradientBoostingClassifier` (`n_estimators=100, max_depth=4`); Hillstrom and Criteo additionally use Logistic Regression, Random Forest, and a Multi-Layer Perceptron to verify findings are not classifier-specific.
+The primary metric is AUC-ROC (threshold-independent, standard in the benchmark literature this paper compares against). Secondary metrics are Average Precision throughout, and — for Hillstrom and Criteo specifically — Accuracy, Precision, Recall, and F1 (minority class) at the classifier's default 0.5 threshold, computed for every method except GReaT (see §4.7 for why GReaT is scoped out of this secondary-metric set). The primary downstream classifier is `GradientBoostingClassifier` (`n_estimators=100, max_depth=4`); Hillstrom and Criteo additionally use Logistic Regression, Random Forest, and a Multi-Layer Perceptron to verify findings are not classifier-specific.
 
 #### 2.4.2. Synthetic Data Class Distribution (Fidelity Proxy)
 
-Rather than a full multi-dimensional statistical fidelity battery (marginal similarity, correlation preservation, KS tests — as in Won et al.'s §3.4.1), we measure one targeted fidelity quantity directly relevant to the imbalanced-classification question this paper asks: the fraction of positive-class rows in synthetic samples generated at α=1.0 (Table 6). This directly tests the mechanism hypothesis (conditional generators enrich the minority class; unconditional generators do not) without requiring the broader fidelity framework, which we leave to future work (§4.6).
+Rather than a full multi-dimensional statistical fidelity battery (marginal similarity, correlation preservation, KS tests — as in Won et al.'s §3.4.1), we measure one targeted fidelity quantity directly relevant to the imbalanced-classification question this paper asks: the fraction of positive-class rows in synthetic samples generated at α=1.0 (Table 6). This directly tests the mechanism hypothesis (conditional generators enrich the minority class; unconditional generators do not) without requiring the broader fidelity framework, which we leave to future work (§4.7).
 
 ---
 
@@ -372,7 +372,7 @@ We tested whether minority-example scarcity is the strongest observed correlate 
 
 ## Data Availability Statement
 
-All datasets used are publicly available: Hillstrom (MineThatData), Criteo (Criteo AI Lab uplift dataset), Telco Customer Churn (IBM/Kaggle), Bank Marketing (UCI ML Repository), German Credit (OpenML id=31), Nomao (OpenML id=1486). Code, experiment scripts, and raw result CSVs are available at [repository URL — TODO: confirm public/private status of `gitlab.zgtools.net` or GitHub repo before listing].
+All datasets used are publicly available: Hillstrom (MineThatData), Criteo (Criteo AI Lab uplift dataset), Telco Customer Churn (IBM/Kaggle), Bank Marketing (UCI ML Repository), German Credit (OpenML id=31), Nomao (OpenML id=1486). Code, experiment scripts, and raw result CSVs are available at https://github.com/adityapt/llmsynth *(TODO: confirm this repository should be public before listing it here — verify current visibility setting and remove/redact anything sensitive first)*.
 
 ## Conflicts of Interest
 
