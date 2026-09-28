@@ -502,6 +502,35 @@ R1's review flagged a decisive gap: before reaching for CTGAN, a practitioner wo
 
 **Figure 15.** Gain comparison across all evaluated methods on both marketing datasets, sorted by gain. ADASYN sits within noise of CTGAN on both datasets; Borderline-SMOTE and random undersampling deliver smaller but real, zero-cost gains.
 
+### 4.11 Full Metric Suite on Benchmark (Control) Datasets: Does the AUC Story Hold?
+
+§4.2 established that no generator exceeds +0.5 AUC points on the four benchmark (control) datasets — Telco, Bank Marketing, German Credit, Nomao — at positive rates ≥ 11.7%. That result uses AUC-ROC only. We extend the same 5-seed, best-α protocol used for Table 7 to the full Accuracy/Precision/Recall/F1 suite on these four control datasets, to check whether "no effect" also holds under threshold-based metrics, or whether AUC's threshold-independence is masking a real shift in operating point.
+
+**Table 8 — Full metric suite, control datasets, best-α gain vs. seed-matched baseline (5-seed paired t-test; p_fdr from a separate 24-test family covering this table only — not merged into the §4.8 family of 14).**
+
+| Dataset | Method (best α) | AUC gain | p(AUC) | F1 gain | p(F1) | Precision | Recall | Accuracy |
+|---|---|---|---|---|---|---|---|---|
+| Telco | GaussianCopula (0.3) | +0.17 pts | 0.300 | −0.0012 | 0.811 | 0.657 | 0.507 | 79.9% |
+| Telco | CTGAN (0.1) | +0.13 pts | 0.306 | +0.0042 | 0.523 | 0.658 | 0.515 | 80.0% |
+| Telco | SMOTE (0.1) | −0.19 pts | 0.394 | **+0.0175** | **0.038** | 0.613 | 0.571 | 79.0% |
+| Bank Marketing | GaussianCopula (0.2) | −0.15 pts | 0.171 | **−0.0417** | **0.009** | 0.638 | 0.356 | 90.1% |
+| Bank Marketing | CTGAN (0.1) | **−0.28 pts** | **0.006** | −0.0261 | 0.026 | 0.633 | 0.377 | 90.2% |
+| Bank Marketing | SMOTE (0.1) | −0.43 pts | 0.036 | **+0.0599** | **0.008** | 0.578 | 0.539 | 90.0% |
+| German Credit | GaussianCopula (0.1) | +0.50 pts | 0.448 | −0.0016 | 0.932 | 0.699 | 0.507 | 78.6% |
+| German Credit | CTGAN (0.3) | +0.24 pts | 0.768 | −0.0296 | 0.156 | 0.695 | 0.470 | 77.9% |
+| German Credit | SMOTE (0.2) | +0.28 pts | 0.692 | +0.0154 | 0.257 | 0.627 | 0.583 | 77.1% |
+| Nomao | GaussianCopula (0.1) | −0.06 pts | 0.051 | **−0.0033** | **0.001** | 0.933 | 0.920 | 95.8% |
+| Nomao | CTGAN (0.1) | −0.06 pts | 0.050 | −0.0025 | 0.125 | 0.934 | 0.920 | 95.9% |
+| Nomao | SMOTE (0.1) | −0.00 pts | 0.869 | −0.0005 | 0.093 | 0.927 | 0.931 | 95.9% |
+
+Bold p-values survive Benjamini-Hochberg FDR correction at q=0.10 within this table's own 24-test family (12 AUC tests + 12 F1 tests): Bank Marketing/CTGAN-AUC, Bank Marketing/GaussianCopula-F1, Bank Marketing/SMOTE-F1, and Nomao/GaussianCopula-F1.
+
+**The magnitude-vs-significance distinction matters here more than anywhere else in this paper.** Four comparisons are FDR-significant, but every one of them is tiny in absolute terms (≤0.28 AUC points, ≤0.06 F1 points) — they are detectable only because these control datasets have unusually tight per-seed variance (baseline AUC CIs of ±0.04 to ±0.10 pts, vs. ±9 to ±23 pts on the marketing datasets), not because the underlying effect is large. This is consistent with, not contradictory to, the §4.2 "negligible" conclusion: negligible in magnitude, occasionally detectable in direction.
+
+**The one exception worth a practitioner's attention is SMOTE's F1 gain on Bank Marketing (+0.0599, p_fdr=0.057) and, more weakly, on Telco (+0.0175, p=0.038, not FDR-significant).** This is a real precision-recall trade-off, not noise: on Bank Marketing, SMOTE's recall rises from a baseline of roughly 0.36–0.38 (matching GaussianCopula/CTGAN's recall) to 0.539, while precision falls correspondingly (0.578 vs. ~0.63–0.64 for the other two generators) — AUC-ROC, being threshold- and prior-invariant, does not register this shift, while F1 (evaluated at the fixed 0.5 threshold) does. The mechanism is consistent with SMOTE's known behavior even outside the extreme-scarcity regime this paper's headline finding concerns: because SMOTE directly interpolates new minority-class points, it can nudge the classifier's default-threshold recall upward on any dataset, not just data-scarce ones — this is a secondary, threshold-dependent effect layered on top of, and independent from, the AUC-based enrichment mechanism (§5.1) that is this paper's primary finding on the marketing datasets. GaussianCopula and CTGAN do not show this effect on Bank Marketing; if anything, their F1 moves in the opposite direction (both significantly negative), consistent with unconditional/unadjusted synthesis nudging the operating point away from the minority class rather than toward it, mirroring their failure to enrich the minority class under §5.1's mechanism.
+
+**Nomao is the cleanest confirmation of "no effect" among the four control datasets.** All three generators' AUC and F1 gains are within ±0.06 points and ±0.004 F1 of zero, and only GaussianCopula's F1 change reaches FDR significance, at a magnitude (−0.0033) an order of magnitude smaller than the SMOTE/Bank-Marketing effect above. This is consistent with Nomao's near-ceiling baseline (§4.9) leaving essentially no room for any method, at any metric, to move.
+
 ---
 
 ## 5. Discussion
@@ -705,6 +734,7 @@ All experiments are reproducible from the companion repository (`experiments/` d
 | Dose-response replication on Nomao (§4.9) | `run_dose_response_nomao.py` (or the memory-constrained equivalent, `_dose_response_nomao_worker.py` + `run_dose_response_nomao_driver.sh`), `make_plot_dose_response_combined.py` | `dose_response_nomao.csv`, `plots/paper2/fig13_dose_response_combined.png` |
 | Combined gain-vs-positive-rate view (Fig 14) | `make_plot_gain_vs_positive_rate.py` | `plots/paper2/fig14_gain_vs_positive_rate.png` |
 | Missing baselines: ADASYN, Borderline-SMOTE, random undersampling (§4.10) | `run_missing_baselines_hillstrom_criteo.py`, `make_plot_missing_baselines.py` | `missing_baselines_hillstrom.csv`, `missing_baselines_criteo.csv`, `plots/paper2/fig15_missing_baselines.png` |
+| Full metric suite, control datasets (§4.11) | `run_full_metrics_benchmark_datasets.py` (Telco, Bank Marketing, German Credit; monolithic); `experiments/_fullmetrics_nomao_worker.py` + `run_fullmetrics_nomao_driver.sh` (Nomao, subprocess-per-combo — the monolithic script OOM-killed on Nomao's 119 features); Nomao's final 25/80 rows completed on a Databricks CPU cluster via `experiments/databricks_nomao_fullmetrics_notebook.py` after repeated local OOM kills | `fullmetrics_telco.csv`, `fullmetrics_bank_marketing.csv`, `fullmetrics_german_credit.csv`, `fullmetrics_nomao.csv` |
 
 Hardware: benchmark and CI experiments run on CPU (Apple M1 Pro); TabDDPM and GReaT experiments run on Databricks GPU clusters (NVIDIA T4 or A10G). Total compute: approximately 60 GPU-hours and 80 CPU-hours.
 
