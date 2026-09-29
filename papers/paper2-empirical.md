@@ -405,7 +405,7 @@ The GReaT-fit variance finding documented for GPT-2 (non-deterministic GPU reduc
 
 **Spearman rank correlation.** As a non-parametric alternative, the Spearman correlation between log(positive rate) and CTGAN gain across six datasets is ρ = −0.49 (p = 0.33). The non-significant p-value reflects the low statistical power of rank-based tests at n = 6 rather than a contradiction of the regression result; the sign is consistent with the hypothesis and the LOO regression establishes robustness through a different lens.
 
-**Individual comparisons.** Marketing dataset comparisons show medium-to-large effect sizes (d_z = 0.62–1.18) consistent across both 5-seed and 10-seed tests, but none reach FDR significance. At 5 seeds, 80% power requires d_z ≥ 2.0; the observed effects (d_z ≈ 0.7–1.2) would individually reach significance at approximately 10–15 seeds. The CTGAN-Criteo 10-seed comparison (p_raw = 0.044) is nominally significant at α=0.05 but does not survive FDR correction over the 14-test family. The only FDR-significant individual comparison is GReaT harm at n=2000 (p_fdr = 0.007, d_z = −4.40).
+**Individual comparisons.** Marketing dataset comparisons show medium-to-large effect sizes (d_z = 0.62–1.18) consistent across both 5-seed and 10-seed tests, but none reach FDR significance. At 5 seeds, 80% power requires d_z ≥ 2.0; the observed effects (d_z ≈ 0.7–1.2) would individually reach significance at approximately 10–15 seeds. The CTGAN-Criteo 10-seed comparison (p_raw = 0.044) is nominally significant at α=0.05 but does not survive FDR correction over the 14-test family. The only FDR-significant individual comparison is GReaT harm at n=2000 (p_fdr = 0.008, d_z = −4.40).
 
 **CTGAN vs TabDDPM.** Large effect sizes (d_z = 1.07–1.17) consistent in direction across both datasets. Underpowered at 5 seeds for FDR significance; direction and magnitude are consistent with the cross-dataset pattern.
 
@@ -569,7 +569,7 @@ A practical corollary: if TabDDPM is to be made competitive in the extreme-imbal
 | SMOTE | 100% ± 0.00% (minority only) | 100% ± 0.00% (minority only) |
 | TabDDPM | 0.89% ± 0.05%* | 0.33% ± 0.09%* |
 
-*TabDDPM values from the original 5-seed run; not independently re-verifiable from a saved artifact (see provenance note above). All other rows are single-run point estimates (n=8,000 generated rows), not multi-seed means.
+*TabDDPM values from the original 5-seed run; not independently re-verifiable from a saved artifact (see provenance note above). GaussianCopula, CTGAN, and SMOTE are a genuine 5-seed measurement (n=8,000 generated rows per seed); see provenance note above.
 
 GaussianCopula faithfully mirrors the real positive rate — it generates no more minority-class rows than the original data (0.96% ± 0.12% vs 0.90% real on Hillstrom; 0.32% ± 0.06% vs 0.30% real on Criteo), producing the same class starvation that degrades the classifier. TabDDPM also samples near the natural rate (0.89% vs 0.90% real on Hillstrom; 0.33% vs 0.30% real on Criteo) — from the original 5-seed measurement, not independently re-verifiable (see provenance note above). CTGAN's conditional vector generates minority-class rows at roughly 7–89× the natural rate (6.65%/26.78% vs 0.90%/0.30% real), directly addressing the bottleneck. This table makes the mechanism visible without inference: CTGAN helps because it generates the right class, not because it generates better-quality rows.
 

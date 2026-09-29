@@ -302,7 +302,7 @@ Three comparisons are FDR-significant, but every one is tiny in absolute terms (
 
 **Figure 8.** CTGAN vs. TabDDPM at two training budgets — extended training (dashed) widens rather than closes the CTGAN advantage; all five TabDDPM-10k α values fall below baseline on Hillstrom.
 
-**GReaT (GPT-2 and Mistral-7B) — does augmentation help here at all?** A directional positive signal at small n on Hillstrom (n=50, 4/5 seeds win) decays and inverts to a robustly negative effect at n=2,000 (0/5 seeds win, p=0.001, the only FDR-significant individual comparison in the study, p_fdr=0.007) — GReaT actively hurts as training size grows, the opposite of every other method tested. Replicating with Mistral-7B (7B parameters vs. GPT-2's 117M) does not change the outcome once gain is computed against each backbone's own seed-matched baseline: Mistral-7B underperforms its own baseline at every n tested on Telco (−4.70 to −1.99 pts), still hurts on anonymized features (German Credit), and its best Hillstrom gain (+1.20 pts, 3/5 valid seeds) remains well below CTGAN. Scaling the backbone 60-fold does not rescue GReaT on any of the three datasets tested — the failure mode is that GReaT samples unconditionally (like TabDDPM and GaussianCopula), so it dilutes rather than enriches the minority class regardless of the language model's raw capability.
+**GReaT (GPT-2 and Mistral-7B) — does augmentation help here at all?** A directional positive signal at small n on Hillstrom (n=50, 4/5 seeds win) decays and inverts to a robustly negative effect at n=2,000 (0/5 seeds win, p=0.001, the only FDR-significant individual comparison in the study, p_fdr=0.008) — GReaT actively hurts as training size grows, the opposite of every other method tested. Replicating with Mistral-7B (7B parameters vs. GPT-2's 117M) does not change the outcome once gain is computed against each backbone's own seed-matched baseline: Mistral-7B underperforms its own baseline at every n tested on Telco (−4.70 to −1.99 pts), still hurts on anonymized features (German Credit), and its best Hillstrom gain (+1.20 pts, 3/5 valid seeds) remains well below CTGAN. Scaling the backbone 60-fold does not rescue GReaT on any of the three datasets tested — the failure mode is that GReaT samples unconditionally (like TabDDPM and GaussianCopula), so it dilutes rather than enriches the minority class regardless of the language model's raw capability.
 
 ![Figure 9](../results/plots/paper2/fig10_modernllm_comparison.png)
 
@@ -322,7 +322,7 @@ Three comparisons are FDR-significant, but every one is tiny in absolute terms (
 | Random undersampling | Free, instant | +2.11 ± 6.05 pts | +7.24 ± 5.76 pts |
 | GaussianCopula | CPU, ~seconds | +0.44 ± 10.68 pts | +6.61 ± 8.65 pts |
 | `class_weight='balanced'` | Free, instant | −1.80 ± 7.33 pts | +5.32 ± 8.55 pts |
-| **GReaT (GPT-2), n=2,000*** | GPU, ~5 min/seed | **−6.87 pts** (0/5 seeds win, p_fdr=0.007) | *not evaluated on Criteo* |
+| **GReaT (GPT-2), n=2,000*** | GPU, ~5 min/seed | **−6.87 pts** (0/5 seeds win, p_fdr=0.008) | *not evaluated on Criteo* |
 
 *GReaT's protocol varies training-set size n at fixed α=1.0, not α at fixed n=10,000 like every other method — its number here is not on the same axis as the rest of the table and is included for visibility, not direct ranking. At its largest tested n (2,000, the condition most comparable in spirit to the other methods' full-data condition), GReaT is the only method in this entire study to deliver a *statistically significant, FDR-corrected* effect — and it is significantly harmful, not helpful. At every other n tested on Hillstrom, GReaT's gain ranges from +2.25 pts (n=50) down through this point, never exceeding TabDDPM's or GaussianCopula's performance at any n (§3.3).
 
@@ -334,7 +334,7 @@ Confidence intervals overlap substantially at the top of Table 8 — the wide CI
 
 ### 3.5. Statistical Significance Analysis
 
-We report paired t-tests with Benjamini-Hochberg FDR correction (q=0.10) over a family of 14 headline comparisons. Individual per-dataset comparisons show medium-to-large effect sizes (d_z = 0.62–1.18) but none reach FDR significance at 5–10 seeds (80% power at 5 seeds requires d_z ≥ 2.0). The cross-dataset regression of CTGAN gain on log(positive rate) across six datasets is the primary statistical support for the regime-level claim (R²=0.92, p=0.0023), robust to leave-one-out refitting (R² 0.90–0.96, all p<0.05 across all six LOO fits). The only individually FDR-significant comparison is GReaT harm at Hillstrom n=2,000 (p_fdr=0.007).
+We report paired t-tests with Benjamini-Hochberg FDR correction (q=0.10) over a family of 14 headline comparisons. Individual per-dataset comparisons show medium-to-large effect sizes (d_z = 0.62–1.18) but none reach FDR significance at 5–10 seeds (80% power at 5 seeds requires d_z ≥ 2.0). The cross-dataset regression of CTGAN gain on log(positive rate) across six datasets is the primary statistical support for the regime-level claim (R²=0.92, p=0.0023), robust to leave-one-out refitting (R² 0.90–0.96, all p<0.05 across all six LOO fits). The only individually FDR-significant comparison is GReaT harm at Hillstrom n=2,000 (p_fdr=0.008).
 
 ![Figure 11](../results/plots/paper2/fig6_regression_hypothesis.png)
 
