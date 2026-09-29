@@ -537,7 +537,7 @@ $$d_z = \frac{\bar\delta}{\mathrm{sd}(\delta)}, \qquad \bar\delta = \tfrac{1}{k}
 40. Shwartz-Ziv, R.; Armon, A. Tabular Data: Deep Learning is Not All You Need. *Inf. Fusion* **2022**, 81, 84–90.
 41. Grinsztajn, L.; Oyallon, E.; Varoquaux, G. Why Do Tree-Based Models Still Outperform Deep Learning on Tabular Data? *NeurIPS* **2022**.
 42. Gündüz, A.F.; Şahin, C.B. Synthetic Data Augmentation for Imbalanced Tabular Protein Subcellular Localization: A Comparative Study of SMOTE, CTGAN, TVAE, and TabDDPM Methods. *Appl. Sci.* **2026**, 16, 3694.
-43. Adhikari, G.; Acharya, J.; Sapkota, A.; Ghimire, S.; Ghimire, U.K. A Comparative Analysis on Synthetic Data Generation of Electronic Health Records using CTGAN, REaLTabFormer and TabDDPM. *J. Innov. Eng. Educ.* **2024**, 9.
+43. Adhikari, G.; Sapkota, A.; Acharya, J.; Ghimire, S.; Ghimire, U.K. A Comparative Analysis on Synthetic Data Generation of Electronic Health Records using CTGAN, REaLTabFormer and TabDDPM. *J. Innov. Eng. Educ.* **2026**, 9.
 44. Bouthillier, X.; et al. Accounting for Variance in Machine Learning Benchmarks. In Proceedings of Machine Learning and Systems (MLSys), **2021**.
 45. van Breugel, B.; Qian, Z.; van der Schaar, M. Synthetic Data, Real Errors: How (Not) to Publish and Use Synthetic Data. In Proceedings of the International Conference on Machine Learning (ICML), **2023**.
 46. Lautrup, A.D.; Hyrup, T.; Zimek, A. SynthEval: A Framework for Detailed Utility and Privacy Evaluation of Tabular Synthetic Data. *Data Min. Knowl. Discov.* **2024**.
