@@ -30,7 +30,7 @@ np.random.seed(RANDOM_STATE)
 
 SEEDS = [42, 123, 7, 2024, 999]
 ALPHAS = [0.1, 0.2, 0.3, 0.5, 1.0]
-N_CAP = 15_000
+N_CAP = 10_000
 
 
 def load_nomao():

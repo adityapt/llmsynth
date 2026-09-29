@@ -30,7 +30,7 @@ from experiments.run_nomao import load_nomao
 seed = int(sys.argv[1])
 method = sys.argv[2]
 alpha = float(sys.argv[3])
-N_CAP = 15_000
+N_CAP = 10_000
 OUT = RESULTS_DIR / "fullmetrics_nomao.csv"
 
 df_full, target, task, name = load_nomao()
