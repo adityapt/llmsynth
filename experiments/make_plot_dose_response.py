@@ -74,10 +74,6 @@ ax.set_title("Augmentation gain vs minority count")
 ax.legend(fontsize=8.5)
 ax.grid(alpha=0.3)
 
-fig.suptitle(
-    "Figure 12 — Dose-response: minority count vs augmentation gain (Bank Marketing, single dataset, fixed N)\n"
-    "Positive gain only at count=16 (SMOTE significant); augmentation significantly HURTS at counts >=64",
-    fontsize=10, fontweight="bold")
 plt.tight_layout()
 plt.savefig(OUT / "fig12_dose_response.png", dpi=160, bbox_inches="tight")
 plt.close()

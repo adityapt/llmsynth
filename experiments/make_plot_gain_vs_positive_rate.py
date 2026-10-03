@@ -74,10 +74,6 @@ ax.axhline(0, color="black", linewidth=1, linestyle=":")
 ax.set_xscale("log")
 ax.set_xlabel("Positive rate (%, log scale)")
 ax.set_ylabel("CTGAN gain vs baseline (AUC points)")
-ax.set_title(
-    "Figure 14 — CTGAN gain vs. positive rate: cross-dataset evidence + within-dataset dose-response\n"
-    "Diminishing (and reversing) returns as positive rate rises, replicated within two datasets, not just across six",
-    fontsize=10, fontweight="bold")
 ax.legend(fontsize=8.5, loc="upper right")
 ax.grid(alpha=0.3)
 plt.tight_layout()

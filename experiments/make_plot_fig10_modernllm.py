@@ -130,11 +130,6 @@ for ax, (label, gpt2_path, mistral_path) in zip(axes, datasets):
     ax.legend(fontsize=7.5)
     ax.grid(alpha=0.3)
 
-fig.suptitle(
-    "Figure 10 — GPT-2 (117M) vs Mistral-7B (7B) vs Baseline\n"
-    "Each backbone plotted against its own seed-matched baseline; annotated points used fewer than 5 valid seeds "
-    "(generation failures excluded, not averaged in). Backbone scaling does not rescue GReaT on any dataset tested.",
-    fontsize=10, fontweight="bold")
 plt.tight_layout()
 plt.savefig(OUT / "fig10_modernllm_comparison.png", dpi=160, bbox_inches="tight")
 plt.close()

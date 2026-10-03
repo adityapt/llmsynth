@@ -74,8 +74,6 @@ for ax, (label, ci_path, mb_path) in zip(axes, [
     ax.set_title(label, fontsize=11, fontweight="bold")
     ax.grid(alpha=0.3, axis="x")
 
-fig.suptitle("Figure 15 — All evaluated methods, sorted by gain (orange=CTGAN, green=free methods matching it)",
-             fontsize=10, fontweight="bold")
 plt.tight_layout()
 plt.savefig(OUT / "fig15_missing_baselines.png", dpi=160, bbox_inches="tight")
 plt.close()

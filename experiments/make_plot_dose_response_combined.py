@@ -51,10 +51,6 @@ for ax, (label, path) in zip(axes, [
     ax.legend(fontsize=8.5)
     ax.grid(alpha=0.3)
 
-fig.suptitle(
-    "Figure 13 — Dose-response replication: Bank Marketing vs Nomao\n"
-    "Same qualitative direction (gains shrink as count rises) — different threshold and effect size (Nomao's near-ceiling baseline leaves little room to move)",
-    fontsize=10, fontweight="bold")
 plt.tight_layout()
 plt.savefig(OUT / "fig13_dose_response_combined.png", dpi=160, bbox_inches="tight")
 plt.close()

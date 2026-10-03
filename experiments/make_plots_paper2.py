@@ -112,9 +112,6 @@ for bar, val in zip(bars, gains):
             va="bottom" if val >= 0 else "top", fontsize=9.5, fontweight="bold")
 ax.axhline(0, color="#555", linewidth=0.8)
 ax.set_ylabel("Best augmentation gain (AUC pts)", fontsize=11)
-ax.set_title("Figure 1 — Best Augmentation Gain by Dataset\n"
-             "Gains concentrate on imbalanced marketing datasets (Hillstrom 0.9%, Criteo 0.2%)",
-             fontsize=11, fontweight="bold")
 ax.grid(axis="y", alpha=0.3)
 blue_patch  = mpatches.Patch(color="#90CAF9", label="Balanced (positive rate ≥ 10%)")
 red_patch   = mpatches.Patch(color="#FF5722", label="Imbalanced (positive rate < 1%)")
@@ -161,9 +158,6 @@ for ax, (label, key) in zip(axes.flatten(), bench_keys):
     ax.legend(fontsize=7.5)
     ax.grid(alpha=0.3)
 
-fig.suptitle("Figure 2 — Augmentation U-Curves: Benchmark Datasets (5-seed CI)\n"
-             "No generator exceeds +0.27 AUC points on balanced datasets",
-             fontsize=11, fontweight="bold")
 plt.tight_layout()
 plt.savefig(OUT / "fig2_ucurves_benchmark.png", dpi=160, bbox_inches="tight")
 plt.close()
@@ -195,9 +189,6 @@ if df_sp is not None:
             ax.fill_between(ALPHAS[:len(means)], lows, highs, color=C[gen], alpha=0.12)
     ax.set_xlabel("Synthetic fraction α", fontsize=11)
     ax.set_ylabel("AUC-ROC", fontsize=11)
-    ax.set_title("Figure 3 — Sparsity Stress Test: Nomao Sparse (70% missing, n=500)\n"
-                 "Augmentation does not recover the 9.4-pt gap caused by feature sparsity",
-                 fontsize=10, fontweight="bold")
     ax.legend(fontsize=8.5)
     ax.grid(alpha=0.3)
     plt.tight_layout()
@@ -229,10 +220,6 @@ if existing:
         ax.axis("off")
     for ax in axes.flatten()[len(existing):]:
         ax.set_visible(False)
-    fig.suptitle("Figure 4 — Low-Data Regime: AUC vs Real Training Set Size\n"
-                 "Augmentation recovers 30–60% of performance gap at n=250; "
-                 "benefit narrows rapidly above n=1,000",
-                 fontsize=11, fontweight="bold")
     plt.tight_layout()
     plt.savefig(OUT / "fig4_lowdata_regime.png", dpi=140, bbox_inches="tight")
     plt.close()
@@ -268,9 +255,6 @@ for ax, (df, label, pos_rate) in zip(axes, [
     ax.legend(fontsize=9)
     ax.grid(alpha=0.3)
 
-fig.suptitle("Figure 5 — Augmentation U-Curves: Real Marketing Datasets\n"
-             "Large gains and substantially narrower CIs after augmentation",
-             fontsize=11, fontweight="bold")
 plt.tight_layout()
 plt.savefig(OUT / "fig5_marketing_ci.png", dpi=160, bbox_inches="tight")
 plt.close()
@@ -315,14 +299,15 @@ scatter = ax.scatter(reg_x, reg_y, s=100, zorder=3,
 plt.colorbar(scatter, ax=ax, label="CTGAN gain (AUC pts)", shrink=0.8)
 ax.plot(x_line, y_line, "--", color="#333", linewidth=1.8,
         label=f"Fit: slope={slope:.2f}, R²={r**2:.2f}, p={p_val:.4f}")
+_offsets = {"German Credit": (-10, 85), "Nomao Lead": (50, -28),
+            "Telco Churn": (60, 65), "Bank Mktg": (25, -40)}
 for xi, yi, lab in zip(reg_x, reg_y, reg_labels):
-    ax.annotate(lab, xy=(xi, yi), xytext=(8, 4), textcoords="offset points",
-                fontsize=8.5, color="#333")
+    off = next((v for k, v in _offsets.items() if lab.startswith(k)), (8, 4))
+    ax.annotate(lab, xy=(xi, yi), xytext=off, textcoords="offset points",
+                fontsize=8.5, color="#333",
+                arrowprops=dict(arrowstyle="-", color="#999", lw=0.6) if lab.split("\n")[0] in _offsets else None)
 ax.set_xlabel("log₁₀(Positive rate %)", fontsize=12)
 ax.set_ylabel("Best CTGAN gain (AUC pts)", fontsize=12)
-ax.set_title(f"Figure 6 — Cross-Dataset Regression: CTGAN Gain vs Class Imbalance\n"
-             f"R²={r**2:.2f}, p={p_val:.4f} — statistical confirmation of the imbalance hypothesis",
-             fontsize=10, fontweight="bold")
 ax.legend(fontsize=9)
 ax.grid(alpha=0.3)
 ax.axhline(0, color="#aaa", linewidth=0.8, linestyle=":")
@@ -393,9 +378,6 @@ for ax, (ds_label, df_ci, df_tab2k, df_tab10k, pos) in zip(axes, [
     ax.legend(fontsize=8.5)
     ax.grid(alpha=0.3)
 
-fig.suptitle("Figure 7 — CTGAN vs TabDDPM at Two Training Budgets (5-seed CI)\n"
-             "Extended TabDDPM training widens the CTGAN advantage — gap is architectural, not training-budget",
-             fontsize=10, fontweight="bold")
 plt.tight_layout()
 plt.savefig(OUT / "fig7_tabddpm_comparison.png", dpi=160, bbox_inches="tight")
 plt.close()
@@ -424,12 +406,9 @@ ax.axhline(0.5, linestyle=":", color="#888", linewidth=1.0, label="Random chance
 ax.set_xticks(x)
 ax.set_xticklabels([f"Seed {s}" for s in seeds], fontsize=9)
 ax.set_ylabel("AUC-ROC", fontsize=11)
-ax.set_title("Figure 8 — MLP Convergence Rescue on Criteo (0.2% positive rate)\n"
-             "7 of 10 baseline seeds fail to converge (AUC ≈ 0); CTGAN rescues all 10",
-             fontsize=10, fontweight="bold")
-ax.legend(fontsize=9)
+ax.legend(fontsize=9, ncol=2, loc="upper center")
 ax.grid(axis="y", alpha=0.3)
-ax.set_ylim(0, 1.05)
+ax.set_ylim(0, 1.25)
 
 # Annotate collapsed seeds
 for i, (seed, val) in enumerate(zip(seeds, base_per_seed)):
@@ -500,10 +479,6 @@ ax2.set_title("Best augmentation gain per classifier", fontsize=10, fontweight="
 ax2.legend(fontsize=9)
 ax2.grid(axis="y", alpha=0.3)
 
-fig.suptitle("Figure 9 — Multi-Classifier Robustness on Criteo (10 seeds)\n"
-             "CTGAN advantage holds across GBC (+12.0) and RF (+9.6); "
-             "LR near ceiling; MLP rescued from failure",
-             fontsize=10, fontweight="bold")
 plt.tight_layout()
 plt.savefig(OUT / "fig9_multiclassifier.png", dpi=160, bbox_inches="tight")
 plt.close()
