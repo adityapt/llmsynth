@@ -199,7 +199,7 @@ with an analogous multinomial diffusion process for categorical columns, and tra
 
 #### 2.3.5. Non-Generative Baselines
 
-**Random majority undersampling** removes majority-class rows to reach a target class ratio, evaluated here at 1:1, and adds no synthetic data at all. **`class_weight='balanced'`** reweights the loss function through `sample_weight=compute_sample_weight('balanced', y_train)` at no data or compute cost. Both are included because a prior review of this work [AUTHOR, YEAR; CITATION TO BE ADDED] identified their absence as a decisive gap: "before fitting a GAN... a practitioner would first try class weighting... and random minority oversampling... This omission is decisive for the paper's deliverable."
+**Random majority undersampling** removes majority-class rows to reach a target class ratio, evaluated here at 1:1, and adds no synthetic data at all. **`class_weight='balanced'`** reweights the loss function through `sample_weight=compute_sample_weight('balanced', y_train)` at no data or compute cost. Both are included because simple resampling and cost-sensitive baselines are the standard comparators that a synthetic generator should beat before it is recommended [47–51].
 
 ### 2.4. Evaluation Metrics
 
@@ -318,7 +318,7 @@ Three comparisons are FDR-significant, but every one is tiny in absolute terms, 
 
 *GReaT's protocol varies training-set size n at fixed α=1.0, whereas every other method varies α at fixed n=10,000. Its number is therefore not on the same axis as the rest of the table and is included for visibility, not for direct ranking. At its largest tested n of 2,000, the condition most comparable to the full-data condition of the other methods, GReaT is the only method in this study to deliver a statistically significant, FDR-corrected effect, and that effect is harmful. At every other n tested on Hillstrom, GReaT's gain ranges from +2.25 points at n=50 down to this value and never exceeds the performance of TabDDPM or GaussianCopula at any n (Section 3.3).
 
-Confidence intervals overlap substantially at the top of Table 8. The wide intervals on Hillstrom, which follow from only about 72 real minority examples per split (Section 4.1), mean that CTGAN, ADASYN and SMOTE cannot be distinguished by eye. A direct paired comparison confirms that this is more than an eyeballing artifact: ADASYN and CTGAN are statistically indistinguishable, with p=0.970 on Hillstrom and p=0.212 on Criteo. This is the outcome that [AUTHOR, YEAR; CITATION TO BE ADDED] predicted when noting that a free heuristic matching a GPU-trained generator "is decisive for the paper's deliverable." If a cheap method recovers most of the reported gain at zero cost, recommending the expensive one is the wrong advice.
+Confidence intervals overlap substantially at the top of Table 8. The wide intervals on Hillstrom, which follow from only about 72 real minority examples per split (Section 4.1), mean that CTGAN, ADASYN and SMOTE cannot be distinguished by eye. A direct paired comparison confirms that this is more than an eyeballing artifact: ADASYN and CTGAN are statistically indistinguishable, with p=0.970 on Hillstrom and p=0.212 on Criteo. This agrees with evidence that balancing adds little for strong classifiers [47,48]. If a cheap method recovers most of the reported gain at zero cost, recommending the expensive one is the wrong advice.
 
 ![Figure 10](../results/plots/paper2/fig15_missing_baselines.png)
 
@@ -547,3 +547,8 @@ $$d_z = \frac{\bar\delta}{\mathrm{sd}(\delta)}, \qquad \bar\delta = \tfrac{1}{k}
 44. Bouthillier, X.; et al. Accounting for Variance in Machine Learning Benchmarks. In Proceedings of Machine Learning and Systems (MLSys), **2021**.
 45. van Breugel, B.; Qian, Z.; van der Schaar, M. Synthetic Data, Real Errors: How (Not) to Publish and Use Synthetic Data. In Proceedings of the International Conference on Machine Learning (ICML), **2023**.
 46. Lautrup, A.D.; Hyrup, T.; Zimek, A. SynthEval: A Framework for Detailed Utility and Privacy Evaluation of Tabular Synthetic Data. *Data Min. Knowl. Discov.* **2024**.
+47. Elor, Y.; Averbuch-Elor, H. To SMOTE, or not to SMOTE? *arXiv* **2022**, arXiv:2201.08528.
+48. Sakho, A.; Malherbe, E.; Scornet, E. Do We Need Rebalancing Strategies? A Theoretical and Empirical Study Around SMOTE and Its Variants. *arXiv* **2024**, arXiv:2402.03819.
+49. Van Hulse, J.; Khoshgoftaar, T.M.; Napolitano, A. Experimental Perspectives on Learning from Imbalanced Data. In Proceedings of the 24th International Conference on Machine Learning (ICML), **2007**; pp. 935–942.
+50. Drummond, C.; Holte, R.C. C4.5, Class Imbalance, and Cost Sensitivity: Why Under-Sampling Beats Over-Sampling. In Proceedings of the ICML Workshop on Learning from Imbalanced Datasets II, **2003**.
+51. Elkan, C. The Foundations of Cost-Sensitive Learning. In Proceedings of the 17th International Joint Conference on Artificial Intelligence (IJCAI), **2001**; pp. 973–978.
