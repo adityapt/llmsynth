@@ -1,6 +1,6 @@
 # Synthetic Data Augmentation in the Extreme-Imbalance Regime: A Dose-Response Study and a Missing-Baseline Reassessment
 
-**Authors:** Aditya Puttaparthi Tirumala [, coauthors TBD]
+**Authors:** Aditya Puttaparthi Tirumala [two coauthors, names to be added]
 
 ## Abstract
 
@@ -433,7 +433,7 @@ We tested whether minority-example scarcity is the strongest observed correlate 
 
 ## Author Contributions
 
-Conceptualization, methodology, software, validation, formal analysis, investigation, data curation, writing (original draft preparation), writing (review and editing), and visualization, A.P.T. The author has read and agreed to the published version of the manuscript.
+Conceptualization, methodology, software, validation, formal analysis, investigation, data curation, writing (original draft preparation), writing (review and editing), and visualization, all authors. All authors have read and agreed to the published version of the manuscript.
 
 ## Funding
 
@@ -453,7 +453,7 @@ All datasets used are publicly available: Hillstrom (MineThatData), Criteo (Crit
 
 ## Conflicts of Interest
 
-The author declares no conflicts of interest.
+The authors declare no conflicts of interest.
 
 ---
 
