@@ -39,7 +39,7 @@ CROSS_DATASET = [
     ("German Credit",   30.0,  0.27),
     ("Nomao Lead",      28.3, -0.07),
     ("Hillstrom",        0.9,  5.75),
-    ("Criteo",            0.2, 12.87),
+    ("Criteo",            0.3, 12.87),
 ]
 
 fig, ax = plt.subplots(figsize=(9, 6))
@@ -47,9 +47,11 @@ fig, ax = plt.subplots(figsize=(9, 6))
 # Cross-dataset sparse points
 rates = [r for _, r, _ in CROSS_DATASET]
 gains = [g for _, _, g in CROSS_DATASET]
-ax.scatter(rates, gains, s=90, color="#212121", zorder=5, label="Cross-dataset (1 point/dataset, §4.8)", marker="D")
+ax.scatter(rates, gains, s=90, color="#212121", zorder=5, label="Cross-dataset (one point per dataset)", marker="D")
 for name, r, g in CROSS_DATASET:
-    ax.annotate(name, (r, g), textcoords="offset points", xytext=(6, 4), fontsize=7.5, color="#212121")
+    _off = {"German Credit": (-4, 22), "Nomao Lead": (-6, -22), "Telco Churn": (-62, 14)}.get(name, (6, 4))
+    ax.annotate(name, (r, g), textcoords="offset points", xytext=_off, fontsize=7.5, color="#212121",
+                arrowprops=dict(arrowstyle="-", color="#999", lw=0.6) if name in ("German Credit", "Nomao Lead", "Telco Churn") else None)
 
 # Dense within-dataset dose-response curves
 for label, path, color in [

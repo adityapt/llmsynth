@@ -52,7 +52,7 @@ datasets_meta = {
     "bank_marketing":  {"label": "Bank Marketing",  "pos_rate": 11.7, "n": 15000},
     "credit_default":  {"label": "German Credit",   "pos_rate": 30.0, "n": 1000},
     "hillstrom":       {"label": "Hillstrom Email", "pos_rate": 0.9,  "n": 10000},
-    "criteo":          {"label": "Criteo Display",  "pos_rate": 0.2,  "n": 10000},
+    "criteo":          {"label": "Criteo Display",  "pos_rate": 0.3,  "n": 10000},
     "nomao_lead":      {"label": "Nomao Lead",       "pos_rate": 28.3, "n": 10000},
 }
 
@@ -434,7 +434,7 @@ plot_ci(
 )
 plot_ci(
     RESULTS / "ci_summary.csv", RESULTS / "ci_criteo.csv",
-    "Criteo Display Advertising (0.2% conversion)",
+    "Criteo Display Advertising (0.3% conversion)",
     "plot_ci_criteo.png", headline_alpha=0.5
 )
 

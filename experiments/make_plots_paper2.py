@@ -7,7 +7,6 @@ Generates (all saved to results/plots/paper2/):
   fig3_ucurve_sparse.png             — sparse stress test U-curve
   fig4_lowdata_regime.png            — low-data regime (AUC vs n_real)
   fig5_marketing_ci.png              — Hillstrom + Criteo CI U-curves
-  fig6_regression_hypothesis.png     — cross-dataset regression (formal HT)
   fig7_tabddpm_comparison.png        — CTGAN vs TabDDPM 2k and 10k
   fig8_mlp_rescue.png                — MLP per-seed AUC: baseline vs CTGAN
   fig9_multiclassifier.png           — multi-classifier robustness on Criteo
@@ -90,7 +89,7 @@ datasets_info = [
     ("German Credit\n30.0%",  "credit_default", benchmark_ci.get("credit_default")),
     ("Nomao Lead\n28.3%",     "nomao_lead",     benchmark_ci.get("nomao_lead")),
     ("Hillstrom\n0.9%",       "hillstrom",      dh),
-    ("Criteo\n0.2%",          "criteo",         dc),
+    ("Criteo\n0.3%",          "criteo",         dc),
 ]
 
 labels, gains = [], []
@@ -231,7 +230,7 @@ if existing:
 fig, axes = plt.subplots(1, 2, figsize=(14, 5.5))
 for ax, (df, label, pos_rate) in zip(axes, [
     (dh, "Hillstrom Email Marketing", "0.9%"),
-    (dc, "Criteo Display Advertising", "0.2%"),
+    (dc, "Criteo Display Advertising", "0.3%"),
 ]):
     base_vals = df[df["method"]=="Baseline"]["auc_roc"].values
     bm, bh = ci95(base_vals)
@@ -261,79 +260,13 @@ plt.close()
 print("Saved fig5_marketing_ci.png")
 
 # ─────────────────────────────────────────────────────────────────────────────
-# Fig 6 — Cross-dataset regression: CTGAN gain vs log(positive rate)  [NEW]
-# ─────────────────────────────────────────────────────────────────────────────
-datasets_regression = {
-    "Telco Churn\n26.6%":    (0.266, 0.0021, benchmark_ci.get("telco_churn"), "auc"),
-    "Bank Mktg\n11.7%":      (0.117, None,   benchmark_ci.get("bank_marketing"), "auc"),
-    "German Credit\n30.0%":  (0.300, None,   benchmark_ci.get("credit_default"), "auc"),
-    "Nomao Lead\n28.3%":     (0.283, None,   benchmark_ci.get("nomao_lead"), "auc"),
-    "Hillstrom\n0.9%":       (0.009, None,   dh, "auc_roc"),
-    "Criteo\n0.2%":          (0.002, None,   dc, "auc_roc"),
-}
-
-reg_x, reg_y, reg_labels = [], [], []
-for label, (pos, _, df, col) in datasets_regression.items():
-    if df is None: continue
-    base = df[df["method"]=="Baseline"][col].mean()
-    best = -99
-    for gen in ["CTGAN"]:
-        for alpha in ALPHAS:
-            vals = df[(df["method"]==gen)&(df["alpha"]==alpha)][col].values
-            if len(vals)==0: continue
-            m, _ = ci95(vals)
-            if m - base > best: best = m - base
-    if best > -99:
-        reg_x.append(np.log10(pos * 100))  # log10(positive rate %)
-        reg_y.append(best * 100)            # gain in pts
-        reg_labels.append(label)
-
-reg_x, reg_y = np.array(reg_x), np.array(reg_y)
-slope, intercept, r, p_val, _ = stats.linregress(reg_x, reg_y)
-x_line = np.linspace(min(reg_x)-0.1, max(reg_x)+0.1, 100)
-y_line = slope * x_line + intercept
-
-fig, ax = plt.subplots(figsize=(8, 6))
-scatter = ax.scatter(reg_x, reg_y, s=100, zorder=3,
-                     c=reg_y, cmap="RdYlGn", edgecolors="#333", linewidths=0.8)
-plt.colorbar(scatter, ax=ax, label="CTGAN gain (AUC pts)", shrink=0.8)
-ax.plot(x_line, y_line, "--", color="#333", linewidth=1.8,
-        label=f"Fit: slope={slope:.2f}, R²={r**2:.2f}, p={p_val:.4f}")
-_offsets = {"German Credit": (-10, 85), "Nomao Lead": (50, -28),
-            "Telco Churn": (60, 65), "Bank Mktg": (25, -40)}
-for xi, yi, lab in zip(reg_x, reg_y, reg_labels):
-    off = next((v for k, v in _offsets.items() if lab.startswith(k)), (8, 4))
-    ax.annotate(lab, xy=(xi, yi), xytext=off, textcoords="offset points",
-                fontsize=8.5, color="#333",
-                arrowprops=dict(arrowstyle="-", color="#999", lw=0.6) if lab.split("\n")[0] in _offsets else None)
-ax.set_xlabel("log₁₀(Positive rate %)", fontsize=12)
-ax.set_ylabel("Best CTGAN gain (AUC pts)", fontsize=12)
-ax.legend(fontsize=9)
-ax.grid(alpha=0.3)
-ax.axhline(0, color="#aaa", linewidth=0.8, linestyle=":")
-ax.invert_xaxis()  # more imbalanced (lower positive rate) on the right
-
-# Add positive-rate labels on top x-axis
-ax2 = ax.twiny()
-ax2.set_xlim(ax.get_xlim())
-tick_pos_rates = [30, 10, 1, 0.2]
-ax2.set_xticks([np.log10(p) for p in tick_pos_rates])
-ax2.set_xticklabels([f"{p}%" for p in tick_pos_rates], fontsize=9)
-ax2.set_xlabel("Positive rate (%)", fontsize=10)
-
-plt.tight_layout()
-plt.savefig(OUT / "fig6_regression_hypothesis.png", dpi=160, bbox_inches="tight")
-plt.close()
-print("Saved fig6_regression_hypothesis.png")
-
-# ─────────────────────────────────────────────────────────────────────────────
 # Fig 7 — TabDDPM vs CTGAN: N_iter=2k and N_iter=10k  [NEW]
 # ─────────────────────────────────────────────────────────────────────────────
 fig, axes = plt.subplots(1, 2, figsize=(14, 5.5))
 
 for ax, (ds_label, df_ci, df_tab2k, df_tab10k, pos) in zip(axes, [
     ("Hillstrom (0.9% positive)", dh, dth, dth10, "hillstrom"),
-    ("Criteo (0.2% positive)",    dc, dtc, dtc10, "criteo"),
+    ("Criteo (0.3% positive)",    dc, dtc, dtc10, "criteo"),
 ]):
     base_vals = df_ci[df_ci["method"]=="Baseline"]["auc_roc"].values
     bm, bh = ci95(base_vals)

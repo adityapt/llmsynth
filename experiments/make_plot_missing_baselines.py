@@ -24,18 +24,20 @@ def ci95(v):
     return float(np.mean(v)), se * stats.t.ppf(0.975, df=len(v) - 1)
 
 
-def best_gain(df, method, alpha_col="alpha"):
+def paired_gain(df, method, alpha):
+    """Seed-matched gain in AUC points with a t-based 95% CI of the paired differences."""
     base = df[df.method == "Baseline"].set_index("seed")["auc_roc"]
-    bm, _ = ci95(base.values)
+    g = df[(df.method == method) & (df["alpha"].astype(str) == str(alpha))].set_index("seed")["auc_roc"]
+    common = sorted(set(base.index) & set(g.index))
+    return ci95((g.loc[common] - base.loc[common]).values * 100)
+
+
+def best_gain(df, method, alpha_col="alpha"):
     best, best_h = -999, 0
     for alpha in df[df.method == method][alpha_col].unique():
-        vals = df[(df.method == method) & (df[alpha_col] == alpha)]["auc_roc"].values
-        if len(vals) == 0:
-            continue
-        m, h = ci95(vals)
-        gain = (m - bm) * 100
-        if gain > best:
-            best, best_h = gain, h * 100
+        m, h = paired_gain(df, method, alpha)
+        if m > best:
+            best, best_h = m, h
     return best, best_h
 
 
@@ -56,11 +58,8 @@ for ax, (label, ci_path, mb_path) in zip(axes, [
         g, h = best_gain(df_mb, m)
         methods.append((m, g, h))
     # RandomUnderSampler: single config, alpha column holds "1:1" string
-    base = df_mb[df_mb.method == "Baseline"]["auc_roc"].values
-    bm, _ = ci95(base)
-    ru = df_mb[df_mb.method == "RandomUnderSampler"]["auc_roc"].values
-    m, h = ci95(ru)
-    methods.append(("RandomUndersampler", (m - bm) * 100, h * 100))
+    m, h = paired_gain(df_mb, "RandomUnderSampler", "1:1")
+    methods.append(("RandomUndersampler", m, h))
 
     methods.sort(key=lambda x: x[1], reverse=True)
     names = [m[0] for m in methods]
