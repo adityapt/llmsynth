@@ -189,7 +189,7 @@ with an analogous multinomial diffusion process for categorical columns, and tra
 
 #### 2.4.1. Classification Utility
 
-The primary metric is AUC-ROC, which is threshold-independent and standard in the benchmark literature this paper compares against. Secondary metrics are Average Precision throughout and, for Hillstrom and Criteo only, Accuracy, Precision, Recall and F1 for the minority class at the classifier's default 0.5 threshold. These are computed for every method except GReaT, which is scoped out of the secondary-metric set for the reason given in Section 4.7. Threshold-based metrics are known to be less stable than AUC-ROC under extreme class imbalance with few minority holdout examples [3,35]. The primary downstream classifier is `GradientBoostingClassifier` [36] with `n_estimators=100` and `max_depth=4`, implemented in scikit-learn [37]. Hillstrom and Criteo additionally use Logistic Regression, Random Forest and a Multi-Layer Perceptron to verify that the findings are not classifier-specific.
+The primary metric is AUC-ROC, which is threshold-independent and standard in the benchmark literature this paper compares against. Secondary metrics are Average Precision throughout and, on every dataset except the sparse stress test, Accuracy, Precision, Recall and F1 for the minority class at the classifier's default 0.5 threshold. These are computed for every method that was run on each dataset except GReaT, which is scoped out of the secondary-metric set for the reason given in Section 4.7. Threshold-based metrics are known to be less stable than AUC-ROC under extreme class imbalance with few minority holdout examples [3,35]. The primary downstream classifier is `GradientBoostingClassifier` [36] with `n_estimators=100` and `max_depth=4`, implemented in scikit-learn [37]. Hillstrom and Criteo additionally use Logistic Regression, Random Forest and a Multi-Layer Perceptron to verify that the findings are not classifier-specific.
 
 #### 2.4.2. Synthetic Data Class Distribution as a Fidelity Proxy
 
@@ -316,7 +316,7 @@ We report paired t-tests with Benjamini-Hochberg FDR correction at q=0.10 over a
 
 **Threshold-based metrics diverge sharply by method (Table 5).** At the default 0.5 threshold, CTGAN, ADASYN, Borderline-SMOTE and GaussianCopula all collapse to F1=0 on Hillstrom, because the classifier never crosses the threshold into predicting the positive class at a 0.9% positive rate, while accuracy stays uselessly high at 98% to 99%. Random undersampling is the exception. It recovers 57% of positives on Hillstrom and 96% on Criteo, against 1% to 29% for every enrichment-based method, but precision collapses and accuracy falls to 51.1% on Hillstrom and 80.9% on Criteo. This is the expected effect of shifting the training-time class prior and not a defect. It is a genuinely different operating point that a practitioner needing high recall, with tolerance for human review, might prefer.
 
-**Table 5. Threshold-based metrics at the default 0.5 threshold, mean over 5 seeds. The best F1, precision and recall in each column are in bold.**
+**Table 5. Threshold-based metrics at the default 0.5 threshold on every dataset except the sparse stress test, mean over 5 seeds at the α that maximizes each method's mean AUC. The best F1, precision and recall in each column are in bold, with ties all in bold.**
 
 **Table 5a. Hillstrom.**
 
@@ -347,6 +347,45 @@ We report paired t-tests with Benjamini-Hochberg FDR correction at q=0.10 over a
 | TabDDPM (2k)* | 0.156 ± 0.181 | n/c | n/c | n/c |
 
 *Precision, recall and accuracy were not computed for TabDDPM (n/c). Its evaluation harness saved only AUC-ROC, F1 and Average Precision, and recomputing the rest requires a GPU rerun with `synthcity` that was not performed. This is a narrower gap than for GReaT (Section 4.7), because F1 and AP are measured values here and only the three additional breakdown metrics are missing. The Hillstrom F1 of 0.000 for TabDDPM matches the threshold-collapse pattern of the enrichment-based methods on this dataset. Its Criteo F1 of 0.156 sits below CTGAN at 0.214 and ADASYN at 0.225, consistent with its lower AUC gain in Table 4.*
+
+**Table 5c. Telco Churn.**
+
+| Method | F1 | Precision | Recall | Accuracy |
+|---|---|---|---|---|
+| Baseline | 0.574 | 0.650 | 0.513 | 79.7% |
+| CTGAN | 0.578 | **0.658** | 0.515 | 80.0% |
+| SMOTE | **0.591** | 0.613 | **0.571** | 79.0% |
+| GaussianCopula | 0.572 | 0.657 | 0.507 | 79.9% |
+
+**Table 5d. Bank Marketing.**
+
+| Method | F1 | Precision | Recall | Accuracy |
+|---|---|---|---|---|
+| Baseline | 0.498 | 0.631 | 0.412 | 90.3% |
+| CTGAN | 0.472 | 0.633 | 0.377 | 90.2% |
+| SMOTE | **0.558** | 0.578 | **0.539** | 90.0% |
+| GaussianCopula | 0.456 | **0.638** | 0.356 | 90.1% |
+
+**Table 5e. German Credit.**
+
+| Method | F1 | Precision | Recall | Accuracy |
+|---|---|---|---|---|
+| Baseline | 0.588 | 0.685 | 0.520 | 78.3% |
+| CTGAN | 0.559 | 0.695 | 0.470 | 77.9% |
+| SMOTE | **0.604** | 0.627 | **0.583** | 77.1% |
+| GaussianCopula | 0.587 | **0.699** | 0.507 | 78.6% |
+
+**Table 5f. Nomao.**
+
+| Method | F1 | Precision | Recall | Accuracy |
+|---|---|---|---|---|
+| Baseline | **0.926** | **0.936** | 0.916 | 95.8% |
+| CTGAN | **0.926** | 0.935 | 0.917 | 95.8% |
+| SMOTE | **0.926** | 0.924 | **0.929** | 95.8% |
+| GaussianCopula | 0.923 | 0.933 | 0.913 | 95.6% |
+
+Only the baseline, CTGAN, SMOTE and GaussianCopula were run on the four control datasets. ADASYN, Borderline-SMOTE, random undersampling, class weighting and TabDDPM were evaluated only on Hillstrom and Criteo. On the controls, SMOTE gives the highest recall and F1 on Telco, Bank Marketing and German Credit at the cost of precision, and all methods are close to indistinguishable on Nomao, whose baseline is near ceiling.
+
 
 **The dose-response curve tests whether the extreme-scarcity effect reflects minority count or dataset identity** by fixing total sample size and varying minority count alone. On Bank Marketing, gains are positive only at the lowest count tested, 16, where SMOTE gains +5.31 points with p=0.033. From count 64 onward they are significantly negative, down to −3.62 points with p<0.01 (Figure 11).
 
