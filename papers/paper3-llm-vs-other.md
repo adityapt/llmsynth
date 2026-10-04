@@ -11,7 +11,7 @@
 
 ## Abstract
 
-LLM-based tabular synthesizers, exemplified by GReaT (Borisov et al., 2023), represent the current frontier of synthetic data generation. The hypothesis underlying this line of work is that pre-trained language model priors — knowledge of how real-world concepts like income, age, and recency relate — improve synthetic sample quality, and that larger models with richer priors should yield better synthesis. We test this hypothesis directly. We evaluate the GReaT fine-tuning framework at two model scales — GPT-2 (117M parameters, 2019) and Mistral-7B (7B parameters, 2024, 60× larger) — against statistical generators (CTGAN, SMOTE, GaussianCopula) and a diffusion model (TabDDPM) across seven tabular classification datasets spanning balanced (30% positive rate) to extremely imbalanced (0.2% positive rate) conditions. Our findings are: (1) Mistral-7B provides only marginal and inconsistent improvement over GPT-2 in the GReaT framework; on anonymized features, both model scales hurt performance regardless of training size; (2) CTGAN outperforms both LLM scales on the extreme-imbalance marketing datasets — the regime where augmentation matters most — by 2–4 AUC points at best LLM performance; (3) the failure is architectural rather than a scale artifact: LLMs sample unconditionally from the learned joint distribution, producing predominantly majority-class rows under extreme imbalance, while CTGAN's conditional vector explicitly targets the minority class; (4) GReaT-fit variance — per-seed AUC drift of up to 12 percentage points on identical training data — is rooted in non-deterministic GPU reductions and is model-agnostic, calling into question published GReaT benchmark confidence intervals regardless of backbone scale. We conclude that scaling LLMs within the GReaT framework does not address its fundamental limitations, and that conditional generation remains the superior architectural choice for imbalanced tabular classification.
+LLM-based tabular synthesizers, exemplified by GReaT (Borisov et al., 2023), represent the current frontier of synthetic data generation. The hypothesis underlying this line of work is that pre-trained language model priors — knowledge of how real-world concepts like income, age, and recency relate — improve synthetic sample quality, and that larger models with richer priors should yield better synthesis. We test this hypothesis directly. We evaluate the GReaT fine-tuning framework at two model scales — GPT-2 (117M parameters, 2019) and Mistral-7B (7B parameters, 2024, 60× larger) — against statistical generators (CTGAN, SMOTE, GaussianCopula) and a diffusion model (TabDDPM) across seven tabular classification datasets spanning balanced (30% positive rate) to extremely imbalanced (0.3% positive rate) conditions. Our findings are: (1) Mistral-7B provides only marginal and inconsistent improvement over GPT-2 in the GReaT framework; on anonymized features, both model scales hurt performance regardless of training size; (2) CTGAN outperforms both LLM scales on the extreme-imbalance marketing datasets — the regime where augmentation matters most — by 2–4 AUC points at best LLM performance; (3) the failure is architectural rather than a scale artifact: LLMs sample unconditionally from the learned joint distribution, producing predominantly majority-class rows under extreme imbalance, while CTGAN's conditional vector explicitly targets the minority class; (4) GReaT-fit variance — per-seed AUC drift of up to 12 percentage points on identical training data — is rooted in non-deterministic GPU reductions and is model-agnostic, calling into question published GReaT benchmark confidence intervals regardless of backbone scale. We conclude that scaling LLMs within the GReaT framework does not address its fundamental limitations, and that conditional generation remains the superior architectural choice for imbalanced tabular classification.
 
 **Keywords:** tabular synthesis, LLM, GReaT, CTGAN, class imbalance, benchmark evaluation
 
@@ -29,11 +29,11 @@ We answer both questions with a controlled empirical study. We evaluate GReaT at
 
 1. **The first controlled GPT-2 vs Mistral-7B comparison within the GReaT framework**, across three datasets with varying feature semantics and class balance. Mistral-7B provides marginal improvement on semantic-feature datasets but fails on anonymized features and underperforms CTGAN in the imbalanced regime.
 
-2. **An architectural explanation for why LLM scale does not help under extreme imbalance.** LLMs sample unconditionally from the learned joint distribution: at 0.2% positive rate, unconditional sampling produces predominantly negative-class rows regardless of model quality. CTGAN's conditional vector is architecturally designed to overcome this; LLM scale is not.
+2. **An architectural explanation for why LLM scale does not help under extreme imbalance.** LLMs sample unconditionally from the learned joint distribution: at 0.3% positive rate, unconditional sampling produces predominantly negative-class rows regardless of model quality. CTGAN's conditional vector is architecturally designed to overcome this; LLM scale is not.
 
 3. **Documentation of GReaT-fit variance as a model-agnostic evaluation failure mode.** Two independent GReaT fits on identical training data produce per-seed AUC differences of up to 12 percentage points. This is rooted in non-deterministic GPU floating-point reductions and is independent of backbone model size, calling into question published confidence intervals for the entire GReaT family.
 
-4. **A benchmark of five synthesis approaches** (GaussianCopula, CTGAN, SMOTE, TabDDPM, GReaT) across seven datasets spanning 0.2%–30% positive rate, with multi-seed confidence intervals and multi-classifier robustness checks.
+4. **A benchmark of five synthesis approaches** (GaussianCopula, CTGAN, SMOTE, TabDDPM, GReaT) across seven datasets spanning 0.3%–30% positive rate, with multi-seed confidence intervals and multi-classifier robustness checks.
 
 ---
 
@@ -74,7 +74,7 @@ GReaT uses the `be-great` library with identical protocol for both backbones: sa
 
 ### 3.2 Datasets
 
-Seven publicly available classification datasets covering positive rates from 0.2% to 30%. The GReaT evaluation focuses on three datasets chosen to isolate two design axes: feature semantics (anonymized vs semantic) and class balance.
+Seven publicly available classification datasets covering positive rates from 0.3% to 30%. The GReaT evaluation focuses on three datasets chosen to isolate two design axes: feature semantics (anonymized vs semantic) and class balance.
 
 | Dataset | Positive rate | Features | GReaT hypothesis |
 |---|---|---|---|
@@ -116,15 +116,15 @@ Identical to Borisov et al. (2023): stratified small-n sampling at n ∈ {50, 10
 
 ### 4.2 LLM vs Statistical Generators: CTGAN Dominates the Imbalanced Regime
 
-On the extreme-imbalance marketing datasets (Hillstrom 0.9%, Criteo 0.2%), CTGAN and SMOTE deliver gains of +5.7 to +12.9 AUC points under 5-seed CI — 2–4× the best GReaT/Mistral-7B result on the same data. The CTGAN advantage holds across four downstream classifier families (GBC, LR, RF, MLP) and under the `class_weight='balanced'` baseline (+7.55 pts advantage over balanced reweighting on both datasets).
+On the extreme-imbalance marketing datasets (Hillstrom 0.9%, Criteo 0.3%), CTGAN and SMOTE deliver gains of +5.7 to +12.9 AUC points under 5-seed CI — 2–4× the best GReaT/Mistral-7B result on the same data. The CTGAN advantage holds across four downstream classifier families (GBC, LR, RF, MLP) and under the `class_weight='balanced'` baseline (+7.55 pts advantage over balanced reweighting on both datasets).
 
 TabDDPM, the strongest generator on general augmentation benchmarks (Davila et al., 2025), also underperforms CTGAN on the imbalanced marketing datasets at both default (N_iter=2k) and extended (N_iter=10k) training — confirming that the failure is not specific to LLM-based approaches but extends to any generator that samples unconditionally from the joint distribution.
 
 ### 4.3 The Architectural Explanation: Conditional vs Unconditional Sampling
 
-The consistent pattern — CTGAN wins in the extreme imbalance regime, LLMs and diffusion models do not — has a single architectural explanation. At 0.2% positive rate, the joint distribution consists of 99.8% negative-class rows. Any generator that samples unconditionally from the learned joint (LLMs, TabDDPM) will produce predominantly negative-class synthetic rows, providing no minority-class enrichment. CTGAN's conditional vector specifies the target class at sampling time, producing user-controlled class proportions regardless of base rate.
+The consistent pattern — CTGAN wins in the extreme imbalance regime, LLMs and diffusion models do not — has a single architectural explanation. At 0.3% positive rate, the joint distribution consists of 99.7% negative-class rows. Any generator that samples unconditionally from the learned joint (LLMs, TabDDPM) will produce predominantly negative-class synthetic rows, providing no minority-class enrichment. CTGAN's conditional vector specifies the target class at sampling time, producing user-controlled class proportions regardless of base rate.
 
-This explains why scale does not help for GReaT: a Mistral-7B model fine-tuned on a 0.2% positive-rate dataset will, when prompted unconditionally, generate rows that are ~99.8% negative class — regardless of how well it has learned the joint distribution. The conditioning problem is not a model quality problem; it is an architectural design problem.
+This explains why scale does not help for GReaT: a Mistral-7B model fine-tuned on a 0.3% positive-rate dataset will, when prompted unconditionally, generate rows that are ~99.7% negative class — regardless of how well it has learned the joint distribution. The conditioning problem is not a model quality problem; it is an architectural design problem.
 
 ### 4.4 GReaT-Fit Variance: A Model-Agnostic Evaluation Failure Mode
 

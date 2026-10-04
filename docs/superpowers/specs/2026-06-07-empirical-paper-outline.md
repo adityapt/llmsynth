@@ -47,7 +47,7 @@ Is class imbalance (positive rate < 5%) the primary — and sufficient — condi
 - No prior work has directly compared CTGAN vs TabDDPM on real marketing data with multi-seed CI
 
 **1.3 Our approach**
-- Controlled study: 7 datasets chosen to span 0.2%–30% positive rate
+- Controlled study: 7 datasets chosen to span 0.3%–30% positive rate
 - 5 generators including current SOTA diffusion model (TabDDPM)
 - Rigorous protocol: 5–10 seeds, α-sweep, multi-classifier verification
 
@@ -98,9 +98,9 @@ Is class imbalance (positive rate < 5%) the primary — and sufficient — condi
 | Nomao Lead (full) | 10,000 | 28.3% | Lead gen | OpenML id=1486 | Control |
 | Nomao Lead (sparse) | 500 | 28.3% | Lead gen | OpenML id=1486 | Sparsity stress test |
 | **Hillstrom Email** | **10,000** | **0.9%** | **Marketing** | MineThatData (2008) | **Treatment** |
-| **Criteo Display** | **10,000** | **0.2%** | **Advertising** | Criteo AI Lab (2018) | **Treatment** |
+| **Criteo Display** | **10,000** | **0.3%** | **Advertising** | Criteo AI Lab (2018) | **Treatment** |
 
-- Rationale: deliberately spans 0.2%–30% positive rate to test the imbalance hypothesis
+- Rationale: deliberately spans 0.3%–30% positive rate to test the imbalance hypothesis
 - Caps: CTGAN fit time scales with n; 10K cap defines the data-scarce imbalanced regime studied
 
 **3.2 Generators and hyperparameters**
@@ -239,7 +239,7 @@ Is class imbalance (positive rate < 5%) the primary — and sufficient — condi
 - This explains why gain is large and reliable under imbalance, negligible otherwise
 
 **5.2 Why CTGAN beats TabDDPM in this regime**
-- TabDDPM samples unconditionally from the learned joint — at 0.2% positive rate, most generated rows are negative class
+- TabDDPM samples unconditionally from the learned joint — at 0.3% positive rate, most generated rows are negative class
 - CTGAN's conditional vector explicitly targets the minority class during generation
 - This architectural difference explains the performance gap in extreme-imbalance even when TabDDPM dominates in balanced settings
 

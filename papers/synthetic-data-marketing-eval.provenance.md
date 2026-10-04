@@ -67,7 +67,7 @@ The paper cites **20 references**, listed below with verification status.
 | Nomao Lead (full) | 10,000 | Classification | 28.3% | OpenML id=1486 | §6.7 |
 | Nomao Lead (sparse, 70% missing) | 500 | Classification | 28.3% | OpenML id=1486 | §6.7 |
 | Hillstrom Email | 64,000 | Classification | 0.9% | MineThatData (2008) | §6.8; §6.6 (GReaT) |
-| Criteo Uplift | 13.9M (cap 10K) | Classification | 0.2% | Criteo AI Lab (2018) | §6.8 |
+| Criteo Uplift | 13.9M (cap 10K) | Classification | 0.3% | Criteo AI Lab (2018) | §6.8 |
 
 ### Methods evaluated
 

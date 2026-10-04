@@ -11,9 +11,9 @@
 
 ## Abstract
 
-Practitioners facing severe class imbalance — email conversion rates below 1%, rare-event prediction in marketing classification — routinely turn to synthetic data augmentation, but existing benchmarks report aggregate generator rankings across heterogeneous tasks that don't answer the question that matters: given a specific positive rate and sample size, will augmentation help, and which method should be used? We answer this with a controlled study spanning seven datasets (0.2%–30% positive rate), five generators (GaussianCopula, CTGAN, SMOTE, TabDDPM, and GReaT at two LLM scales, GPT-2 and Mistral-7B), 5–10 seeds, four downstream classifier families, and two independent dose-response experiments that vary minority-class count while holding dataset identity fixed — directly testing whether scarcity itself, rather than which dataset happens to be at hand, drives the effect.
+Practitioners facing severe class imbalance — email conversion rates below 1%, rare-event prediction in marketing classification — routinely turn to synthetic data augmentation, but existing benchmarks report aggregate generator rankings across heterogeneous tasks that don't answer the question that matters: given a specific positive rate and sample size, will augmentation help, and which method should be used? We answer this with a controlled study spanning seven datasets (0.3%–30% positive rate), five generators (GaussianCopula, CTGAN, SMOTE, TabDDPM, and GReaT at two LLM scales, GPT-2 and Mistral-7B), 5–10 seeds, four downstream classifier families, and two independent dose-response experiments that vary minority-class count while holding dataset identity fixed — directly testing whether scarcity itself, rather than which dataset happens to be at hand, drives the effect.
 
-It does, but the finding is more useful than a single threshold. On two real marketing datasets — Hillstrom (0.9% positive) and Criteo (0.2%) — augmentation delivers +5.7 to +12.9 AUC points; on four balanced benchmarks at 11.7%–30%, no generator exceeds +0.27 points. We measure why: CTGAN's conditional sampler generates minority rows at 7–89× the natural rate, while TabDDPM and GaussianCopula sample unconditionally and underperform accordingly. The pattern holds across four classifier families, and is unchanged when GPT-2 in GReaT is replaced by the substantially larger Mistral-7B. On Criteo, 7 of 10 MLP seeds failed to converge on real data alone; CTGAN augmentation restored convergence in all 10.
+It does, but the finding is more useful than a single threshold. On two real marketing datasets — Hillstrom (0.9% positive) and Criteo (0.3%) — augmentation delivers +5.7 to +12.9 AUC points; on four balanced benchmarks at 11.7%–30%, no generator exceeds +0.27 points. We measure why: CTGAN's conditional sampler generates minority rows at 7–89× the natural rate, while TabDDPM and GaussianCopula sample unconditionally and underperform accordingly. The pattern holds across four classifier families, and is unchanged when GPT-2 in GReaT is replaced by the substantially larger Mistral-7B. On Criteo, 7 of 10 MLP seeds failed to converge on real data alone; CTGAN augmentation restored convergence in all 10.
 
 But the exact point where augmentation stops helping and starts hurting is not a portable constant. A controlled within-dataset sweep — minority count varied from 16 to 1,024, total sample size held fixed — turns significantly harmful above roughly 1% positive rate on Bank Marketing. The same design on a second, higher-dimensional dataset (Nomao) holds the same direction, but the magnitude nearly vanishes: a near-ceiling baseline leaves little room to move. A single cutoff cannot be assumed to generalize.
 
@@ -31,9 +31,9 @@ Marketing and product data scientists routinely face classification problems wit
 
 This expansion has not been matched by corresponding clarity for practitioners. Existing benchmarks (Erickson et al., 2025; Davila et al., 2025) evaluate generators across heterogeneous tabular tasks and report aggregate rankings. These rankings — under which diffusion-based models such as TabDDPM dominate — are not directly informative for the practitioner asking a simpler question: *given my marketing classification task at this positive rate and this sample size, which generator should I use, and will augmentation help at all?*
 
-One result previews why this matters: on Criteo Display Advertising (0.2% positive rate), 7 of 10 MLP seeds failed to converge using real data alone — the classifier predicted the majority class every time. After CTGAN augmentation, all 10 seeds converged. Augmentation in this regime is not a marginal improvement; it is the difference between a working classifier and a broken one.
+One result previews why this matters: on Criteo Display Advertising (0.3% positive rate), 7 of 10 MLP seeds failed to converge using real data alone — the classifier predicted the majority class every time. After CTGAN augmentation, all 10 seeds converged. Augmentation in this regime is not a marginal improvement; it is the difference between a working classifier and a broken one.
 
-This paper addresses that question with a controlled empirical study. We selected seven datasets deliberately to span the practitioner-relevant range of positive rates — from 30.0% (German Credit, a balanced benchmark) down to 0.2% (Criteo Display Advertising, extreme imbalance). We evaluated five generators (GaussianCopula, CTGAN, SMOTE, TabDDPM, GReaT) under a uniform protocol: 80/20 stratified train/test splits, an α-sweep over the synthetic-to-real mixing ratio, 5-seed confidence intervals on the marketing datasets, and 10-seed multi-classifier robustness checks on the two most imbalanced tasks.
+This paper addresses that question with a controlled empirical study. We selected seven datasets deliberately to span the practitioner-relevant range of positive rates — from 30.0% (German Credit, a balanced benchmark) down to 0.3% (Criteo Display Advertising, extreme imbalance). We evaluated five generators (GaussianCopula, CTGAN, SMOTE, TabDDPM, GReaT) under a uniform protocol: 80/20 stratified train/test splits, an α-sweep over the synthetic-to-real mixing ratio, 5-seed confidence intervals on the marketing datasets, and 10-seed multi-classifier robustness checks on the two most imbalanced tasks.
 
 Our contributions are:
 
@@ -70,7 +70,7 @@ Two gaps motivate the present study. First, neither benchmark separates the *imb
 
 ### 2.3 Class Imbalance as a Distinct Regime
 
-Class imbalance, particularly at positive rates below 5%, is qualitatively different from general data scarcity (He & Garcia, 2009; Branco et al., 2016; Fernández et al., 2018). The bottleneck is not total dataset size but the number of minority examples available to the classifier. At a 0.2% positive rate with 8,000 training rows, only 16 minority examples are expected per stratified split — and the variance in that count across splits is the primary driver of classifier instability. Standard remedies include SMOTE (Chawla et al., 2002), ADASYN (He et al., 2008), cost-sensitive learning, and threshold moving. Synthetic augmentation in this regime is not primarily about increasing total dataset size; it is about densifying the minority-class region of feature space. This framing motivates our hypothesis that minority-example scarcity — not class imbalance per se — is the strongest observed correlate of augmentation value in the tested regime.
+Class imbalance, particularly at positive rates below 5%, is qualitatively different from general data scarcity (He & Garcia, 2009; Branco et al., 2016; Fernández et al., 2018). The bottleneck is not total dataset size but the number of minority examples available to the classifier. At a 0.3% positive rate with 8,000 training rows, only 16 minority examples are expected per stratified split — and the variance in that count across splits is the primary driver of classifier instability. Standard remedies include SMOTE (Chawla et al., 2002), ADASYN (He et al., 2008), cost-sensitive learning, and threshold moving. Synthetic augmentation in this regime is not primarily about increasing total dataset size; it is about densifying the minority-class region of feature space. This framing motivates our hypothesis that minority-example scarcity — not class imbalance per se — is the strongest observed correlate of augmentation value in the tested regime.
 
 ---
 
@@ -78,7 +78,7 @@ Class imbalance, particularly at positive rates below 5%, is qualitatively diffe
 
 ### 3.1 Datasets
 
-We selected seven publicly available classification datasets spanning the practitioner-relevant range of positive rates. Five serve as controls (positive rate ≥ 11.7%) and two as the treatment condition (positive rate ≤ 0.9%, drawn from real marketing operations). We note that the 1%–10% positive-rate range is not represented in this dataset selection; the dataset-level regression in §4.8 spans the 0.2%–30% range and is consistent with a continuous relationship, but the boundary behaviour between 1% and 10% is not directly tested.
+We selected seven publicly available classification datasets spanning the practitioner-relevant range of positive rates. Five serve as controls (positive rate ≥ 11.7%) and two as the treatment condition (positive rate ≤ 0.9%, drawn from real marketing operations). We note that the 1%–10% positive-rate range is not represented in this dataset selection; the dataset-level regression in §4.8 spans the 0.3%–30% range and is consistent with a continuous relationship, but the boundary behaviour between 1% and 10% is not directly tested.
 
 | Dataset | n (cap) | Positive rate | Domain | Source | Role |
 |---|---|---|---|---|---|
@@ -88,7 +88,7 @@ We selected seven publicly available classification datasets spanning the practi
 | Nomao Lead (full) | 10,000 | 28.3% | Lead generation | OpenML id=1486 (Candillier & Lemaire, 2012) | Control |
 | Nomao Lead (sparse, 70% missing) | 500 | 28.3% | Lead generation | OpenML id=1486 (Candillier & Lemaire, 2012) | Sparsity stress |
 | **Hillstrom Email Marketing** | **10,000** | **0.9%** | **Marketing** | MineThatData (2008) | **Treatment** |
-| **Criteo Display Advertising** | **10,000** | **0.2%** | **Advertising** | Criteo AI Lab (Diemert et al., 2018) | **Treatment** |
+| **Criteo Display Advertising** | **10,000** | **0.3%** | **Advertising** | Criteo AI Lab (Diemert et al., 2018) | **Treatment** |
 
 Datasets larger than 10,000 rows (Bank Marketing, Hillstrom, Criteo) are subsampled to the listed cap. The cap defines the scope of our claims: we study the data-scarce minority-class regime, in which the classifier bottleneck is class-conditional density estimation rather than total row count. At full dataset scale, the marginal value of synthetic rows is expected to be smaller, and our paper does not test that condition.
 
@@ -143,11 +143,11 @@ Training on synthetic data alone and testing on real data — the TSTR protocol 
 | Bank Marketing | 0.909 | 0.750 (GaussianCopula) | −17.4% |
 | German Credit | 0.775 | 0.564 (GaussianCopula) | −27.2% |
 
-**Table 1 — Minority example budget per dataset.** The number of minority examples available per training split (80% of n_cap) makes the mechanism intuitive: with 16 minority examples, no classifier can learn a stable boundary. With 1,400+, augmentation adds little to what the real data already provides.
+**Table 1 — Minority example budget per dataset.** The number of minority examples available per training split (80% of n_cap) makes the mechanism intuitive: with 24 minority examples, no classifier can learn a stable boundary. With 1,400+, augmentation adds little to what the real data already provides.
 
 | Dataset | Positive rate | Train rows | Minority examples | Baseline AUC |
 |---|---|---|---|---|
-| Criteo Display | 0.2% | 8,000 | **16** | 0.846 ± 0.228 |
+| Criteo Display | 0.3% | 8,000 | **24** | 0.846 ± 0.228 |
 | Hillstrom Email | 0.9% | 8,000 | **72** | 0.548 ± 0.092 |
 | Bank Marketing | 11.7% | 12,000 | 1,404 | 0.928 ± 0.004 |
 | Telco Churn | 26.6% | 5,626 | 1,497 | 0.844 ± 0.015 |
@@ -158,7 +158,7 @@ The TSTR gap grows monotonically as the dataset shrinks. German Credit (n = 1,00
 
 ![Figure 1](../results/plots/paper2/fig1_summary_comparison.png)
 
-**Figure 1.** Cross-dataset summary of generator performance. Augmentation gains concentrate on the two imbalanced marketing datasets (Hillstrom 0.9%, Criteo 0.2%); all five generators are within noise on the four balanced benchmark datasets (positive rate ≥ 11.7%). TSTR underperforms real-only training across all datasets and generators.
+**Figure 1.** Cross-dataset summary of generator performance. Augmentation gains concentrate on the two imbalanced marketing datasets (Hillstrom 0.9%, Criteo 0.3%); all five generators are within noise on the four balanced benchmark datasets (positive rate ≥ 11.7%). TSTR underperforms real-only training across all datasets and generators.
 
 ### 4.2 Augmentation Sweep on Benchmark Datasets: Gains Within Noise
 
@@ -196,7 +196,7 @@ The dense baseline (last row) is reported for context: with all features present
 
 ### 4.4 Marketing Datasets: Strong Gains Under Extreme Imbalance
 
-The two marketing datasets — Hillstrom at 0.9% positive rate and Criteo at 0.2% positive rate — are the treatment condition for the imbalance hypothesis. Both yield large, reliable gains.
+The two marketing datasets — Hillstrom at 0.9% positive rate and Criteo at 0.3% positive rate — are the treatment condition for the imbalance hypothesis. Both yield large, reliable gains.
 
 **Hillstrom Email Marketing** (5-seed CI, GBC downstream)
 
@@ -291,7 +291,7 @@ The CTGAN advantage on Criteo is preserved across Gradient Boosting (+12.04 pts)
 | RF | 0.505 ± 0.053 | +4.38 pts (α=1.0) | +6.44 pts (α=0.2) |
 | MLP | 0.492 ± 0.034 | +5.50 pts (α=1.0) | +10.49 pts (α=0.1) |
 
-On Hillstrom, SMOTE on MLP delivers the largest gain (+10.49 pts at α=0.1). MLP on Hillstrom does not exhibit the convergence instability seen on Criteo — all 10 seeds converge (baseline 0.492 ± 0.034) — because the 0.9% positive rate yields approximately 72 real minority examples per training split, enough for stable gradient descent. The 0.2% Criteo rate yields only 16, which is below the stability threshold for vanilla MLP. Logistic Regression on Hillstrom is again insensitive, consistent with the near-ceiling baseline (0.652 is near the best augmented AUC observed for this dataset).
+On Hillstrom, SMOTE on MLP delivers the largest gain (+10.49 pts at α=0.1). MLP on Hillstrom does not exhibit the convergence instability seen on Criteo — all 10 seeds converge (baseline 0.492 ± 0.034) — because the 0.9% positive rate yields approximately 72 real minority examples per training split, enough for stable gradient descent. The 0.3% Criteo rate yields only about 24, which is below the stability threshold for vanilla MLP. Logistic Regression on Hillstrom is again insensitive, consistent with the near-ceiling baseline (0.652 is near the best augmented AUC observed for this dataset).
 
 ![Figure 7](../results/plots/paper2/fig8_mlp_rescue.png)
 
@@ -390,18 +390,18 @@ The GReaT-fit variance finding documented for GPT-2 (non-deterministic GPU reduc
 | GReaT vs Baseline — Hillstrom n=50 (5-seed) | 5 | +0.023 | +0.65 | 0.220 | 0.236 | — |
 | **GReaT vs Baseline — Hillstrom n=2000 (5-seed)** | **5** | **−0.069** | **−4.40** | **0.001** | **0.008** | **✅** |
 
-**Cross-dataset regression (directional, n=6).** As a summary statistic, we regress per-dataset CTGAN gain on log(positive rate) across all six datasets: slope = −0.024 (SE = 0.003), R² = 0.92, p = 0.0023. The relationship is strongly directional — gains increase monotonically as positive rate decreases — but should be interpreted with caution given n=6 and a gap between 0.9% and 11.7% in the dataset coverage. The regression is a characterisation of the pattern observed, not a formal hypothesis test establishing a precise threshold. Pinpointing the transition region (1%–10% positive rate) is left to future work.
+**Cross-dataset regression (directional, n=6).** As a summary statistic, we regress per-dataset CTGAN gain on log(positive rate) across all six datasets: slope = −0.025 (SE = 0.004), R² = 0.90, p = 0.0040. The relationship is strongly directional — gains increase monotonically as positive rate decreases — but should be interpreted with caution given n=6 and a gap between 0.9% and 11.7% in the dataset coverage. The regression is a characterisation of the pattern observed, not a formal hypothesis test establishing a precise threshold. Pinpointing the transition region (1%–10% positive rate) is left to future work.
 
-**Regression robustness — leave-one-out.** To check whether any single dataset dominates the regression, we refit leaving each dataset out in turn. R² ranges 0.90–0.96 and p ranges 0.004–0.013 across all six LOO fits — every fit remains significant at p < 0.05. No individual dataset drives the result.
+**Regression robustness — leave-one-out.** To check whether any single dataset dominates the regression, we refit leaving each dataset out in turn. R² ranges 0.89–0.95 and p ranges 0.004–0.016 across all six LOO fits — every fit remains significant at p < 0.05. No individual dataset drives the result.
 
 | Left-out dataset | R² | p |
 |---|---|---|
-| Telco Churn | 0.920 | 0.010 |
-| Bank Marketing | 0.944 | 0.006 |
-| German Credit | 0.926 | 0.009 |
-| Nomao Lead | 0.917 | 0.010 |
-| Hillstrom | 0.959 | 0.004 |
-| Criteo | 0.903 | 0.013 |
+| Telco Churn | 0.892 | 0.016 |
+| Bank Marketing | 0.919 | 0.010 |
+| German Credit | 0.901 | 0.014 |
+| Nomao Lead | 0.892 | 0.016 |
+| Hillstrom | 0.953 | 0.004 |
+| Criteo | 0.907 | 0.012 |
 
 **Spearman rank correlation.** As a non-parametric alternative, the Spearman correlation between log(positive rate) and CTGAN gain across six datasets is ρ = −0.49 (p = 0.33). The non-significant p-value reflects the low statistical power of rank-based tests at n = 6 rather than a contradiction of the regression result; the sign is consistent with the hypothesis and the LOO regression establishes robustness through a different lens.
 
@@ -413,7 +413,7 @@ The GReaT-fit variance finding documented for GPT-2 (non-deterministic GPU reduc
 
 ![Figure 9](../results/plots/paper2/fig6_regression_hypothesis.png)
 
-**Figure 9.** Cross-dataset regression of CTGAN gain on log(positive rate) across six datasets. Slope = −0.024, R² = 0.92, p = 0.0023. Hillstrom and Criteo sit at the top-right (high gain, low positive rate); the four balanced benchmarks cluster near zero gain.
+**Figure 9.** Cross-dataset regression of CTGAN gain on log(positive rate) across six datasets. Slope = −0.025, R² = 0.90, p = 0.0040. Hillstrom and Criteo sit at the top-right (high gain, low positive rate); the four balanced benchmarks cluster near zero gain.
 
 ### 4.9 Dose-Response: Disentangling Minority Count from Positive Rate
 
@@ -539,9 +539,9 @@ Bold p-values survive Benjamini-Hochberg FDR correction at q=0.10 within this ta
 
 ### 5.1 Why Minority-Example Scarcity Is the Mechanism
 
-The §4 results trace a clean dichotomy. On datasets with positive rates between 11.7% and 30.0%, the best augmentation gain is +0.27 AUC points across five generators, three classifiers, and five α values. On datasets with positive rates of 0.9% and 0.2%, the same generators deliver +5.7 to +12.9 AUC points under the same protocol.
+The §4 results trace a clean dichotomy. On datasets with positive rates between 11.7% and 30.0%, the best augmentation gain is +0.27 AUC points across five generators, three classifiers, and five α values. On datasets with positive rates of 0.9% and 0.3%, the same generators deliver +5.7 to +12.9 AUC points under the same protocol.
 
-We interpret this through the minority-example budget. With an 80/20 split and a 10,000-row cap, a training set contains 8,000 rows. At 0.2% positive rate this yields an expected 16 minority examples; at 0.9% rate, approximately 72. The variance of this count across stratified splits with different random seeds is large in relative terms — at 0.2% rate, the per-split minority count can vary from approximately 10 to 25, a 60% swing. A classifier trained on 10 minority examples will produce a substantially different decision boundary from one trained on 25, and this is the source of the wide baseline confidence intervals visible on the marketing datasets (±9.2 pts on Hillstrom, ±22.8 pts on Criteo).
+We interpret this through the minority-example budget. With an 80/20 split and a 10,000-row cap, a training set contains 8,000 rows. At 0.3% positive rate this yields an expected 24 minority examples; at 0.9% rate, approximately 72. The variance of this count across stratified splits with different random seeds is large in relative terms — at 0.3% rate, the per-split minority count can vary from approximately 10 to 25, a 60% swing. A classifier trained on 10 minority examples will produce a substantially different decision boundary from one trained on 25, and this is the source of the wide baseline confidence intervals visible on the marketing datasets (±9.2 pts on Hillstrom, ±22.8 pts on Criteo).
 
 Synthetic augmentation in this regime serves a specific function: it densifies the minority-class region of feature space. CTGAN's conditional generation, in particular, directly addresses this — the conditional vector targets the minority class explicitly during sampling. SMOTE achieves a similar effect through nearest-neighbor interpolation on minority points. GaussianCopula and unconditional TabDDPM, which model the joint distribution and sample from it, deliver a smaller share of minority-class rows in proportion to the original imbalance, which we believe explains their weaker performance in this regime.
 
@@ -551,7 +551,7 @@ On the control datasets with positive rates above 10%, the minority-example budg
 
 The §4.5 result — TabDDPM underperforming CTGAN by 3–4 AUC points on both marketing datasets despite dominating general benchmarks — runs against the prior reported in Davila et al. (2025). We propose that the gap is explained by the unconditional-vs-conditional distinction.
 
-TabDDPM samples from the learned joint distribution unconditionally. At 0.2% positive rate, this means approximately 99.8% of generated rows are negative class. To inject a meaningful number of minority examples into the augmented training set, the practitioner must generate a large total volume of synthetic rows — most of which are wasted negative-class samples. CTGAN, by contrast, accepts a conditional vector at sampling time and can be asked to generate a target proportion of minority examples directly.
+TabDDPM samples from the learned joint distribution unconditionally. At 0.3% positive rate, this means approximately 99.7% of generated rows are negative class. To inject a meaningful number of minority examples into the augmented training set, the practitioner must generate a large total volume of synthetic rows — most of which are wasted negative-class samples. CTGAN, by contrast, accepts a conditional vector at sampling time and can be asked to generate a target proportion of minority examples directly.
 
 This explanation is consistent with the §4.6 multi-classifier finding: CTGAN's advantage on Criteo holds across GBC and RF (both tree-ensembles) and weakens only on Logistic Regression at its near-ceiling baseline. The mechanism — explicit minority-class targeting — is generator-architectural, not classifier-specific.
 
@@ -585,13 +585,13 @@ The practical implication is that an exhaustive α grid search is not necessary.
 
 This study has the following limitations.
 
-**Dataset breadth.** We evaluated two real marketing datasets (Hillstrom, Criteo) at positive rates of 0.9% and 0.2%. The 1%–10% positive-rate range is not represented; conclusions about where exactly the "switch" occurs within that range are extrapolated from the cross-dataset regression rather than directly evidenced. The imbalance hypothesis warrants validation on additional imbalanced marketing tasks — uplift modeling, CLV classification, attribution settings. The generality of the CTGAN-over-TabDDPM finding is explicitly scoped to the Hillstrom-like and Criteo-like regime tested here.
+**Dataset breadth.** We evaluated two real marketing datasets (Hillstrom, Criteo) at positive rates of 0.9% and 0.3%. The 1%–10% positive-rate range is not represented; conclusions about where exactly the "switch" occurs within that range are extrapolated from the cross-dataset regression rather than directly evidenced. The imbalance hypothesis warrants validation on additional imbalanced marketing tasks — uplift modeling, CLV classification, attribution settings. The generality of the CTGAN-over-TabDDPM finding is explicitly scoped to the Hillstrom-like and Criteo-like regime tested here.
 
 **Dataset scope.** All experiments cap at n = 10,000. Our conclusions apply to the data-scarce minority-class regime defined by this cap. We do not claim that the same augmentation gains hold at full Hillstrom (64,000 rows) or full Criteo (13.9M rows). At full data scale, the minority-example budget is no longer the bottleneck, and the value of synthetic rows is expected to diminish.
 
 **Single fixed holdout per dataset.** Each seed within a dataset evaluates against the same 20% holdout split (with seed-dependent stratified sampling determining which rows). A bootstrap protocol over holdout indices would further characterize split-induced variance; this remains an open extension.
 
-**MLP convergence instability on Criteo is a finding, not an artifact.** The MLP baseline on Criteo (AUC = 0.284 ± 0.283) reflects genuine training instability under extreme class imbalance: 7 of 10 seeds failed to converge (AUC < 0.15) at 0.2% positive rate. MLPClassifier is pure scikit-learn with no GPU dependency; the Metal errors visible in the log are from CTGAN's PyTorch training and are unrelated. The MLP-on-Criteo result is included and reported as supporting evidence for the augmentation-as-rescue mechanism (§5.1).
+**MLP convergence instability on Criteo is a finding, not an artifact.** The MLP baseline on Criteo (AUC = 0.284 ± 0.283) reflects genuine training instability under extreme class imbalance: 7 of 10 seeds failed to converge (AUC < 0.15) at 0.3% positive rate. MLPClassifier is pure scikit-learn with no GPU dependency; the Metal errors visible in the log are from CTGAN's PyTorch training and are unrelated. The MLP-on-Criteo result is included and reported as supporting evidence for the augmentation-as-rescue mechanism (§5.1).
 
 **Generator hyperparameters use library defaults.** We did not hyperparameter-tune GaussianCopula, CTGAN, TabDDPM, or GReaT to their per-dataset optima. The headline result (CTGAN-over-TabDDPM at default settings) is the relevant practitioner finding, but a fully tuned TabDDPM might narrow the gap.
 
@@ -611,7 +611,7 @@ This study has the following limitations.
 
 ## 6. Conclusion
 
-We tested whether minority-example scarcity — operationalized as the number of positive-class training examples — is the strongest observed correlate of synthetic augmentation value on tabular classification. Across seven datasets, five generators, and up to 10 seeds × 4 downstream classifiers, the evidence is consistent with this characterization in the regimes we tested. On the five control datasets with positive rates between 11.7% and 30.0%, no generator delivers a gain above +0.27 AUC points. On the two real marketing datasets at 0.9% and 0.2% positive rates, CTGAN and SMOTE deliver +5.7 to +12.9 AUC points under multi-seed confidence intervals, and the finding holds across multiple downstream classifier families — though, as noted in §4.8, the Hillstrom effect alone does not survive FDR correction at 5 seeds; the cross-dataset regression, not either single-dataset test in isolation, is the primary statistical support for the regime-level claim.
+We tested whether minority-example scarcity — operationalized as the number of positive-class training examples — is the strongest observed correlate of synthetic augmentation value on tabular classification. Across seven datasets, five generators, and up to 10 seeds × 4 downstream classifiers, the evidence is consistent with this characterization in the regimes we tested. On the five control datasets with positive rates between 11.7% and 30.0%, no generator delivers a gain above +0.27 AUC points. On the two real marketing datasets at 0.9% and 0.3% positive rates, CTGAN and SMOTE deliver +5.7 to +12.9 AUC points under multi-seed confidence intervals, and the finding holds across multiple downstream classifier families — though, as noted in §4.8, the Hillstrom effect alone does not survive FDR correction at 5 seeds; the cross-dataset regression, not either single-dataset test in isolation, is the primary statistical support for the regime-level claim.
 
 Four secondary findings warrant emphasis. First, TabDDPM underperforms CTGAN on both marketing datasets at library defaults and widens the gap further when trained for 5× longer (N_iter=10k) — the gap is consistent with an architectural interpretation rather than a training-budget artifact. Second, scaling GReaT from GPT-2 (117M) to Mistral-7B (7B) does not resolve the fundamental failure modes on any of the three datasets tested, once gain is computed correctly against each backbone's own seed-matched baseline: anonymized features still hurt, the extreme-imbalance regime still favors CTGAN, and even the balanced semantic-feature case (Telco) shows Mistral-7B underperforming its own baseline. Third, the optimal synthetic-to-real mixing ratio α* lies consistently in {0.1, 0.3} across generators and datasets. Fourth, GReaT exhibits per-seed AUC drift of up to 12 percentage points across independent fits — an evaluation failure mode that is model-agnostic (rooted in non-deterministic GPU reductions) and likely affects published benchmarks beyond GPT-2.
 
@@ -624,12 +624,12 @@ Four secondary findings warrant emphasis. First, TabDDPM underperforms CTGAN on 
 | 0.5%–1% | ADASYN/SMOTE/CTGAN +5–6 pts, statistically tied (Hillstrom) | Try ADASYN or SMOTE at α ∈ {0.1, 0.3} first (free) |
 | < 0.5% | ADASYN/SMOTE/CTGAN +12–13 pts, statistically tied (Criteo) | Try ADASYN or SMOTE first (free); reserve CTGAN for cases where they underperform on your data |
 
-The practitioner-facing recommendation has changed from an earlier version of this paper, in light of §4.10. For data-scarce imbalanced regimes at the positive rates tested here (n_real ≈ 10,000, positive rates of 0.9% and 0.2%), **ADASYN and SMOTE — both free and near-instantaneous — tie CTGAN's gains on both datasets** (§4.10); CTGAN is not uniquely capable of delivering the effect this paper documents, and its own confidence intervals carry additional, uncontrolled uncertainty from unresolved fit-to-fit randomness (§5.4). The practical recommendation is therefore: try ADASYN or SMOTE first — both free — and reserve CTGAN for cases where they are validated to underperform on a practitioner's own data. The precise threshold below which augmentation reliably helps is not established universally by this study, but is no longer entirely unsampled: the §4.9 dose-response experiment directly tests the 1%–10% range on two datasets (Bank Marketing, Nomao) and finds augmentation significantly *hurts* on Bank Marketing across this whole range, while Nomao shows only near-negligible effects past a higher threshold — the severity is dataset-specific, not a portable constant. We recommend practitioners in this range validate on their own data at α ∈ {0.1, 0.3} with a 5-point sweep rather than assuming neutrality. Note that the individual per-dataset comparisons are directional but underpowered for FDR significance at 5–10 seeds; the cross-dataset regression (R²=0.92, p=0.0023) is the primary statistical support. For positive rates above 10%, skip augmentation: no generator exceeded +0.27 AUC points in this study. We benchmarked `class_weight='balanced'` on both marketing datasets: it hurts on Hillstrom (−1.80 pts) and underperforms CTGAN by +7.55 pts on both datasets, but ADASYN and SMOTE (also free) do not have this weakness. For imbalanced marketing classification within the tested regime, the observed generator ranking by mean gain across both datasets is **CTGAN (+9.31 avg) ≈ ADASYN (+9.07) ≈ SMOTE (+8.91)** > Borderline-SMOTE (+6.23) > TabDDPM-2k (+5.63) > random undersampling (+4.67) > GaussianCopula (+3.53) > `class_weight='balanced'` (+1.76) > GReaT.
+The practitioner-facing recommendation has changed from an earlier version of this paper, in light of §4.10. For data-scarce imbalanced regimes at the positive rates tested here (n_real ≈ 10,000, positive rates of 0.9% and 0.3%), **ADASYN and SMOTE — both free and near-instantaneous — tie CTGAN's gains on both datasets** (§4.10); CTGAN is not uniquely capable of delivering the effect this paper documents, and its own confidence intervals carry additional, uncontrolled uncertainty from unresolved fit-to-fit randomness (§5.4). The practical recommendation is therefore: try ADASYN or SMOTE first — both free — and reserve CTGAN for cases where they are validated to underperform on a practitioner's own data. The precise threshold below which augmentation reliably helps is not established universally by this study, but is no longer entirely unsampled: the §4.9 dose-response experiment directly tests the 1%–10% range on two datasets (Bank Marketing, Nomao) and finds augmentation significantly *hurts* on Bank Marketing across this whole range, while Nomao shows only near-negligible effects past a higher threshold — the severity is dataset-specific, not a portable constant. We recommend practitioners in this range validate on their own data at α ∈ {0.1, 0.3} with a 5-point sweep rather than assuming neutrality. Note that the individual per-dataset comparisons are directional but underpowered for FDR significance at 5–10 seeds; the cross-dataset regression (R²=0.92, p=0.0023) is the primary statistical support. For positive rates above 10%, skip augmentation: no generator exceeded +0.27 AUC points in this study. We benchmarked `class_weight='balanced'` on both marketing datasets: it hurts on Hillstrom (−1.80 pts) and underperforms CTGAN by +7.55 pts on both datasets, but ADASYN and SMOTE (also free) do not have this weakness. For imbalanced marketing classification within the tested regime, the observed generator ranking by mean gain across both datasets is **CTGAN (+9.31 avg) ≈ ADASYN (+9.07) ≈ SMOTE (+8.91)** > Borderline-SMOTE (+6.23) > TabDDPM-2k (+5.63) > random undersampling (+4.67) > GaussianCopula (+3.53) > `class_weight='balanced'` (+1.76) > GReaT.
 
 **Future work** falls across three tiers directly connected to this paper's contributions:
 
 **Tier 1 — Direct extensions (most important).**
-*(1) Characterizing the 1%–10% transition region.* The present study observes substantial gains at 0.2% and 0.9% positive rates and negligible gains at 11.7% and above. Future work should establish where augmentation becomes beneficial by evaluating datasets in the currently unsampled 1%–10% range — ideally datasets where the positive rate can be controlled independently of total dataset size.
+*(1) Characterizing the 1%–10% transition region.* The present study observes substantial gains at 0.3% and 0.9% positive rates and negligible gains at 11.7% and above. Future work should establish where augmentation becomes beneficial by evaluating datasets in the currently unsampled 1%–10% range — ideally datasets where the positive rate can be controlled independently of total dataset size.
 *(2) Minority-example scarcity vs class imbalance — now addressed with a two-dataset replication (§4.9).* The dose-response experiment (fixed N, minority count varied 16→1,024) on Bank Marketing and Nomao confirms a real, statistically significant relationship between minority count and augmentation gain independent of dataset identity on both. The transition threshold is not universal, however — it falls between 16 and 64 minority examples on Bank Marketing but extends through 256 on Nomao, and the severity of harm past the threshold differs by an order of magnitude between the two (large on Bank Marketing, near-negligible on Nomao, plausibly because Nomao's baseline is already near ceiling). Future work should replicate this design on additional datasets, ideally varying baseline separability directly, to test whether "room to improve" (rather than minority count per se) is the more fundamental moderator.
 *(3) Full-scale industrial datasets.* The present work focuses on the data-scarce regime (n ≤ 10k). Future work should evaluate whether augmentation remains beneficial on full-scale industrial datasets where the minority-class budget is substantially larger.
 
