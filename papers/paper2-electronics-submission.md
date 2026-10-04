@@ -84,9 +84,9 @@ An 80/20 stratified train/test split is used for all main experiments. For the G
 
 #### 2.2.5. Synthetic Data Generation Protocol
 
-**Notation.** Let $D = (X, y)$ denote a labeled dataset with $y \in \{0,1\}$, $N = |D|$ the total row count, and $m = \sum_i y_i$ the minority (positive-class) count, so the positive rate is $\pi = m/N$. For a generator $G_\theta$ fit on training split $D_{tr}$, let $S \sim G_\theta(\cdot \mid D_{tr}, n_{syn})$ denote $n_{syn}$ synthetic rows sampled from the fitted generator. The augmented training set at mixing ratio $\alpha$ is
+**Notation.** Let $D = (X, y)$ denote a labeled dataset with $y \in \lbrace 0,1 \rbrace$, $N = |D|$ the total row count, and $m = \sum_i y_i$ the minority (positive-class) count, so the positive rate is $\pi = m/N$. For a generator $G_\theta$ fit on training split $D_{tr}$, let $S \sim G_\theta(\cdot \mid D_{tr}, n_{syn})$ denote $n_{syn}$ synthetic rows sampled from the fitted generator. The augmented training set at mixing ratio $\alpha$ is
 
-$$D_{tr}^{(\alpha)} = D_{tr} \cup S, \qquad n_{syn} = \lfloor \alpha \cdot |D_{tr}| \rfloor, \qquad \alpha \in \{0.1, 0.2, 0.3, 0.5, 1.0\}.$$
+$$D_{tr}^{(\alpha)} = D_{tr} \cup S, \qquad n_{syn} = \lfloor \alpha \cdot |D_{tr}| \rfloor, \qquad \alpha \in \lbrace 0.1, 0.2, 0.3, 0.5, 1.0 \rbrace.$$
 
 For a classifier $f$ trained on $D_{tr}^{(\alpha)}$ and evaluated on a fixed real holdout $D_{ho}$, the **gain** of generator $G$ at $\alpha$, seed $s$, is
 
@@ -96,13 +96,13 @@ Each gain is therefore measured against the same seed's own real-only baseline, 
 
 **Enrichment ratio.** Let $\hat\pi_{syn}(G) = \tfrac{1}{n_{syn}}\sum_{j} \mathbb{1}[S_j \text{ is positive-class}]$ be the measured positive rate within a generator's own synthetic output at $\alpha=1$ (Table 2). The enrichment ratio
 
-$$\rho(G) = \hat\pi_{syn}(G) \,/\, \pi$$
+$$\rho(G) = \hat\pi_{syn}(G) \ /\  \pi$$
 
 is the core mechanism statistic of this paper. It is close to 1 for the unconditional samplers (GaussianCopula, TabDDPM and GReaT), which reproduce the training distribution's own rate, while for CTGAN it lies between 7 and 89 across the two marketing datasets (Table 2). It is a directly measured quantity rather than one inferred from downstream performance.
 
 For each (dataset, generator, seed) triple we generate synthetic rows at α ∈ {0.1, 0.2, 0.3, 0.5, 1.0}. GaussianCopula and CTGAN are refit independently at each α, with no fit-once-and-subsample caching in this implementation. SMOTE, ADASYN and Borderline-SMOTE are called again at each α because they have no separate fit step. TabDDPM fits once at the largest α and subsamples for smaller values, and GReaT fits once per (n, seed).
 
-**Dose-response design.** To separate minority-class count $m$ from dataset identity, we fix $N=10{,}000$ and vary only $m \in \{16, 64, 256, 512, 1{,}024\}$, equivalent to $\pi \in \{0.16\%, 0.64\%, 2.56\%, 5.12\%, 10.24\%\}$. We use two datasets chosen for headroom beyond their capped versions in Table 1. Bank Marketing has a full source of 45,211 rows and 5,289 positives. Nomao has a full source of 34,465 rows and 9,844 positives, and was chosen additionally for its different domain and higher dimensionality, 119 features against 17. GaussianCopula, CTGAN and SMOTE are evaluated at each level. TabDDPM and GReaT are excluded from this sweep to keep it CPU-only. Algorithm 1 gives the full procedure.
+**Dose-response design.** To separate minority-class count $m$ from dataset identity, we fix $N=10{,}000$ and vary only $m \in \lbrace 16, 64, 256, 512, 1{,}024 \rbrace$, which corresponds to positive rates of 0.16%, 0.64%, 2.56%, 5.12% and 10.24%. We use two datasets chosen for headroom beyond their capped versions in Table 1. Bank Marketing has a full source of 45,211 rows and 5,289 positives. Nomao has a full source of 34,465 rows and 9,844 positives, and was chosen additionally for its different domain and higher dimensionality, 119 features against 17. GaussianCopula, CTGAN and SMOTE are evaluated at each level. TabDDPM and GReaT are excluded from this sweep to keep it CPU-only. Algorithm 1 gives the full procedure.
 
 **Algorithm 1: Minority-Count Dose-Response Sweep**
 
@@ -153,7 +153,7 @@ $$x_{new} = x_i + \lambda \cdot (x_{nn} - x_i), \qquad \lambda \sim \mathcal{U}(
 
 It has no separate fit step and operates only on the minority class. **ADASYN** [26] extends this by weighting each minority example $x_i$ by the local density of majority neighbors,
 
-$$r_i = \frac{1}{k}\Big|\{x_j \in kNN(x_i) : y_j = 0\}\Big|, \qquad \hat{r}_i = r_i \,\Big/\, \sum_{i'} r_{i'},$$
+$$r_i = \frac{1}{k}\Big|\lbrace x_j \in kNN(x_i) : y_j = 0 \rbrace\Big|, \qquad \hat{r}_i = r_i \ \Big/\  \sum_{i'} r_{i'},$$
 
 then generates $g_i = \mathrm{round}(\hat{r}_i \cdot n_{syn})$ synthetic points at $x_i$ using the same interpolation rule as SMOTE, so examples in harder-to-learn regions, those surrounded by more majority examples, receive proportionally more synthetic neighbors. **Borderline-SMOTE** [27] applies the identical interpolation formula but restricts the base points $x_i$ to minority examples classified as "in danger", meaning a majority of their $k$ nearest neighbors belong to the majority class. All three are free, needing no GPU and no training step beyond nearest-neighbor search, and are evaluated at the same α sweep as the deep generative methods.
 
@@ -169,7 +169,7 @@ where $\Phi_\Sigma$ is the multivariate Gaussian CDF with correlation matrix $\S
 
 **CTGAN** [29] is a conditional generative adversarial network [30] trained with the standard minimax objective
 
-$$\min_G \max_D\; \mathbb{E}_{x \sim p_{data}}\big[\log D(x \mid c)\big] + \mathbb{E}_{z \sim p_z}\big[\log\big(1 - D(G(z, c) \mid c)\big)\big],$$
+$$\min_G \max_D\  \mathbb{E}_{x \sim p_{data}}\big[\log D(x \mid c)\big] + \mathbb{E}_{z \sim p_z}\big[\log\big(1 - D(G(z, c) \mid c)\big)\big],$$
 
 The conditional vector $c$ encodes a target discrete-column value drawn during training by training-by-sampling. At each step, $c$ is drawn with log-frequency weighting across that column's categories rather than at their natural empirical frequency, so the generator learns to condition on the minority class and can be asked to target it at inference time. GaussianCopula and the unconditional formulation of TabDDPM lack this mechanism. It produces the 7 to 89 times minority-class enrichment that we measure directly (Table 2) rather than infer from downstream performance alone.
 
@@ -177,7 +177,7 @@ The conditional vector $c$ encodes a target discrete-column value drawn during t
 
 **TabDDPM** [31,32] applies a Gaussian forward diffusion process [33] to continuous features,
 
-$$q(x_t \mid x_{t-1}) = \mathcal{N}\big(x_t;\ \sqrt{1-\beta_t}\, x_{t-1},\ \beta_t I\big),$$
+$$q(x_t \mid x_{t-1}) = \mathcal{N}\big(x_t;\ \sqrt{1-\beta_t}\  x_{t-1},\ \beta_t I\big),$$
 
 with an analogous multinomial diffusion process for categorical columns, and trains a network $\epsilon_\theta$ to reverse it. Sampling proceeds by iterative denoising from $x_T \sim \mathcal{N}(0, I)$ back to $x_0$. TabDDPM is reported as the strongest single-table generator on general augmentation benchmarks [15], but its reverse process samples unconditionally over the joint feature-label distribution. No class-conditioning term enters the objective of $\epsilon_\theta$, which is the same structural limitation as GaussianCopula through a different generative mechanism. **GReaT** [34] serializes each tabular row as a natural-language string and fine-tunes a pretrained causal language model, GPT-2 with 117M parameters or Mistral-7B with 7B parameters, using the standard autoregressive objective $\mathcal{L} = -\sum_t \log p_\theta(w_t \mid w_{<t})$ over the serialized token sequence. Its sampling is likewise unconditional on the label unless explicitly prompted, and the default `guided_sampling` configuration used here does not enforce class-balanced generation.
 
@@ -469,7 +469,7 @@ $$P = \frac{TP}{TP+FP}, \qquad R = \frac{TP}{TP+FN}, \qquad \mathrm{Acc} = \frac
 
 $$\mathrm{AUC} = \Pr(\hat{y}_i > \hat{y}_j \mid y_i = 1,\ y_j = 0).$$
 
-**Average Precision (AP)** is the area under the precision-recall curve, $\mathrm{AP} = \sum_k (R_k - R_{k-1})\, P_k$, summed over the ranking-induced sequence of thresholds $k$. $F_1$ is a single-threshold quantity while AP is threshold-aggregated, so the two are not interchangeable (Section 3.6). Neither can be recovered algebraically from the other or from AUC alone. The $F_1$ score has two degrees of freedom, $P$ and $R$, whereas AUC and AP each supply only one aggregate constraint across all thresholds and not a value at the specific 0.5 cut point.
+**Average Precision (AP)** is the area under the precision-recall curve, $\mathrm{AP} = \sum_k (R_k - R_{k-1})\  P_k$, summed over the ranking-induced sequence of thresholds $k$. $F_1$ is a single-threshold quantity while AP is threshold-aggregated, so the two are not interchangeable (Section 3.6). Neither can be recovered algebraically from the other or from AUC alone. The $F_1$ score has two degrees of freedom, $P$ and $R$, whereas AUC and AP each supply only one aggregate constraint across all thresholds and not a value at the specific 0.5 cut point.
 
 **Cohen's $d_z$** (paired-samples effect size): for per-seed differences $\delta_s = \Delta_G(\alpha, s)$ across seeds $s=1,\dots,k$,
 
