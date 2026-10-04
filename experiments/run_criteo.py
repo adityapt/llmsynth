@@ -2,7 +2,7 @@
 Criteo Uplift Modeling Dataset — synthetic data augmentation experiment.
 
 Real display advertising campaign data from Criteo (2014).
-~13.9M rows; treatment/control split; target = conversion (~2.9% positive).
+~13.9M rows; treatment/control split; target = conversion (~0.3% positive; 0.298% measured in the loaded pool).
 Severe class imbalance, real-world ad click/conversion signal.
 
 We cap to N_CAP rows for tractability and predict conversion propensity
@@ -30,9 +30,10 @@ ALPHAS = [0.1, 0.2, 0.3, 0.5, 1.0]
 #   (~days per fit); GReaT fine-tuning at this scale is infeasible too. 10K is
 #   what the full experimental matrix (multiple generators × seeds × alphas)
 #   permits on the available GPU budget.
-# - Information: at 0.2% positive rate, 10K rows ≈ 20 minority examples. This is
-#   already the most extreme imbalance setting in the paper. Scaling to 100K
-#   would give 200 positives — more, but still in the rare-event regime where
+# - Information: at the measured ~0.3% positive rate (0.298% in the loaded pool),
+#   10K rows ≈ 30 minority examples, about 24 in an 8,000-row training split.
+#   This is already the most extreme imbalance setting in the paper. Scaling to
+#   100K would give ~300 positives — more, but still in the rare-event regime where
 #   the dynamics of imbalanced classification are unchanged. The cap preserves
 #   the regime of interest while keeping compute feasible.
 # - Scope: same as Hillstrom — we study the imbalanced-minority data-scarcity

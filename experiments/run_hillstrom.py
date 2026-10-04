@@ -32,7 +32,7 @@ ALPHAS = [0.1, 0.2, 0.3, 0.5, 1.0]
 # - Scope: we study the data-scarcity / imbalanced-minority regime where augmentation
 #   plausibly helps. Practitioners facing new campaigns or cold-start segments rarely
 #   have 64K labeled rows. We do NOT claim augmentation helps at full-data scale.
-# - Cross-dataset consistency: matches Criteo (also 10K, 0.2% positive) for §6.8
+# - Cross-dataset consistency: matches Criteo (also 10K, ~0.3% positive) for §6.8
 #   apples-to-apples comparison along the imbalance axis.
 N_CAP = 10000
 

@@ -18,7 +18,7 @@ Core CI experiments use **5-seed cross-validation** (seeds 42, 123, 7, 2024, 999
 - `run_nomao_sparse.py` — Nomao with 70% simulated missingness + small n=500
 - `run_kdd_appetency.py` — KDD Cup 2009 Appetency (natural CRM sparsity, 70% missing) *(script only; not used in the paper — no result files generated)*
 - `run_hillstrom.py` — Hillstrom Email Marketing (GaussianCopula/CTGAN/SMOTE, real campaign data, 0.9% conversion)
-- `run_criteo.py` — Criteo Uplift Display Advertising (real ad data, 0.2% conversion)
+- `run_criteo.py` — Criteo Uplift Display Advertising (real ad data, 0.3% conversion)
 - `run_confidence_intervals.py` — 5-seed CI protocol for Hillstrom + Criteo (GBC downstream, §6.8 core results)
 - `run_ci_multi_classifier.py` — Extended 10-seed CI with 4 downstream classifiers (GBC, LR, RF, MLP); classifier-robustness check for §6.8 findings
 - `run_great_databricks.py` — GReaT (GPT-2) on German Credit, designed for Databricks GPU cluster
@@ -52,7 +52,7 @@ Core CI experiments use **5-seed cross-validation** (seeds 42, 123, 7, 2024, 999
 | Nomao Lead (full) | 10,000 | Classification | 28.3% | OpenML id=1486 |
 | Nomao Lead (sparse, 70% missing) | 500 | Classification | 28.3% | OpenML id=1486 |
 | Hillstrom Email | 64,000 (cap 10K) | Classification | 0.9% | MineThatData (2008) |
-| Criteo Uplift | 13.9M (cap 10K) | Classification | 0.2% | Criteo AI Lab (2018) |
+| Criteo Uplift | 13.9M (cap 10K) | Classification | 0.3% | Criteo AI Lab (2018) |
 
 ## Methods
 
@@ -88,7 +88,7 @@ Results are 5-seed mean ± 95% CI unless noted. Gains are AUC-ROC points (absolu
 | Nomao Lead | 28.3% | −0.06 pts | — | — | Skip it |
 | Nomao Sparse (70% missing) | 28.3% | +0.5 pts (noise) | — | — | No |
 | **Hillstrom Email** | **0.9%** | **+5.7 pts** | **+5.8 pts** | **+1.4 pts** | **Strong yes (CTGAN/SMOTE); TabDDPM marginal** |
-| **Criteo Display Ads** | **0.2%** | **+12.9 pts** | **+12.0 pts** | **+9.9 pts** | **Strong yes; CTGAN > TabDDPM > SMOTE** |
+| **Criteo Display Ads** | **0.3%** | **+12.9 pts** | **+12.0 pts** | **+9.9 pts** | **Strong yes; CTGAN > TabDDPM > SMOTE** |
 
 **Multi-classifier robustness (10 seeds, Hillstrom + Criteo):** CTGAN's Criteo advantage holds across GBC (+12.0 pts) and RF (+9.6 pts). LR is near ceiling on Criteo (baseline 0.963) and insensitive to augmentation. Findings are not GBC-specific.
 
