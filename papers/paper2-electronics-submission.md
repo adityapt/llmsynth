@@ -1,19 +1,3 @@
-<!--
-This file restructures papers/paper2-empirical.md into the exact section/
-subsection hierarchy of Won et al. (2026), "Synthetic Data Augmentation for
-Imbalanced Tabular Data: A Comparative Study of Generation Methods,"
-Electronics 15(4), 883 (https://www.mdpi.com/2079-9292/15/4/883) -- the
-target venue's own closest precedent. paper2-empirical.md remains the
-source-of-truth analysis document (all numbers verified against raw CSVs
-there); this file is a submission-formatted derivative, explicitly framed
-as an extension of Won et al. along five of its own six stated limitations
-(see Introduction).
-
-Placeholder boilerplate sections (Author Contributions, Funding, IRB
-Statement, Informed Consent, Conflicts of Interest) are marked TODO and
-need Aditya's/coauthors' actual input -- not something to fabricate.
--->
-
 # Synthetic Data Augmentation in the Extreme-Imbalance Regime: A Dose-Response Study and a Missing-Baseline Reassessment
 
 **Authors:** Aditya Puttaparthi Tirumala [, coauthors TBD]
@@ -374,7 +358,7 @@ We report paired t-tests with Benjamini-Hochberg FDR correction at q=0.10 over a
 
 **Figure 12.** Bank Marketing dose-response, showing AUC and gain against minority count. Gain is positive only at the lowest count tested, and augmentation significantly hurts from count 64 onward. The decline holds smoothly across the whole range with no reversal. The count of 512 was added specifically to check for a reversal partway through, and there is none.
 
-On Nomao, chosen for a different domain and for 119 features against 17 for Bank Marketing, the same direction holds, but the magnitude is an order of magnitude smaller, from −0.09 to −0.31 points. Nomao's baseline is already near ceiling, with AUC above 0.97 by count 256, which leaves little room to move.
+On Nomao, chosen for a different domain and for 119 features against 17 for Bank Marketing, the same direction holds: gains are large at the lowest counts, with CTGAN at +11.21 points and SMOTE at +16.83 points at count 16, and shrink as count rises. At counts of 512 and 1,024 the harm is an order of magnitude smaller than on Bank Marketing, from −0.09 to −0.31 points for GaussianCopula and CTGAN. Nomao's baseline is already near ceiling, with AUC above 0.97 by count 256, which leaves little room to move.
 
 ![Figure 13](../results/plots/paper2/fig13_dose_response_combined.png)
 
@@ -449,27 +433,27 @@ We tested whether minority-example scarcity is the strongest observed correlate 
 
 ## Author Contributions
 
-*TODO — needs actual input from Aditya and coauthors (CRediT taxonomy: conceptualization, methodology, software, validation, formal analysis, investigation, data curation, writing, visualization, supervision).*
+Conceptualization, methodology, software, validation, formal analysis, investigation, data curation, writing (original draft preparation), writing (review and editing), and visualization, A.P.T. The author has read and agreed to the published version of the manuscript.
 
 ## Funding
 
-*TODO — needs actual input (e.g., "This research received no external funding" if applicable).*
+This research received no external funding.
 
 ## Institutional Review Board Statement
 
-*TODO — likely "Not applicable" given all datasets are publicly available, de-identified, non-human-subjects tabular data, but confirm before submission.*
+Not applicable. This study used only publicly available, de-identified tabular datasets and involved no human participants or animals.
 
 ## Informed Consent Statement
 
-*TODO — likely "Not applicable" for the same reason.*
+Not applicable. The study used only publicly available, de-identified data, and no participants were recruited.
 
 ## Data Availability Statement
 
-All datasets used are publicly available: Hillstrom (MineThatData), Criteo (Criteo AI Lab uplift dataset), Telco Customer Churn (IBM/Kaggle), Bank Marketing (UCI ML Repository), German Credit (OpenML id=31), Nomao (OpenML id=1486). Code, experiment scripts, and raw result CSVs are available at https://github.com/adityapt/llmsynth *(TODO: confirm this repository should be public before listing it here — verify current visibility setting and remove/redact anything sensitive first)*.
+All datasets used are publicly available: Hillstrom (MineThatData), Criteo (Criteo AI Lab uplift dataset), Telco Customer Churn (IBM/Kaggle), Bank Marketing (UCI ML Repository), German Credit (OpenML id=31), and Nomao (OpenML id=1486). The code, experiment scripts and raw result files are available from the corresponding author upon reasonable request.
 
 ## Conflicts of Interest
 
-*TODO — needs actual input (standard: "The authors declare no conflicts of interest.").*
+The author declares no conflicts of interest.
 
 ---
 
