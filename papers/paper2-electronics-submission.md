@@ -92,7 +92,7 @@ For a classifier $f$ trained on $D_{tr}^{(\alpha)}$ and evaluated on a fixed rea
 
 $$\Delta_G(\alpha, s) = \mathrm{AUC}\big(f_{D_{tr}^{(\alpha)}, s},\ D_{ho}\big) - \mathrm{AUC}\big(f_{D_{tr}, s},\ D_{ho}\big),$$
 
-Each gain is therefore measured against the same seed's own real-only baseline, never a blended or cross-seed baseline. We report $\bar\Delta_G(\alpha) = \tfrac{1}{|S|}\sum_{s \in S} \Delta_G(\alpha, s)$ with a t-distribution 95% CI across seeds $S$, and take $\alpha^\* = \arg\max_\alpha \bar\Delta_G(\alpha)$ as the reported best-$\alpha$ gain.
+Each gain is therefore measured against the same seed's own real-only baseline, never a blended or cross-seed baseline. We report $\bar\Delta_G(\alpha) = \tfrac{1}{|S|}\sum_{s \in S} \Delta_G(\alpha, s)$ with a t-distribution 95% CI across seeds $S$, and take $\alpha^{\ast} = \arg\max_\alpha \bar\Delta_G(\alpha)$ as the reported best-$\alpha$ gain.
 
 **Enrichment ratio.** Let $\hat\pi_{syn}(G) = \tfrac{1}{n_{syn}}\sum_{j} \mathbb{1}[S_j \text{ is positive-class}]$ be the measured positive rate within a generator's own synthetic output at $\alpha=1$ (Table 2). The enrichment ratio
 
