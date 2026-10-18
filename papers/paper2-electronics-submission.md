@@ -1,6 +1,12 @@
 # Synthetic Data Augmentation in the Extreme-Imbalance Regime: A Dose-Response Study and a Missing-Baseline Reassessment
 
-**Authors:** Aditya Puttaparthi Tirumala [two coauthors, names to be added]
+**Authors:** Aditya Puttaparthi Tirumala ¹, Meghasyam Tummalacherla ² and Varun Varma Sangaraju ³
+
+¹ [Affiliation to be added]  
+² [Affiliation to be added]  
+³ Independent Researcher and Senior Engineer, USA
+
+**Corresponding author:** [to be confirmed]
 
 ## Abstract
 
