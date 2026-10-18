@@ -16,7 +16,7 @@ Marketing and product data scientists routinely face classification problems wit
 
 This expansion has not brought matching clarity for practitioners. Existing benchmarks [14–16] evaluate generators across heterogeneous tabular tasks and report aggregate rankings that do not answer the practitioner's actual question: given my classification task at this positive rate and this sample size, which generator should I use, and will augmentation help at all?
 
-This paper extends the broader benchmark literature, including the closest study at the target venue. Won et al. [17], published in Electronics, compare SMOTE, GaussianCopula, TVAE and CTGAN on a single banking dataset, UCI Bank Marketing with a 7.88:1 imbalance, across statistical fidelity and machine learning utility, and report a weak negative correlation between the two. Their Limitations section (§5.6) identifies six gaps, and this paper addresses five of them through dataset breadth, generator coverage, and dose-response methodology. It does not extend their fidelity axis. The multi-dimensional fidelity battery they center on, covering marginal similarity, correlation preservation and KS tests, asks whether statistical realism predicts downstream utility. We ask a different question: under what conditions does augmentation help, and why? We measure one targeted fidelity quantity that bears directly on that question (Section 2.4.2) and state the omission in Section 4.7 rather than leave it unexplained.
+This paper extends the broader benchmark literature, including the closest study at the target venue. Won et al. [17], published in Electronics, compare SMOTE, GaussianCopula, TVAE and CTGAN on a single banking dataset, UCI Bank Marketing with a 7.88:1 imbalance, across statistical fidelity and machine learning utility, and report a weak negative correlation between the two. Their Limitations section (§5.6) identifies six gaps, and this paper addresses five of them through dataset breadth, generator coverage, and dose-response methodology. It does not extend their fidelity axis. The multi-dimensional fidelity battery they center on, covering marginal similarity, correlation preservation and KS tests, asks whether statistical realism predicts downstream utility. We ask a different question: under what conditions does augmentation help, and why? We measure one targeted fidelity quantity that bears directly on that question (Section 2.4.2) and explain the omission in Section 4.7.
 
 The five gaps addressed are as follows.
 
@@ -30,7 +30,7 @@ The sixth gap, hyperparameter optimization for deep generative models, is a genu
 
 One result previews why the practitioner-facing question matters. On Criteo Display Advertising at a 0.3% positive rate, 7 of 10 MLP seeds failed to converge on real data alone and predicted the majority class every time. After CTGAN augmentation, all 10 seeds converged. In this regime augmentation is the difference between a working classifier and a broken one.
 
-This paper does not propose a new generative method. The regularity it confirms is that resampling delivers value under absolute minority-class rarity rather than relative imbalance, which is consistent with the imbalanced-learning literature dating to the early 2000s. Its contribution is the same kind that Won et al. [17] claim: a systematic, integrated comparison at a scale and with a rigor not previously available for this practitioner question. It adds two findings that neither Won et al. nor the broader benchmark literature provide, a controlled separation of minority count from dataset identity and a missing-baseline check that overturns the assumption that a more sophisticated generator should win.
+This paper does not propose a new generative method. The regularity it confirms is that resampling helps when minority examples are absolutely rare, whatever the relative imbalance, which is consistent with the imbalanced-learning literature dating to the early 2000s. Its contribution is the same kind that Won et al. [17] claim: a systematic, integrated comparison at a scale and with a rigor not previously available for this practitioner question. It adds two findings that neither Won et al. nor the broader benchmark literature provide, a controlled separation of minority count from dataset identity and a missing-baseline check that overturns the assumption that a more sophisticated generator should win.
 
 Our contributions are:
 
@@ -38,7 +38,7 @@ Our contributions are:
 2. A controlled dose-response design that separates minority-class count from dataset identity. To our knowledge it is the first within-dataset test of this question. It is replicated on two datasets with different domains and dimensionality and answers the call in Won et al. [17] for a range of imbalance ratios.
 3. A missing-baseline check that changes the practical recommendation. ADASYN and SMOTE, both free, statistically tie CTGAN on both marketing datasets.
 4. A disclosed reliability finding. CTGAN's fit-to-fit randomness is uncontrolled in the standard SDV implementation and produces AUC swings comparable to the headline effect sizes, a limitation we believe has not been reported before.
-5. A direct TabDDPM versus CTGAN comparison at two training budgets. Extended training widens the gap, which points to an architectural explanation (unconditional versus conditional sampling) rather than undertraining.
+5. A direct TabDDPM versus CTGAN comparison at two training budgets. Extended training widens the gap, which points to an architectural explanation (unconditional versus conditional sampling) and argues against undertraining.
 
 Section 2 describes datasets, experimental setup, generator implementations, and evaluation metrics. Section 3 reports results. Section 4 discusses mechanism, fidelity-utility trade-offs, and practical implications. Section 5 concludes.
 
@@ -98,7 +98,7 @@ Each gain is therefore measured against the same seed's own real-only baseline, 
 
 $$\rho(G) = \hat\pi_{syn}(G) \ /\  \pi$$
 
-is the core mechanism statistic of this paper. It is close to 1 for the unconditional samplers (GaussianCopula, TabDDPM and GReaT), which reproduce the training distribution's own rate, while for CTGAN it lies between 7 and 89 across the two marketing datasets (Table 2). It is a directly measured quantity rather than one inferred from downstream performance.
+is the core mechanism statistic of this paper. It is close to 1 for the unconditional samplers (GaussianCopula, TabDDPM and GReaT), which reproduce the training distribution's own rate, while for CTGAN it lies between 7 and 89 across the two marketing datasets (Table 2). It is measured directly from the generated rows.
 
 For each (dataset, generator, seed) triple we generate synthetic rows at α ∈ {0.1, 0.2, 0.3, 0.5, 1.0}. GaussianCopula and CTGAN are refit independently at each α, with no fit-once-and-subsample caching in this implementation. SMOTE, ADASYN and Borderline-SMOTE are called again at each α because they have no separate fit step. TabDDPM fits once at the largest α and subsamples for smaller values, and GReaT fits once per (n, seed).
 
@@ -171,7 +171,7 @@ where $\Phi_\Sigma$ is the multivariate Gaussian CDF with correlation matrix $\S
 
 $$\min_G \max_D\  \mathbb{E}_{x \sim p_{data}}\big[\log D(x \mid c)\big] + \mathbb{E}_{z \sim p_z}\big[\log\big(1 - D(G(z, c) \mid c)\big)\big],$$
 
-The conditional vector $c$ encodes a target discrete-column value drawn during training by training-by-sampling. At each step, $c$ is drawn with log-frequency weighting across that column's categories rather than at their natural empirical frequency, so the generator learns to condition on the minority class and can be asked to target it at inference time. GaussianCopula and the unconditional formulation of TabDDPM lack this mechanism. It produces the 7 to 89 times minority-class enrichment that we measure directly (Table 2) rather than infer from downstream performance alone.
+The conditional vector $c$ encodes a target discrete-column value drawn during training by training-by-sampling. At each step, $c$ is drawn with log-frequency weighting across that column's categories rather than at their natural empirical frequency, so the generator learns to condition on the minority class and can be asked to target it at inference time. GaussianCopula and the unconditional formulation of TabDDPM lack this mechanism. It produces the 7 to 89 times minority-class enrichment that we measure directly in Table 2.
 
 #### 2.3.4. TabDDPM and GReaT
 
@@ -201,7 +201,7 @@ We do not run a full multi-dimensional statistical fidelity battery of the kind 
 
 ### 3.1. Synthetic-Only Training Underperforms Real Data (TSTR)
 
-Training on synthetic data alone and testing on real data (TSTR) gives the cleanest measure of how faithfully a generator captures the joint distribution. Across three benchmark datasets, every generator's TSTR AUC falls materially below the real-data baseline. Even for GaussianCopula, the closest generator, the shortfall relative to baseline is 4.1% on Telco, 17.4% on Bank Marketing and 27.2% on German Credit. The gap grows as the dataset shrinks and no generator closes it. Synthetic data works as an augmentation method, not a replacement.
+Training on synthetic data alone and testing on real data (TSTR) gives the cleanest measure of how faithfully a generator captures the joint distribution. Across three benchmark datasets, every generator's TSTR AUC falls materially below the real-data baseline. Even for GaussianCopula, the closest generator, the shortfall relative to baseline is 4.1% on Telco, 17.4% on Bank Marketing and 27.2% on German Credit. The gap grows as the dataset shrinks and no generator closes it. Synthetic data can augment real data but cannot replace it.
 
 ### 3.2. Class Distribution After Augmentation
 
@@ -254,7 +254,7 @@ Three comparisons are FDR-significant, but every one is tiny in absolute terms, 
 
 ![Figure 4](../results/plots/paper2/fig4_lowdata_regime.png)
 
-**Figure 4.** Low-data regime: AUC against real training set size for the benchmark datasets. Augmentation recovers 30% to 60% of the performance gap at n=250 and the benefit narrows rapidly by n≥1,000. This is a second, independent line of evidence that augmentation value depends on how much real minority-class data is available and is not a fixed property of the generator.
+**Figure 4.** Low-data regime: AUC against real training set size for the benchmark datasets. Augmentation recovers 30% to 60% of the performance gap at n=250 and the benefit narrows rapidly by n≥1,000. This is a second, independent line of evidence that augmentation value depends on how much real minority-class data is available, whichever generator is used.
 
 **Marketing datasets with extreme imbalance.** On Hillstrom the baseline is 0.548 ± 0.092, CTGAN reaches 0.605 ± 0.073, a gain of 5.75 points, and SMOTE reaches 0.606 ± 0.087, a gain of 5.84 points. On Criteo the baseline is 0.846 ± 0.228, CTGAN reaches 0.974 ± 0.036, a gain of 12.87 points, and SMOTE reaches 0.966 ± 0.026, a gain of 11.99 points. Augmented confidence intervals are substantially narrower than the baseline, so synthetic augmentation under extreme imbalance stabilizes learning as well as improving its mean (Figure 5).
 
@@ -314,7 +314,7 @@ We report paired t-tests with Benjamini-Hochberg FDR correction at q=0.10 over a
 
 ### 3.6. Precision-Recall Trade-Off and the Dose-Response Curve
 
-**Threshold-based metrics diverge sharply by method (Table 5).** At the default 0.5 threshold, CTGAN, ADASYN, Borderline-SMOTE and GaussianCopula all collapse to F1=0 on Hillstrom, because the classifier never crosses the threshold into predicting the positive class at a 0.9% positive rate, while accuracy stays uselessly high at 98% to 99%. Random undersampling is the exception. It recovers 57% of positives on Hillstrom and 96% on Criteo, against 1% to 29% for every enrichment-based method, but precision collapses and accuracy falls to 51.1% on Hillstrom and 80.9% on Criteo. This is the expected effect of shifting the training-time class prior and not a defect. It is a genuinely different operating point that a practitioner needing high recall, with tolerance for human review, might prefer.
+**Threshold-based metrics diverge sharply by method (Table 5).** At the default 0.5 threshold, CTGAN, ADASYN, Borderline-SMOTE and GaussianCopula all collapse to F1=0 on Hillstrom, because the classifier never crosses the threshold into predicting the positive class at a 0.9% positive rate, while accuracy stays uselessly high at 98% to 99%. Random undersampling is the exception. It recovers 57% of positives on Hillstrom and 96% on Criteo, against 1% to 29% for every enrichment-based method, but precision collapses and accuracy falls to 51.1% on Hillstrom and 80.9% on Criteo. This is the expected effect of shifting the training-time class prior. It is a genuinely different operating point that a practitioner needing high recall, with tolerance for human review, might prefer.
 
 **Table 5. Threshold-based metrics at the default 0.5 threshold on every dataset except the sparse stress test, mean over 5 seeds at the α that maximizes each method's mean AUC. The best F1, precision and recall in each column are in bold, with ties all in bold.**
 
@@ -403,7 +403,7 @@ Overlaying both curves on the original six-dataset comparison shows that each cu
 
 ![Figure 13](../results/plots/paper2/fig14_gain_vs_positive_rate.png)
 
-**Figure 13.** CTGAN gain against positive rate. Sparse cross-dataset points, shown as diamonds with one per dataset, are overlaid with the two dense within-dataset dose-response curves. This is the central figure for which positive-rate range shows value and which does not. It shows diminishing and then reversing returns as positive rate rises, replicated within two datasets and not merely inferred from six sparse cross-dataset points.
+**Figure 13.** CTGAN gain against positive rate. Sparse cross-dataset points, shown as diamonds with one per dataset, are overlaid with the two dense within-dataset dose-response curves. This is the central figure for which positive-rate range shows value and which does not. It shows diminishing and then reversing returns as positive rate rises, replicated within two datasets and not only suggested by six sparse cross-dataset points.
 
 **Table 6. Dose-response summary, showing CTGAN gain against minority count on both datasets.**
 
@@ -425,7 +425,7 @@ The results trace a clean dichotomy at the cross-dataset level. On datasets with
 
 ### 4.2. Deep Learning Methods' Performance Is Not Uniquely Strong
 
-This finding is consistent with the broader tabular-data literature, where tree-based models are repeatedly shown to match or outperform deep learning approaches [40,41]. TabDDPM, the strongest generator on general benchmarks [15], underperforms CTGAN in this regime by 3 to 4 AUC points and gets worse with five times more training. That pattern is inconsistent with undertraining and consistent with an architectural explanation, in which unconditional sampling cannot be fixed by more compute and needs a conditioning mechanism. It also agrees with prior comparative work that finds TabDDPM competitive at moderate imbalance but conditional generators advantageous under extreme scarcity [42,43]. The failure of GReaT is a property of the framework and not of the backbone. Scaling from GPT-2 at 117M parameters to Mistral-7B at 7B, which is 60 times larger, does not change the outcome on any of three datasets once gains are computed against each backbone's own seed-matched baseline. The missing-baseline comparison in Section 3.4 extends the theme. CTGAN is not uniquely capable of delivering the headline effect, since ADASYN, a heuristic from 2008, statistically ties it.
+This finding is consistent with the broader tabular-data literature, where tree-based models are repeatedly shown to match or outperform deep learning approaches [40,41]. TabDDPM, the strongest generator on general benchmarks [15], underperforms CTGAN in this regime by 3 to 4 AUC points and gets worse with five times more training. That pattern is inconsistent with undertraining and consistent with an architectural explanation, in which unconditional sampling cannot be fixed by more compute and needs a conditioning mechanism. It also agrees with prior comparative work that finds TabDDPM competitive at moderate imbalance but conditional generators advantageous under extreme scarcity [42,43]. The failure of GReaT comes from the framework and holds across both backbones. Scaling from GPT-2 at 117M parameters to Mistral-7B at 7B, which is 60 times larger, does not change the outcome on any of three datasets once gains are computed against each backbone's own seed-matched baseline. The missing-baseline comparison in Section 3.4 extends the theme. CTGAN is not uniquely capable of delivering the headline effect, since ADASYN, a heuristic from 2008, statistically ties it.
 
 ### 4.3. Evaluation Metrics and Operational Considerations
 
@@ -435,7 +435,7 @@ AUC-ROC and threshold-based metrics such as F1, precision and recall diverge sha
 
 ### 4.4. Model-Specific Observations
 
-Random undersampling is the clearest example of a method whose behavior cannot be summarized by AUC gain alone (Section 3.6). It is not competitive on F1 or precision but delivers the highest recall of any method by a wide margin, which makes it a viable option for high-recall, human-reviewed use cases. The failure of GaussianCopula is structural and not a matter of degree. It samples at the natural class rate by design, so no amount of α-tuning changes its inability to enrich the minority class.
+Random undersampling is the clearest example of a method whose behavior cannot be summarized by AUC gain alone (Section 3.6). It is not competitive on F1 or precision but delivers the highest recall of any method by a wide margin, which makes it a viable option for high-recall, human-reviewed use cases. GaussianCopula fails for a structural reason. It samples at the natural class rate by design, so no amount of α-tuning changes its inability to enrich the minority class.
 
 ### 4.5. A Self-Disclosed Reliability Limitation: CTGAN's Uncontrolled Fit-to-Fit Variance
 
