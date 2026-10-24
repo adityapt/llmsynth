@@ -45,13 +45,19 @@ CROSS_DATASET = [
 fig, ax = plt.subplots(figsize=(9, 6))
 
 # Cross-dataset sparse points
-rates = [r for _, r, _ in CROSS_DATASET]
-gains = [g for _, _, g in CROSS_DATASET]
-ax.scatter(rates, gains, s=90, color="#212121", zorder=5, label="Cross-dataset (one point per dataset)", marker="D")
+# One marker and legend entry per dataset (cross-dataset points, one per dataset)
+DS_STYLE = {
+    "Telco Churn":    ("#8E24AA", "D"),
+    "Bank Marketing": ("#00897B", "s"),
+    "German Credit":  ("#F9A825", "^"),
+    "Nomao Lead":     ("#6D4C41", "v"),
+    "Hillstrom":      ("#D81B60", "P"),
+    "Criteo":         ("#212121", "X"),
+}
 for name, r, g in CROSS_DATASET:
-    _off = {"German Credit": (-4, 22), "Nomao Lead": (-6, -22), "Telco Churn": (-62, 14)}.get(name, (6, 4))
-    ax.annotate(name, (r, g), textcoords="offset points", xytext=_off, fontsize=7.5, color="#212121",
-                arrowprops=dict(arrowstyle="-", color="#999", lw=0.6) if name in ("German Credit", "Nomao Lead", "Telco Churn") else None)
+    color, marker = DS_STYLE[name]
+    ax.scatter([r], [g], s=110, color=color, marker=marker, zorder=5,
+               edgecolors="white", linewidths=0.8, label=f"{name} ({r}% positive)")
 
 # Dense within-dataset dose-response curves
 for label, path, color in [

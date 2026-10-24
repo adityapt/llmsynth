@@ -153,7 +153,7 @@ for ax, (label, key) in zip(axes.flatten(), bench_keys):
             ax.plot(ALPHAS[:len(means)], means, marker="o", label=gen, color=C[gen], **STYLE)
             ax.fill_between(ALPHAS[:len(means)], lows, highs, color=C[gen], alpha=0.12)
     ax.set_title(label, fontsize=10, fontweight="bold")
-    ax.set_xlabel("Synthetic fraction α", fontsize=9)
+    ax.set_xlabel("Mixing ratio α", fontsize=9)
     ax.set_ylabel("AUC-ROC", fontsize=9)
     ax.legend(fontsize=7.5)
     ax.grid(alpha=0.3)
@@ -187,7 +187,7 @@ if df_sp is not None:
         if means:
             ax.plot(ALPHAS[:len(means)], means, marker="o", label=gen, color=C[gen], **STYLE)
             ax.fill_between(ALPHAS[:len(means)], lows, highs, color=C[gen], alpha=0.12)
-    ax.set_xlabel("Synthetic fraction α", fontsize=11)
+    ax.set_xlabel("Mixing ratio α", fontsize=11)
     ax.set_ylabel("AUC-ROC", fontsize=11)
     ax.legend(fontsize=8.5)
     ax.grid(alpha=0.3)
@@ -248,7 +248,7 @@ for ax, (df, label, pos_rate) in zip(axes, [
         if means:
             ax.plot(ALPHAS[:len(means)], means, marker="o", label=gen, color=C[gen], **STYLE)
             ax.fill_between(ALPHAS[:len(means)], lows, highs, color=C[gen], alpha=0.15)
-    ax.set_xlabel("Synthetic fraction α", fontsize=11)
+    ax.set_xlabel("Mixing ratio α", fontsize=11)
     ax.set_ylabel("AUC-ROC", fontsize=11)
     ax.set_title(f"{label}\n(positive rate {pos_rate}, 5 seeds, shaded = 95% CI)",
                  fontsize=10, fontweight="bold")
@@ -372,7 +372,7 @@ for ax, (ds_label, df_ci, df_tab2k, df_tab10k, pos) in zip(axes, [
             label="TabDDPM N_iter=10k", color=C["TabDDPM"], linewidth=2.0, markersize=6, alpha=0.7)
     ax.fill_between(ALPHAS[:len(tab10_m)], tab10_lo, tab10_hi, color=C["TabDDPM"], alpha=0.07)
 
-    ax.set_xlabel("Synthetic fraction α", fontsize=11)
+    ax.set_xlabel("Mixing ratio α", fontsize=11)
     ax.set_ylabel("AUC-ROC", fontsize=11)
     ax.set_title(f"{ds_label}", fontsize=10, fontweight="bold")
     ax.legend(fontsize=8.5)
