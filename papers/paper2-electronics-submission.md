@@ -10,7 +10,7 @@
 
 ## Abstract
 
-Practitioners facing severe class imbalance, for example when email conversion rates fall below 1%, often turn to synthetic data augmentation. Existing benchmarks do not say whether augmentation helps at a given positive rate and sample size. We report a controlled study of six datasets (seven configurations, with Nomao in a full and a sparse version) spanning 0.3% to 30% positive rate, five generators (GaussianCopula, CTGAN, SMOTE, TabDDPM, and GReaT), four classifier families, and 5 to 10 seeds. Two dose-response experiments hold the total sample size fixed and vary only the number of minority-class examples, which separates scarcity from dataset identity. On the two marketing datasets, Hillstrom (0.9% positive) and Criteo (0.3%), augmentation raised AUC by 5.7 to 12.9 points. On the four control datasets, at 11.7% to 30% positive rate, no generator gained more than 0.27 AUC points. CTGAN's conditional sampler produced minority rows at 7 to 89 times the natural rate on the marketing datasets, whereas TabDDPM and GaussianCopula sample unconditionally and gained less. On Criteo, 7 of 10 multi-layer perceptron (MLP) seeds failed to converge on real data alone, and CTGAN augmentation restored convergence in all 10. The harmful range depends on the dataset. On Bank Marketing, augmentation became significantly harmful above about 1% positive rate, while on Nomao the effect had the same direction but was much smaller. ADASYN, a free method from 2008, tied CTGAN on both marketing datasets in paired t-tests (p = 0.97 and 0.21), and SMOTE tied as well. CTGAN training was not reproducible in the standard SDV implementation, as refitting on identical data and seed swung AUC by over 10 points. Below about 1% positive rate we recommend trying ADASYN or SMOTE before CTGAN. Above 10%, augmentation is unlikely to help. In between, our two datasets disagree, so practitioners should validate on their own data.
+Practitioners facing severe class imbalance, such as email conversion rates below 1%, often turn to synthetic data augmentation. Existing benchmarks do not say whether augmentation helps at a given positive rate and sample size. We report a controlled study of six datasets (seven configurations, with Nomao in a full and a sparse version) spanning 0.3% to 30% positive rate, five generators (GaussianCopula, CTGAN, SMOTE, TabDDPM, and GReaT), four classifier families, and 5 to 10 seeds. Two dose-response experiments hold the total sample size fixed and vary only the number of minority-class examples, separating scarcity from dataset identity. On the two marketing datasets, Hillstrom (0.9% positive) and Criteo (0.3%), augmentation raised mean AUC by 5.7 to 12.9 points, although the 5-seed paired intervals include zero. On the four control datasets, at 11.7% to 30% positive rate, no generator gained more than 0.27 AUC points. CTGAN's conditional sampler produced minority rows at 7 to 89 times the natural rate on the marketing datasets, while unconditional TabDDPM and GaussianCopula gained less. On Criteo, 7 of 10 multi-layer perceptron (MLP) seeds failed to converge on real data alone, and CTGAN augmentation restored convergence in all 10. The harmful range depends on the dataset. On Bank Marketing augmentation became significantly harmful above about 1% positive rate, but on Nomao the effect was much smaller. ADASYN, a free method, tied CTGAN on both marketing datasets in paired t-tests (p = 0.97 and 0.21), and SMOTE tied as well. CTGAN training was not reproducible in the standard SDV implementation, as refitting on identical data and seed swung AUC by over 10 points. Below about 1% positive rate we recommend trying ADASYN or SMOTE before CTGAN. Above 10%, augmentation is unlikely to help. In between, our two datasets disagree, so practitioners should validate on their own data.
 
 **Keywords:** synthetic data augmentation; class imbalance; CTGAN; ADASYN; SMOTE; dose-response; tabular classification; marketing analytics
 
@@ -96,7 +96,7 @@ $$D_{tr}^{(\alpha)} = D_{tr} \cup S, \qquad n_{syn} = \lfloor \alpha \cdot |D_{t
 
 For a classifier $f$ trained on $D_{tr}^{(\alpha)}$ and evaluated on a fixed real holdout $D_{ho}$, the **per-seed gain** of generator $G$ at mixing ratio $\alpha$ and seed $s$ is
 
-$$\Delta_G(\alpha, s) = \mathrm{AUC}\big(f_{D_{tr}^{(\alpha)}, s},\ D_{ho}\big) - \mathrm{AUC}\big(f_{D_{tr}, s},\ D_{ho}\big),$$
+$$\Delta_G(\alpha, s) = \mathrm{AUC}\big(f_{D_{tr}^{(\alpha)}, s},\ D_{ho}\big) - \mathrm{AUC}\big(f_{D_{tr}, s},\ D_{ho}\big).$$
 
 Each per-seed gain is therefore measured against the same seed's own real-only baseline, never a blended or cross-seed baseline. We report the mean gain $\bar\Delta_G(\alpha) = \tfrac{1}{|S|}\sum_{s \in S} \Delta_G(\alpha, s)$, which averages the per-seed gains over seeds $S$, with a t-distribution 95% CI across seeds, and take $\alpha^{\ast} = \arg\max_\alpha \bar\Delta_G(\alpha)$ as the reported best $\alpha$. Gains are reported in AUC points, meaning AUC multiplied by 100, so one point is 0.01 AUC.
 
@@ -104,7 +104,7 @@ Each per-seed gain is therefore measured against the same seed's own real-only b
 
 $$\rho(G) = \hat\pi_{syn}(G) \ /\  \pi$$
 
-is the core mechanism statistic of this paper. It is close to 1 for the unconditional samplers (GaussianCopula, TabDDPM and GReaT), which reproduce the training distribution's own rate, while for CTGAN it lies between 7 and 89 across the two marketing datasets (Table 2). It is measured directly from the generated rows.
+is the core mechanism statistic of this paper. It is measured directly from the generated rows. It is close to 1 for GaussianCopula and TabDDPM, which sample unconditionally and reproduce the training distribution's own rate, while for CTGAN it lies between 7 and 89 across the two marketing datasets (Table 2). GReaT also samples unconditionally, so we expect a ratio near 1, but we did not measure it.
 
 For each (dataset, generator, seed) triple we generate synthetic rows at α ∈ {0.1, 0.2, 0.3, 0.5, 1.0}. GaussianCopula and CTGAN are refit independently at each α, with no fit-once-and-subsample caching in this implementation. SMOTE, ADASYN and Borderline-SMOTE are called again at each α because they have no separate fit step. TabDDPM fits once at the largest α and subsamples for smaller values. GReaT fits once per training size n and seed, generates one set of rows equal to the α=1 amount, and subsamples that set for smaller α.
 
@@ -125,12 +125,12 @@ Output: gain estimate Δ̄_G(m) with 95% CI, for every G ∈ G, m ∈ M
 5:      for s in S:
 6:          D_tr ← Shuffle( Sample(P'⁺, m, seed=s) ∪ Sample(P'⁻, n_neg, seed=s) )
 7:          f_base ← Fit(GradientBoostingClassifier, D_tr, seed=s)
-8:          Δ_base ← AUC(f_base, D_ho)
+8:          AUC_base ← AUC(f_base, D_ho)
 9:          for G in G:
 10:             S_syn ← Fit-and-Sample(G, D_tr, n_syn = |D_tr|, seed=s)   // α = 1.0
 11:             D_aug ← D_tr ∪ S_syn
 12:             f_aug ← Fit(GradientBoostingClassifier, D_aug, seed=s)
-13:             Δ_G(m, s) ← AUC(f_aug, D_ho) − Δ_base       // seed-matched, never cross-seed
+13:             Δ_G(m, s) ← AUC(f_aug, D_ho) − AUC_base     // seed-matched, never cross-seed
 14:         end for
 15:     end for
 16:     for G in G: report mean_s Δ_G(m, s) ± t-CI95         // Table 6 / Figures 11–13
@@ -207,7 +207,7 @@ We do not run a full multi-dimensional statistical fidelity battery of the kind 
 
 ### 3.1. Synthetic-Only Training Underperforms Real Data (TSTR)
 
-Training on synthetic data alone and testing on real data (TSTR) gives the cleanest measure of how faithfully a generator captures the joint distribution. Across three control datasets, every generator's TSTR AUC falls materially below the real-data baseline. Even for GaussianCopula, the closest generator, the shortfall relative to baseline is 4.1% on Telco, 17.4% on Bank Marketing and 27.2% on German Credit. The gap grows as the dataset shrinks and no generator closes it. Synthetic data can augment real data but cannot replace it.
+Training on synthetic data alone and testing on real data (TSTR) gives the cleanest measure of how faithfully a generator captures the joint distribution. Across three control datasets, every generator's TSTR AUC falls materially below the real-data baseline. Even for GaussianCopula, the closest generator, the shortfall relative to baseline is 4.1% on Telco, 17.4% on Bank Marketing and 27.2% on German Credit. The gap is largest on the smallest dataset, German Credit, and no generator closes it. Synthetic data can augment real data but cannot replace it.
 
 ### 3.2. Class Distribution After Augmentation
 
@@ -225,7 +225,7 @@ GaussianCopula and TabDDPM both mirror the natural, rare positive rate. They sam
 
 ### 3.3. Classification Performance
 
-**Benchmark datasets with positive rates of 10% or more.** The best gain from any generator at any α stays below +0.5 AUC points, at +0.21 on Telco, −0.17 on Bank Marketing, +0.27 on German Credit and −0.06 on Nomao. All of these lie within the 95% CI of the baseline (Figures 1 and 2).
+**Control datasets, with positive rates of 10% or more.** The best gain from any generator at any α stays below +0.5 AUC points, at +0.21 on Telco, −0.17 on Bank Marketing, +0.27 on German Credit and −0.06 on Nomao. All of these lie within the 95% CI of the baseline (Figures 1 and 2).
 
 ![Figure 1](../results/plots/paper2/fig1_summary_comparison.png)
 
@@ -262,7 +262,7 @@ Three comparisons are FDR-significant, but every one is tiny in absolute terms, 
 
 **Figure 4.** Low-data regime: AUC against real training set size for the control datasets. Augmentation recovers 30% to 60% of the performance gap at n=250 and the benefit narrows rapidly by n≥1,000. This is a second, independent line of evidence that augmentation value depends on how much real minority-class data is available, whichever generator is used.
 
-**Marketing datasets with extreme imbalance.** On Hillstrom the baseline AUC is 0.548 ± 0.092, CTGAN reaches 0.605 ± 0.073, a gain of 5.75 points, and SMOTE reaches 0.606 ± 0.087, a gain of 5.84 points. On Criteo the baseline AUC is 0.846 ± 0.228, CTGAN reaches 0.974 ± 0.036, a gain of 12.87 points, and SMOTE reaches 0.966 ± 0.026, a gain of 11.99 points. Augmented confidence intervals are substantially narrower than the baseline, so synthetic augmentation under extreme imbalance stabilizes learning as well as improving its mean (Figure 5).
+**Marketing datasets with extreme imbalance.** On Hillstrom the baseline AUC is 0.548 ± 0.092, CTGAN reaches 0.605 ± 0.073, a gain of 5.75 points, and SMOTE reaches 0.606 ± 0.087, a gain of 5.84 points. On Criteo the baseline AUC is 0.846 ± 0.228, CTGAN reaches 0.974 ± 0.036, a gain of 12.87 points, and SMOTE reaches 0.966 ± 0.026, a gain of 11.99 points. Augmented confidence intervals are substantially narrower than the baseline, so synthetic augmentation under extreme imbalance stabilizes learning as well as improving its mean (Figure 5). These are mean gains. With 5 seeds, the 95% CI of the seed-paired gain includes zero for every method in Table 4 except GReaT, so no single gain is established on its own. The evidence for the regime-level pattern is the contrast with the control datasets and the dose-response experiments.
 
 ![Figure 5](../results/plots/paper2/fig5_marketing_ci.png)
 
@@ -278,7 +278,7 @@ Three comparisons are FDR-significant, but every one is tiny in absolute terms, 
 
 **Figure 7.** Multi-classifier robustness on Criteo across all four classifier families. The CTGAN advantage is not an artifact of choosing Gradient Boosting as the primary classifier.
 
-**TabDDPM versus CTGAN at two training budgets.** At the default number of training iterations, N_iter=2,000, and at a fivefold extension to N_iter=10,000, CTGAN outperforms TabDDPM on both datasets. Extended training widens the gap rather than closing it, and TabDDPM at 10k goes uniformly negative on Hillstrom. In a paired t-test of CTGAN against TabDDPM over seeds, Hillstrom shows Δ=+7.76 points with d_z=1.25 and p=0.049, and Criteo shows Δ=+6.41 points with d_z=0.73 and p=0.179 (Figure 8).
+**TabDDPM versus CTGAN at two training budgets.** At the default number of training iterations, N_iter=2,000, and at a fivefold extension to N_iter=10,000, CTGAN outperforms TabDDPM on both datasets. Extended training widens the gap rather than closing it, and TabDDPM at 10k goes uniformly negative on Hillstrom. In a paired t-test over seeds that compares the best-α CTGAN run with the best-α TabDDPM run, the difference at the default 2,000 iterations is +4.40 points on Hillstrom (d_z=1.07, p=0.076) and +2.96 points on Criteo (d_z=1.17, p=0.058). At 10,000 iterations it is +7.76 points on Hillstrom (d_z=1.25, p=0.049) and +6.41 points on Criteo (d_z=0.73, p=0.179) (Figure 8).
 
 ![Figure 8](../results/plots/paper2/fig7_tabddpm_comparison.png)
 
@@ -425,11 +425,11 @@ Overlaying both curves on the original six-dataset comparison shows that each cu
 
 ### 4.1. Why Minority-Example Scarcity Is the Mechanism
 
-The results trace a clean dichotomy at the cross-dataset level. On datasets with positive rates between 11.7% and 30.0%, the best augmentation gain is +0.27 AUC points, while on datasets at 0.9% and 0.3% the same generators deliver +5.7 to +12.9 points. We interpret this through the minority-example budget. At a 0.3% positive rate and an 8,000-row training set only about 24 minority examples are expected, and the variance of this count across seeds is the source of the wide baseline confidence intervals, ±22.8 AUC points on Criteo. Synthetic augmentation densifies the minority-class region of feature space. CTGAN, SMOTE and ADASYN all do this directly, though by different mechanisms. SMOTE interpolates within the convex hull of observed minority examples without consulting the majority class, which can leave it blind to the boundary and prone to near-duplicate samples when minority seeds are few [38]. CTGAN conditions on the class label while preserving cross-feature correlations, which in principle makes its minority samples more aware of where the class boundary lies [39]. GaussianCopula and unconditional TabDDPM sample in proportion to the existing imbalance and cannot densify the minority class.
+The results trace a clean dichotomy at the cross-dataset level. On datasets with positive rates between 11.7% and 30.0%, the best augmentation gain is +0.27 AUC points, while on datasets at 0.9% and 0.3% the same generators deliver mean gains of +5.7 to +12.9 AUC points. We interpret this through the minority-example budget. At a 0.3% positive rate and an 8,000-row training set only about 24 minority examples are expected, and the variance of this count across seeds is the source of the wide baseline confidence intervals, ±22.8 AUC points on Criteo. Synthetic augmentation densifies the minority-class region of feature space. CTGAN, SMOTE and ADASYN all do this directly, though by different mechanisms. SMOTE interpolates within the convex hull of observed minority examples without consulting the majority class, which can leave it blind to the boundary and prone to near-duplicate samples when minority seeds are few [38]. CTGAN conditions on the class label while preserving cross-feature correlations, which in principle makes its minority samples more aware of where the class boundary lies [39]. GaussianCopula and unconditional TabDDPM sample in proportion to the existing imbalance and cannot densify the minority class.
 
 ### 4.2. Deep Learning Methods' Performance Is Not Uniquely Strong
 
-This finding is consistent with the broader tabular-data literature, where tree-based models are repeatedly shown to match or outperform deep learning approaches [40,41]. TabDDPM, the strongest generator on general benchmarks [15], underperforms CTGAN in this regime by 3 to 4 AUC points and gets worse with five times more training. That pattern is inconsistent with undertraining and consistent with an architectural explanation, in which unconditional sampling cannot be fixed by more compute and needs a conditioning mechanism. It also agrees with prior comparative work that finds TabDDPM competitive at moderate imbalance but conditional generators advantageous under extreme scarcity [42,43]. The failure of GReaT comes from the framework and holds across both backbones. Scaling from GPT-2 at 117M parameters to Mistral-7B at 7B, which is 60 times larger, does not change the outcome on any of three datasets once gains are computed against each backbone's own seed-matched baseline. The missing-baseline comparison in Section 3.4 extends the theme. CTGAN is not uniquely capable of delivering the headline effect, since ADASYN, a heuristic from 2008, statistically ties it.
+This finding is consistent with the broader tabular-data literature, where tree-based models are repeatedly shown to match or outperform deep learning approaches [40,41]. TabDDPM, the strongest generator on general benchmarks [15], underperforms CTGAN in this regime by 3.0 to 4.4 AUC points at the default budget and falls further behind with five times more training. That pattern is inconsistent with undertraining and consistent with an architectural explanation, in which unconditional sampling cannot be fixed by more compute and needs a conditioning mechanism. It also agrees with prior comparative work that finds TabDDPM competitive at moderate imbalance but conditional generators advantageous under extreme scarcity [42,43]. The failure of GReaT comes from the framework and holds across both backbones. Scaling from GPT-2 at 117M parameters to Mistral-7B at 7B, which is 60 times larger, does not change the outcome on any of three datasets once gains are computed against each backbone's own seed-matched baseline. The missing-baseline comparison in Section 3.4 extends the theme. CTGAN is not uniquely capable of delivering the headline effect, since ADASYN, a heuristic from 2008, statistically ties it.
 
 ### 4.3. Evaluation Metrics and Operational Considerations
 
