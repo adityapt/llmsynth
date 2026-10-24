@@ -229,7 +229,7 @@ GaussianCopula and TabDDPM both mirror the natural, rare positive rate. They sam
 
 ![Figure 1](../results/plots/paper2/fig1_summary_comparison.png)
 
-**Figure 1.** Cross-dataset summary. Augmentation gains concentrate on the two imbalanced marketing datasets, and all generators are within the 95% CI of the baseline on the four control datasets. This is the clearest visual answer to which range shows value and which does not.
+**Figure 1.** Cross-dataset summary. Augmentation gains concentrate on the two marketing datasets, and all generators are within the 95% CI of the baseline on the four control datasets. This is the clearest visual answer to which range shows value and which does not.
 
 ![Figure 2](../results/plots/paper2/fig2_ucurves_benchmark.png)
 
