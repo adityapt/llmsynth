@@ -248,7 +248,7 @@ GaussianCopula and TabDDPM both mirror the natural, rare positive rate. They sam
 | German Credit | SMOTE (0.2) | +0.28 pts | 0.692 | +0.0154 | 0.257 | −0.058 | +0.063 | −1.20 |
 | Nomao | CTGAN (0.1) | −0.06 pts | 0.042 | −0.0000 | 0.991 | −0.001 | +0.001 | −0.01 |
 
-*GaussianCopula and CTGAN rows for Telco and German Credit, and GaussianCopula and SMOTE rows for Nomao, are omitted from this condensed table because all are non-significant, with gains within ±0.5 AUC points, which is ±0.005 AUC, and ±0.03 F1 of zero. The full 12-row table is in the companion analysis document. Bold values survive Benjamini-Hochberg FDR correction at q=0.10 within this table's own family of 24 tests, which is separate from the family of 14 in Section 3.5. Nomao numbers come from a rerun at n=10,000, matching Table 1.*
+*GaussianCopula and CTGAN rows for Telco and German Credit, and GaussianCopula and SMOTE rows for Nomao, are omitted from this condensed table because all are non-significant, with gains within ±0.5 AUC points, which is ±0.005 AUC, and ±0.03 F1 of zero. The full 12-row table is available from the authors on request. Bold values survive Benjamini-Hochberg FDR correction at q=0.10 within this table's own family of 24 tests, which is separate from the family of 14 in Section 3.5. Nomao numbers come from a rerun at n=10,000, matching Table 1.*
 
 Three comparisons are FDR-significant, but every one is tiny in absolute terms, at most 0.28 AUC points and 0.06 F1 points. They are detectable only because these control datasets have unusually tight per-seed variance, which is consistent with a negligible effect that is occasionally detectable in direction. The one exception worth practical attention is the F1 gain of SMOTE on Bank Marketing, which is +0.060 and FDR-significant, and, more weakly, on Telco, where it is +0.018 and uncorrected. On Bank Marketing, SMOTE raises recall by 0.128, from 0.412 to 0.539, and lowers precision by 0.053, from 0.631 to 0.578. This precision-recall trade-off does not show up in AUC-ROC, because AUC-ROC does not depend on the decision threshold or the class prior. GaussianCopula and CTGAN show no such effect, and their F1 moves in the opposite direction if anything. Nomao is the cleanest no-effect case. Every gain is within ±0.06 AUC points and ±0.003 F1 of zero and none is FDR-significant, which fits a near-ceiling baseline (Section 3.6) that leaves no room for any method to move.
 
@@ -523,7 +523,7 @@ The following abbreviations are used in this manuscript.
 
 ## Appendix A. Experimental Configuration
 
-See the generator and classifier hyperparameter tables in the companion analysis document (`paper2-empirical.md`, Sections 3.2 to 3.4) for the complete configuration. It is reproduced there in full rather than duplicated here, to avoid drift between the two documents.
+Generator hyperparameters are library defaults, except for the TabDDPM training budget (Section 3.3). The Gradient Boosting settings are given in Section 2.4.1. The full hyperparameter tables for all generators and classifiers are available from the authors on request.
 
 ## Appendix B. Evaluation Metrics Definitions
 
