@@ -73,8 +73,11 @@ see `results/RUN_MANIFEST.md`.
    for the comparison in Section 4.5. They were added to the history in commits `3fe90ca` (2026-04-14, April run) and
    `9c88aef` (2026-09-26, September run); the code as of those commits is what produced them. The PyTorch seeding
    (`torch.manual_seed` in `synthetic_data_eval.py`) was introduced after them. `run_ctgan_refit_variance.py` still reproduces the unseeded behaviour.
-4. **Mistral-7B result files.** `run_modernllm_all_databricks.py` writes `modernllm_*_results.csv`. The files used in the paper carry
-   a `_parallel` suffix that the script does not add; the job configuration that produced them is not included in this repository.
+4. **Mistral-7B result files.** `run_modernllm_all_databricks.py` writes `modernllm_*_results.csv`; the files used in the paper carry
+   a `_parallel` suffix that the script does not add. The script was revised repeatedly on 2026-06-12 (see the commit history).
+   The final revision uses full fine-tuning, batch size 16, bf16, 8-bit AdamW and a maximum sampled row length of 200, and runs
+   training sizes up to n = 500. The result files also include n = 1,000 and 2,000 (Hillstrom) and n = 1,000 (Telco), which the
+   final revision does not produce, so those results come from an earlier revision. Which revision produced which result is not recorded.
 5. **Run times** were not logged.
 
 ## License
