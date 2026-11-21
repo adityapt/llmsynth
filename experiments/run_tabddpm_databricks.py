@@ -2,8 +2,8 @@
 # =============================================================================
 # TabDDPM on the imbalanced marketing datasets (Hillstrom, Criteo) — GPU/Databricks
 # =============================================================================
-# Item #1 from the 2026-06 review: add the diffusion augmentation champion as a
-# comparator so §6.8 reports TabDDPM alongside GaussianCopula / CTGAN / SMOTE.
+# Adds the diffusion augmentation baseline as a comparator, so TabDDPM is reported
+# alongside GaussianCopula / CTGAN / SMOTE.
 # TabDDPM (Kotelnikov et al., ICML 2023) is the standard augmentation-utility
 # baseline; its absence is the paper's principal scope limitation.
 #
@@ -84,7 +84,7 @@ DDPM_BATCH    = 1024
 #   load_criteo_uplift() calls df.sample(..., random_state=42) on the 50K pool —
 #   without this shuffle the per-seed cap sampling draws different rows and the
 #   Baseline AUCs diverge from ci_criteo.csv.
-WORK_DIR = os.environ.get("LLMSYNTH_WORK_DIR", "/Workspace/Users/<your-username>/Temp")
+WORK_DIR = os.environ.get("LLMSYNTH_WORK_DIR", "./work")
 DATASETS = [
     ("Hillstrom Email", f"{WORK_DIR}/hillstrom.csv",     None,      None, f"{WORK_DIR}/ci_tabddpm_hillstrom.csv"),
     ("Criteo Display",  f"{WORK_DIR}/criteo_uplift.csv", N_CAP * 5, 42,   f"{WORK_DIR}/ci_tabddpm_criteo.csv"),

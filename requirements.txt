@@ -1,0 +1,11 @@
+# Python 3.9. Versions pinned to those recorded in results/RUN_MANIFEST.md (October 2026 reruns)
+# and the paper's Section 2.2.1. scipy, statsmodels and matplotlib versions were not recorded.
+sdv==1.36.0
+torch==2.8.0
+scikit-learn==1.6.1
+numpy==1.26.4
+pandas==2.3.2
+imbalanced-learn==0.12.4
+scipy
+statsmodels
+matplotlib

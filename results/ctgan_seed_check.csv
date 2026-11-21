@@ -1,0 +1,8 @@
+check,fit,torch_seed,auc_roc,identical_to_earlier_fit_with_same_seed
+"same seed, twice",1,1,0.6776880363452802,False
+"same seed, twice",2,1,0.6776880363452802,True
+different seeds,1,1,0.6776880363452802,True
+different seeds,2,2,0.6211376497781557,False
+different seeds,3,3,0.5922580302345971,False
+different seeds,4,4,0.7164908738276787,False
+different seeds,5,5,0.7054517920242301,False

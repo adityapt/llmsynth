@@ -28,7 +28,7 @@ SEEDS     = [42, 123, 7, 2024, 999]
 SMALL_NS  = [50, 100, 200, 500]
 HOLDOUT_N = 200
 # Set LLMSYNTH_WORK_DIR env var (or replace the default below) before running.
-WORK_DIR  = os.environ.get("LLMSYNTH_WORK_DIR", "/Workspace/Users/<your-username>/Temp")
+WORK_DIR  = os.environ.get("LLMSYNTH_WORK_DIR", "./work")
 DATA_PATH = f"{WORK_DIR}/credit_default.csv"
 OUT_PATH  = f"{WORK_DIR}/great_results.csv"
 

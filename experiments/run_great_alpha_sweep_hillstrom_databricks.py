@@ -41,7 +41,7 @@ ALPHAS    = [0.1, 0.2, 0.3, 0.5, 1.0]
 HOLDOUT_N = 10000
 
 # Set LLMSYNTH_WORK_DIR env var (or replace the default below) before running.
-WORK_DIR  = os.environ.get("LLMSYNTH_WORK_DIR", "/Workspace/Users/<your-username>/Temp")
+WORK_DIR  = os.environ.get("LLMSYNTH_WORK_DIR", "./work")
 DATA_PATH = f"{WORK_DIR}/hillstrom.csv"
 OUT_PATH  = f"{WORK_DIR}/great_alpha_sweep_hillstrom_results.csv"
 

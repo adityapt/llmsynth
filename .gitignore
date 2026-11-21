@@ -1,7 +1,9 @@
+data/
+trainer_great/
+work/
 __pycache__/
 *.pyc
-.DS_Store
-data/
 *.egg-info/
 .venv/
-trainer_great/
+.DS_Store
+results/synthetic_cache/

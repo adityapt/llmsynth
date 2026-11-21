@@ -32,6 +32,8 @@ import warnings
 warnings.filterwarnings("ignore")
 
 import os
+for _v in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS", "VECLIB_MAXIMUM_THREADS"):
+    os.environ.setdefault(_v, "1")  # fixed thread count; set before numpy is imported (see run notes)
 import io
 import zipfile
 import requests
@@ -43,7 +45,8 @@ matplotlib.use("Agg")
 from pathlib import Path
 from sklearn.model_selection import train_test_split, StratifiedKFold
 from sklearn.ensemble import GradientBoostingClassifier, GradientBoostingRegressor
-from sklearn.metrics import roc_auc_score, f1_score, average_precision_score, mean_absolute_percentage_error
+from sklearn.metrics import (roc_auc_score, f1_score, average_precision_score, mean_absolute_percentage_error,
+                             precision_score, recall_score, accuracy_score)
 from sklearn.preprocessing import LabelEncoder, StandardScaler
 from imblearn.over_sampling import SMOTE
 from sdv.single_table import CTGANSynthesizer, GaussianCopulaSynthesizer
@@ -231,8 +234,26 @@ def generate_smote(X_train, y_train, n_synthetic):
     return df_syn
 
 
-def generate_ctgan(df_train, target, n_synthetic, task):
-    """CTGAN synthesizer via SDV."""
+def generate_ctgan(df_train, target, n_synthetic, task, seed=None):
+    """CTGAN synthesizer via SDV.
+
+    PyTorch is seeded before each fit so that a rerun with the same inputs gives the same synthetic
+    rows (seed=-1 turns this off). If no seed is passed, the seed is a hash of the training data and the number of rows
+    requested. PyTorch's state therefore does not depend on run order, but CTGAN also draws from NumPy's global
+    generator, which the calling script seeds, so the output does depend on what ran before in the same process
+    and a script must be rerun from the start to reproduce it.
+    The fit runs on the CPU with torch limited to 2 threads, and the other math libraries default to 1 thread
+    through the environment variables set at the top of this file (the launch scripts set the same values).
+    """
+    import zlib
+    import torch
+    from pandas.util import hash_pandas_object
+    if seed is None:
+        h = hash_pandas_object(df_train, index=False).values.tobytes()
+        seed = (zlib.crc32(h) ^ int(n_synthetic)) % (2 ** 31)
+    torch.set_num_threads(2)
+    if seed >= 0:  # seed=-1 leaves PyTorch unseeded, which reproduces the behaviour of the earlier runs
+        torch.manual_seed(seed)
     metadata = SingleTableMetadata()
     metadata.detect_from_dataframe(df_train)
     if task == "classification":
@@ -243,11 +264,17 @@ def generate_ctgan(df_train, target, n_synthetic, task):
         epochs=150,
         batch_size=min(500, len(df_train)),
         verbose=False,
+        cuda=False,
     )
     synth.fit(df_train)
     df_syn = synth.sample(num_rows=n_synthetic)
     if task == "classification":
         df_syn[target] = df_syn[target].astype(int)
+    # Keep every CTGAN output so that any metric can be recomputed without refitting.
+    cache = RESULTS_DIR / "synthetic_cache"
+    cache.mkdir(exist_ok=True)
+    dh = zlib.crc32(hash_pandas_object(df_train, index=False).values.tobytes())  # keeps files of different data apart
+    df_syn.to_parquet(cache / f"ctgan_{seed:010d}_n{int(n_synthetic)}_d{len(df_train)}x{df_train.shape[1]}_h{dh:08x}.parquet")
     return df_syn
 
 
@@ -281,6 +308,9 @@ def train_evaluate(X_train, y_train, X_test, y_test, task):
             "auc_roc": roc_auc_score(y_test, proba),
             "f1_minority": f1_score(y_test, preds, pos_label=1, zero_division=0),
             "avg_precision": average_precision_score(y_test, proba),
+            "precision": precision_score(y_test, preds, pos_label=1, zero_division=0),
+            "recall": recall_score(y_test, preds, pos_label=1, zero_division=0),
+            "accuracy": accuracy_score(y_test, preds),
         }
     else:
         reg = GradientBoostingRegressor(n_estimators=100, max_depth=4, random_state=RANDOM_STATE)

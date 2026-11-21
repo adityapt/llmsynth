@@ -1,0 +1,6 @@
+# Extra packages for the GPU experiments (TabDDPM, GReaT with GPT-2 and Mistral-7B),
+# run on a single NVIDIA A100.
+synthcity==0.2.11
+be-great==0.0.13
+transformers
+accelerate

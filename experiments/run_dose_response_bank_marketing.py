@@ -1,9 +1,9 @@
 """
-Dose-response design: disentangles minority-example COUNT from positive RATE,
-addressing R1's core rejection critique (the original study's positive rate
-is confounded with dataset identity, since every dataset differs in domain/
-features/baseline AUC). Also fills the paper's own most-cited gap — the
-untested 1%-10% positive-rate region — as a side effect.
+Dose-response design: disentangles minority-example COUNT from positive RATE.
+In a cross-dataset comparison the positive rate is confounded with dataset
+identity, since every dataset differs in domain/features/baseline AUC. This
+design also covers the 1%-10% positive-rate region that the cross-dataset
+comparison leaves untested.
 
 Design: fix total training size at N_CAP (matching the rest of the study),
 vary ONLY the minority-class count, holding dataset/domain/features/
@@ -36,7 +36,7 @@ import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import GradientBoostingClassifier
-from sklearn.metrics import roc_auc_score, f1_score, average_precision_score
+from sklearn.metrics import roc_auc_score, f1_score, average_precision_score, precision_score, recall_score, accuracy_score
 
 from experiments.synthetic_data_eval import RESULTS_DIR, DATA_DIR, generate_ctgan, generate_gaussian_copula, generate_smote
 
@@ -72,6 +72,9 @@ def metrics(y_true, proba, preds):
         "auc_roc": roc_auc_score(y_true, proba),
         "f1_minority": f1_score(y_true, preds, pos_label=1, zero_division=0),
         "avg_precision": average_precision_score(y_true, proba),
+        "precision": precision_score(y_true, preds, pos_label=1, zero_division=0),
+        "recall": recall_score(y_true, preds, pos_label=1, zero_division=0),
+        "accuracy": accuracy_score(y_true, preds),
     }
 
 

@@ -50,9 +50,9 @@ def full_metrics(y_true, proba, preds):
     }
 
 
-def run_dataset(df_full, target, task, name, out_csv):
+def run_dataset(df_full, target, task, name, out_csv, n_cap=N_CAP):
     print(f"\n{'='*60}\n{name}\n{'='*60}", flush=True)
-    n_use = min(N_CAP, len(df_full))
+    n_use = min(n_cap, len(df_full))
     rows = []
     if out_csv.exists():
         rows = pd.read_csv(out_csv).to_dict("records")
@@ -114,5 +114,6 @@ if __name__ == "__main__":
         (*load_nomao(), "fullmetrics_nomao.csv"),
     ]
     for df_full, target, task, name, out_name in datasets:
-        run_dataset(df_full, target, task, name, RESULTS_DIR / out_name)
+        # Bank Marketing is capped at 15,000 rows (Table 1); Nomao at 10,000. Telco and German Credit are below both.
+        run_dataset(df_full, target, task, name, RESULTS_DIR / out_name, n_cap=10_000 if out_name == "fullmetrics_nomao.csv" else N_CAP)
     print("\nAll done.")

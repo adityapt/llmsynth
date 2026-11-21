@@ -15,7 +15,7 @@ import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import GradientBoostingClassifier
-from sklearn.metrics import roc_auc_score, f1_score, average_precision_score
+from sklearn.metrics import roc_auc_score, f1_score, average_precision_score, precision_score, recall_score, accuracy_score
 
 from experiments.synthetic_data_eval import RESULTS_DIR, DATA_DIR, generate_ctgan, generate_gaussian_copula, generate_smote
 
@@ -71,6 +71,9 @@ row = {
     "auc_roc": roc_auc_score(y_ho, proba),
     "f1_minority": f1_score(y_ho, preds, pos_label=1, zero_division=0),
     "avg_precision": average_precision_score(y_ho, proba),
+    "precision": precision_score(y_ho, preds, pos_label=1, zero_division=0),
+    "recall": recall_score(y_ho, preds, pos_label=1, zero_division=0),
+    "accuracy": accuracy_score(y_ho, preds),
 }
 print(f"minority_count={m_count} seed={seed} {method}: AUC={row['auc_roc']:.4f}", flush=True)
 

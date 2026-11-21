@@ -1,0 +1,289 @@
+  Shape: (64000, 9), positive rate: 0.9%
+
+============================================================
+Full-metrics rerun: Hillstrom Email (5 seeds)
+============================================================
+
+  Seed 42:
+    Baseline: AUC=0.6189 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9865
+    GaussianCopula α=0.1: AUC=0.5809 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9830
+    GaussianCopula α=0.2: AUC=0.5600 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9850
+    GaussianCopula α=0.3: AUC=0.5753 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9835
+    GaussianCopula α=0.5: AUC=0.5597 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9840
+    GaussianCopula α=1.0: AUC=0.5710 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9860
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+    CTGAN α=0.1: AUC=0.6797 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9875
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+    CTGAN α=0.2: AUC=0.6436 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9885
+    CTGAN α=0.3: AUC=0.6749 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9880
+    CTGAN α=0.5: AUC=0.6731 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9895
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+    CTGAN α=1.0: AUC=0.7063 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9890
+    SMOTE α=0.1: AUC=0.6487 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9860
+    SMOTE α=0.2: AUC=0.6831 F1=0.0400 P=0.0323 R=0.0526 Acc=0.9760
+    SMOTE α=0.3: AUC=0.6834 F1=0.0533 P=0.0357 R=0.1053 Acc=0.9645
+    SMOTE α=0.5: AUC=0.6696 F1=0.0342 P=0.0204 R=0.1053 Acc=0.9435
+    SMOTE α=1.0: AUC=0.6754 F1=0.0351 P=0.0191 R=0.2105 Acc=0.8900
+
+  Seed 123:
+    Baseline: AUC=0.5466 F1=0.0606 P=0.0667 R=0.0556 Acc=0.9845
+    GaussianCopula α=0.1: AUC=0.6368 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9845
+    GaussianCopula α=0.2: AUC=0.6224 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9855
+    GaussianCopula α=0.3: AUC=0.5210 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9855
+    GaussianCopula α=0.5: AUC=0.5481 F1=0.0645 P=0.0769 R=0.0556 Acc=0.9855
+    GaussianCopula α=1.0: AUC=0.5626 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9875
+    CTGAN α=0.1: AUC=0.6354 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9875
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+    CTGAN α=0.2: AUC=0.4986 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9880
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+    CTGAN α=0.3: AUC=0.6229 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9875
+    CTGAN α=0.5: AUC=0.6057 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9905
+    CTGAN α=1.0: AUC=0.6103 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9905
+    SMOTE α=0.1: AUC=0.5778 F1=0.0690 P=0.0909 R=0.0556 Acc=0.9865
+    SMOTE α=0.2: AUC=0.5615 F1=0.0455 P=0.0385 R=0.0556 Acc=0.9790
+    SMOTE α=0.3: AUC=0.5692 F1=0.0278 P=0.0185 R=0.0556 Acc=0.9650
+    SMOTE α=0.5: AUC=0.5579 F1=0.0325 P=0.0190 R=0.1111 Acc=0.9405
+    SMOTE α=1.0: AUC=0.5440 F1=0.0356 P=0.0193 R=0.2222 Acc=0.8915
+
+  Seed 7:
+    Baseline: AUC=0.6196 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9810
+    GaussianCopula α=0.1: AUC=0.6152 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9800
+    GaussianCopula α=0.2: AUC=0.5789 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9815
+    GaussianCopula α=0.3: AUC=0.6044 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9830
+    GaussianCopula α=0.5: AUC=0.5595 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9800
+    GaussianCopula α=1.0: AUC=0.5699 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9820
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+    CTGAN α=0.1: AUC=0.6229 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9795
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+    CTGAN α=0.2: AUC=0.6455 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9865
+    CTGAN α=0.3: AUC=0.6061 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9885
+    CTGAN α=0.5: AUC=0.6554 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9880
+    CTGAN α=1.0: AUC=0.6104 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9885
+    SMOTE α=0.1: AUC=0.6495 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9835
+    SMOTE α=0.2: AUC=0.6183 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9650
+    SMOTE α=0.3: AUC=0.6178 F1=0.0225 P=0.0149 R=0.0455 Acc=0.9565
+    SMOTE α=0.5: AUC=0.6121 F1=0.0138 P=0.0081 R=0.0455 Acc=0.9285
+    SMOTE α=1.0: AUC=0.6128 F1=0.0251 P=0.0138 R=0.1364 Acc=0.8835
+
+  Seed 2024:
+    Baseline: AUC=0.4503 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9855
+    GaussianCopula α=0.1: AUC=0.4941 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9850
+    GaussianCopula α=0.2: AUC=0.4488 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9880
+    GaussianCopula α=0.3: AUC=0.4191 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9865
+    GaussianCopula α=0.5: AUC=0.4380 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9870
+    GaussianCopula α=1.0: AUC=0.4344 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9870
+    CTGAN α=0.1: AUC=0.3527 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9855
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+    CTGAN α=0.2: AUC=0.4034 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9860
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+    CTGAN α=0.3: AUC=0.4043 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9885
+    CTGAN α=0.5: AUC=0.4835 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9885
+    CTGAN α=1.0: AUC=0.4786 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9905
+    SMOTE α=0.1: AUC=0.6591 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9845
+    SMOTE α=0.2: AUC=0.6221 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9735
+    SMOTE α=0.3: AUC=0.6407 F1=0.0253 P=0.0161 R=0.0588 Acc=0.9615
+    SMOTE α=0.5: AUC=0.6324 F1=0.0265 P=0.0149 R=0.1176 Acc=0.9265
+    SMOTE α=1.0: AUC=0.6263 F1=0.0222 P=0.0119 R=0.1765 Acc=0.8680
+
+  Seed 999:
+    Baseline: AUC=0.5024 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9845
+    GaussianCopula α=0.1: AUC=0.4328 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9800
+    GaussianCopula α=0.2: AUC=0.4730 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9840
+    GaussianCopula α=0.3: AUC=0.4977 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9830
+    GaussianCopula α=0.5: AUC=0.4013 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9840
+    GaussianCopula α=1.0: AUC=0.4828 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9835
+    CTGAN α=0.1: AUC=0.4524 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9810
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+    CTGAN α=0.2: AUC=0.5327 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9835
+    CTGAN α=0.3: AUC=0.5339 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9860
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+    CTGAN α=0.5: AUC=0.5542 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9865
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+    CTGAN α=1.0: AUC=0.5268 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9880
+    SMOTE α=0.1: AUC=0.4947 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9875
+    SMOTE α=0.2: AUC=0.5168 F1=0.0417 P=0.0345 R=0.0526 Acc=0.9770
+    SMOTE α=0.3: AUC=0.5019 F1=0.0299 P=0.0208 R=0.0526 Acc=0.9675
+    SMOTE α=0.5: AUC=0.4941 F1=0.0177 P=0.0106 R=0.0526 Acc=0.9445
+    SMOTE α=1.0: AUC=0.4975 F1=0.0279 P=0.0153 R=0.1579 Acc=0.8955
+
+  Saved: results/ci_hillstrom_fullmetrics.csv
+  Shape after load: (50000, 13), positive rate: 0.3%
+
+============================================================
+Full-metrics rerun: Criteo Uplift (5 seeds)
+============================================================
+
+  Seed 42:
+    Baseline: AUC=0.7477 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9960
+    GaussianCopula α=0.1: AUC=0.8775 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9965
+    GaussianCopula α=0.2: AUC=0.8822 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9950
+    GaussianCopula α=0.3: AUC=0.7404 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9965
+    GaussianCopula α=0.5: AUC=0.7515 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9960
+    GaussianCopula α=1.0: AUC=0.8607 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9960
+    CTGAN α=0.1: AUC=0.8719 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9970
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+    CTGAN α=0.2: AUC=0.9045 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9960
+    CTGAN α=0.3: AUC=0.8910 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9965
+    CTGAN α=0.5: AUC=0.9093 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9960
+    CTGAN α=1.0: AUC=0.9027 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9940
+    SMOTE α=0.1: AUC=0.8985 F1=0.1818 P=0.1667 R=0.2000 Acc=0.9955
+    SMOTE α=0.2: AUC=0.9253 F1=0.1818 P=0.1667 R=0.2000 Acc=0.9955
+    SMOTE α=0.3: AUC=0.9340 F1=0.1333 P=0.1000 R=0.2000 Acc=0.9935
+    SMOTE α=0.5: AUC=0.9324 F1=0.1333 P=0.1000 R=0.2000 Acc=0.9935
+    SMOTE α=1.0: AUC=0.9082 F1=0.1111 P=0.0769 R=0.2000 Acc=0.9920
+
+  Seed 123:
+    Baseline: AUC=0.9790 F1=0.4000 P=0.5000 R=0.3333 Acc=0.9970
+    GaussianCopula α=0.1: AUC=0.8123 F1=0.2222 P=0.3333 R=0.1667 Acc=0.9965
+    GaussianCopula α=0.2: AUC=0.9832 F1=0.4000 P=0.5000 R=0.3333 Acc=0.9970
+    GaussianCopula α=0.3: AUC=0.8116 F1=0.1667 P=0.1667 R=0.1667 Acc=0.9950
+    GaussianCopula α=0.5: AUC=0.9856 F1=0.2667 P=0.2222 R=0.3333 Acc=0.9945
+    GaussianCopula α=1.0: AUC=0.9849 F1=0.4444 P=0.6667 R=0.3333 Acc=0.9975
+    CTGAN α=0.1: AUC=0.9844 F1=0.4000 P=0.5000 R=0.3333 Acc=0.9970
+    CTGAN α=0.2: AUC=0.9903 F1=0.4286 P=0.3750 R=0.5000 Acc=0.9960
+    CTGAN α=0.3: AUC=0.9842 F1=0.1333 P=0.1111 R=0.1667 Acc=0.9935
+    CTGAN α=0.5: AUC=0.9860 F1=0.1538 P=0.1429 R=0.1667 Acc=0.9945
+    CTGAN α=1.0: AUC=0.9859 F1=0.3158 P=0.2308 R=0.5000 Acc=0.9935
+    SMOTE α=0.1: AUC=0.9807 F1=0.2667 P=0.2222 R=0.3333 Acc=0.9945
+    SMOTE α=0.2: AUC=0.9774 F1=0.3529 P=0.2727 R=0.5000 Acc=0.9945
+    SMOTE α=0.3: AUC=0.9717 F1=0.2105 P=0.1538 R=0.3333 Acc=0.9925
+    SMOTE α=0.5: AUC=0.9828 F1=0.2222 P=0.1429 R=0.5000 Acc=0.9895
+    SMOTE α=1.0: AUC=0.9793 F1=0.1714 P=0.1034 R=0.5000 Acc=0.9855
+
+  Seed 7:
+    Baseline: AUC=0.9654 F1=0.3077 P=0.2857 R=0.3333 Acc=0.9955
+    GaussianCopula α=0.1: AUC=0.9717 F1=0.3333 P=0.3333 R=0.3333 Acc=0.9960
+    GaussianCopula α=0.2: AUC=0.9600 F1=0.3077 P=0.2857 R=0.3333 Acc=0.9955
+    GaussianCopula α=0.3: AUC=0.9692 F1=0.2857 P=0.2500 R=0.3333 Acc=0.9950
+    GaussianCopula α=0.5: AUC=0.9574 F1=0.2667 P=0.2222 R=0.3333 Acc=0.9945
+    GaussianCopula α=1.0: AUC=0.9627 F1=0.2353 P=0.1818 R=0.3333 Acc=0.9935
+    CTGAN α=0.1: AUC=0.9887 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9955
+    CTGAN α=0.2: AUC=0.9810 F1=0.2222 P=0.3333 R=0.1667 Acc=0.9965
+    CTGAN α=0.3: AUC=0.9820 F1=0.2222 P=0.3333 R=0.1667 Acc=0.9965
+    CTGAN α=0.5: AUC=0.9890 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9950
+    CTGAN α=1.0: AUC=0.9911 F1=0.2857 P=0.2500 R=0.3333 Acc=0.9950
+    SMOTE α=0.1: AUC=0.9804 F1=0.3529 P=0.2727 R=0.5000 Acc=0.9945
+    SMOTE α=0.2: AUC=0.9849 F1=0.2727 P=0.1875 R=0.5000 Acc=0.9920
+    SMOTE α=0.3: AUC=0.9866 F1=0.2500 P=0.1667 R=0.5000 Acc=0.9910
+    SMOTE α=0.5: AUC=0.9827 F1=0.2308 P=0.1500 R=0.5000 Acc=0.9900
+    SMOTE α=1.0: AUC=0.9835 F1=0.1935 P=0.1200 R=0.5000 Acc=0.9875
+
+  Seed 2024:
+    Baseline: AUC=0.5670 F1=0.2857 P=0.5000 R=0.2000 Acc=0.9975
+    GaussianCopula α=0.1: AUC=0.9166 F1=0.2000 P=0.2000 R=0.2000 Acc=0.9960
+    GaussianCopula α=0.2: AUC=0.4336 F1=0.2500 P=0.3333 R=0.2000 Acc=0.9970
+    GaussianCopula α=0.3: AUC=0.4154 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9960
+    GaussianCopula α=0.5: AUC=0.5650 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9970
+    GaussianCopula α=1.0: AUC=0.7930 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9955
+    CTGAN α=0.1: AUC=0.9907 F1=0.3333 P=1.0000 R=0.2000 Acc=0.9980
+    CTGAN α=0.2: AUC=0.9863 F1=0.2222 P=0.2500 R=0.2000 Acc=0.9965
+    CTGAN α=0.3: AUC=0.9914 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9955
+    CTGAN α=0.5: AUC=0.9862 F1=0.0000 P=0.0000 R=0.0000 Acc=0.9955
+    CTGAN α=1.0: AUC=0.9716 F1=0.1538 P=0.1250 R=0.2000 Acc=0.9945
+    SMOTE α=0.1: AUC=0.9707 F1=0.1667 P=0.1429 R=0.2000 Acc=0.9950
+    SMOTE α=0.2: AUC=0.9810 F1=0.1429 P=0.1111 R=0.2000 Acc=0.9940
+    SMOTE α=0.3: AUC=0.9785 F1=0.1538 P=0.1250 R=0.2000 Acc=0.9945
+    SMOTE α=0.5: AUC=0.9749 F1=0.1250 P=0.0909 R=0.2000 Acc=0.9930
+    SMOTE α=1.0: AUC=0.9607 F1=0.0952 P=0.0625 R=0.2000 Acc=0.9905
+
+  Seed 999:
+    Baseline: AUC=0.9691 F1=0.3000 P=0.2727 R=0.3333 Acc=0.9930
+    GaussianCopula α=0.1: AUC=0.9805 F1=0.2667 P=0.1905 R=0.4444 Acc=0.9890
+    GaussianCopula α=0.2: AUC=0.9689 F1=0.3333 P=0.2667 R=0.4444 Acc=0.9920
+    GaussianCopula α=0.3: AUC=0.9514 F1=0.2500 P=0.2000 R=0.3333 Acc=0.9910
+    GaussianCopula α=0.5: AUC=0.9617 F1=0.2400 P=0.1875 R=0.3333 Acc=0.9905
+    GaussianCopula α=1.0: AUC=0.8578 F1=0.3200 P=0.2500 R=0.4444 Acc=0.9915
+    CTGAN α=0.1: AUC=0.9733 F1=0.1111 P=0.1111 R=0.1111 Acc=0.9920
+    CTGAN α=0.2: AUC=0.9763 F1=0.2500 P=0.2857 R=0.2222 Acc=0.9940
+    CTGAN α=0.3: AUC=0.9731 F1=0.2667 P=0.3333 R=0.2222 Acc=0.9945
+    CTGAN α=0.5: AUC=0.9772 F1=0.1333 P=0.1667 R=0.1111 Acc=0.9935
+    CTGAN α=1.0: AUC=0.9759 F1=0.2500 P=0.2857 R=0.2222 Acc=0.9940
+    SMOTE α=0.1: AUC=0.9672 F1=0.2609 P=0.2143 R=0.3333 Acc=0.9915
+    SMOTE α=0.2: AUC=0.9586 F1=0.2222 P=0.1667 R=0.3333 Acc=0.9895
+    SMOTE α=0.3: AUC=0.9569 F1=0.1538 P=0.1176 R=0.2222 Acc=0.9890
+    SMOTE α=0.5: AUC=0.9523 F1=0.1379 P=0.1000 R=0.2222 Acc=0.9875
+    SMOTE α=1.0: AUC=0.9549 F1=0.1463 P=0.0938 R=0.3333 Acc=0.9825
+
+  Saved: results/ci_criteo_fullmetrics.csv
+
+Done.
+exit 0

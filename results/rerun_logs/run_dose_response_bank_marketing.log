@@ -1,0 +1,172 @@
+Full pool: (45211, 17), positive rate 11.70%
+Holdout: 3000 rows, 351 positives (fixed across all conditions)
+Remaining pool: 4938 positives, 37273 negatives available for training draws
+
+=== minority_count=16 (positive rate 0.16%) ===
+  seed=42 Baseline: AUC=0.7329
+  seed=42 GaussianCopula: AUC=0.7288
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+  seed=42 CTGAN: AUC=0.7615
+  seed=42 SMOTE: AUC=0.7503
+  seed=123 Baseline: AUC=0.6530
+  seed=123 GaussianCopula: AUC=0.7303
+  seed=123 CTGAN: AUC=0.6562
+  seed=123 SMOTE: AUC=0.6775
+  seed=7 Baseline: AUC=0.6489
+  seed=7 GaussianCopula: AUC=0.6484
+  seed=7 CTGAN: AUC=0.6652
+  seed=7 SMOTE: AUC=0.7528
+  seed=2024 Baseline: AUC=0.7431
+  seed=2024 GaussianCopula: AUC=0.5219
+  seed=2024 CTGAN: AUC=0.7194
+  seed=2024 SMOTE: AUC=0.7843
+  seed=999 Baseline: AUC=0.6772
+  seed=999 GaussianCopula: AUC=0.6270
+  seed=999 CTGAN: AUC=0.7596
+  seed=999 SMOTE: AUC=0.7557
+
+=== minority_count=64 (positive rate 0.64%) ===
+  seed=42 Baseline: AUC=0.8248
+  seed=42 GaussianCopula: AUC=0.8154
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+  seed=42 CTGAN: AUC=0.7881
+  seed=42 SMOTE: AUC=0.8170
+  seed=123 Baseline: AUC=0.8313
+  seed=123 GaussianCopula: AUC=0.8062
+  seed=123 CTGAN: AUC=0.8334
+  seed=123 SMOTE: AUC=0.8247
+  seed=7 Baseline: AUC=0.8406
+  seed=7 GaussianCopula: AUC=0.8107
+  seed=7 CTGAN: AUC=0.8030
+  seed=7 SMOTE: AUC=0.7969
+  seed=2024 Baseline: AUC=0.8424
+  seed=2024 GaussianCopula: AUC=0.7787
+  seed=2024 CTGAN: AUC=0.8191
+  seed=2024 SMOTE: AUC=0.7942
+  seed=999 Baseline: AUC=0.8304
+  seed=999 GaussianCopula: AUC=0.8141
+  seed=999 CTGAN: AUC=0.7912
+  seed=999 SMOTE: AUC=0.8260
+
+=== minority_count=256 (positive rate 2.56%) ===
+  seed=42 Baseline: AUC=0.8904
+  seed=42 GaussianCopula: AUC=0.8702
+  seed=42 CTGAN: AUC=0.8392
+  seed=42 SMOTE: AUC=0.8681
+  seed=123 Baseline: AUC=0.8936
+  seed=123 GaussianCopula: AUC=0.8835
+  seed=123 CTGAN: AUC=0.8702
+  seed=123 SMOTE: AUC=0.8646
+  seed=7 Baseline: AUC=0.8992
+  seed=7 GaussianCopula: AUC=0.8734
+  seed=7 CTGAN: AUC=0.8459
+  seed=7 SMOTE: AUC=0.8627
+  seed=2024 Baseline: AUC=0.8962
+  seed=2024 GaussianCopula: AUC=0.8845
+  seed=2024 CTGAN: AUC=0.8551
+  seed=2024 SMOTE: AUC=0.8562
+  seed=999 Baseline: AUC=0.8971
+  seed=999 GaussianCopula: AUC=0.8838
+  seed=999 CTGAN: AUC=0.8697
+  seed=999 SMOTE: AUC=0.8442
+
+=== minority_count=512 (positive rate 5.12%) ===
+  seed=42 Baseline: AUC=0.9056
+  seed=42 GaussianCopula: AUC=0.9021
+  seed=42 CTGAN: AUC=0.8874
+  seed=42 SMOTE: AUC=0.8720
+  seed=123 Baseline: AUC=0.9103
+  seed=123 GaussianCopula: AUC=0.8961
+  seed=123 CTGAN: AUC=0.8724
+  seed=123 SMOTE: AUC=0.8743
+  seed=7 Baseline: AUC=0.9099
+  seed=7 GaussianCopula: AUC=0.8960
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+  seed=7 CTGAN: AUC=0.8727
+  seed=7 SMOTE: AUC=0.8841
+  seed=2024 Baseline: AUC=0.9038
+  seed=2024 GaussianCopula: AUC=0.8867
+  seed=2024 CTGAN: AUC=0.8894
+  seed=2024 SMOTE: AUC=0.8709
+  seed=999 Baseline: AUC=0.9051
+  seed=999 GaussianCopula: AUC=0.8885
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+  seed=999 CTGAN: AUC=0.8856
+  seed=999 SMOTE: AUC=0.8713
+
+=== minority_count=1024 (positive rate 10.24%) ===
+  seed=42 Baseline: AUC=0.9168
+  seed=42 GaussianCopula: AUC=0.9037
+  seed=42 CTGAN: AUC=0.8841
+  seed=42 SMOTE: AUC=0.8876
+  seed=123 Baseline: AUC=0.9100
+  seed=123 GaussianCopula: AUC=0.9065
+  seed=123 CTGAN: AUC=0.8884
+  seed=123 SMOTE: AUC=0.8845
+  seed=7 Baseline: AUC=0.9147
+  seed=7 GaussianCopula: AUC=0.9005
+  seed=7 CTGAN: AUC=0.8888
+  seed=7 SMOTE: AUC=0.8894
+  seed=2024 Baseline: AUC=0.9155
+  seed=2024 GaussianCopula: AUC=0.9050
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+  seed=2024 CTGAN: AUC=0.8883
+  seed=2024 SMOTE: AUC=0.8854
+  seed=999 Baseline: AUC=0.9115
+  seed=999 GaussianCopula: AUC=0.9067
+  seed=999 CTGAN: AUC=0.8816
+  seed=999 SMOTE: AUC=0.8909
+
+Done. Saved: results/dose_response_bank_marketing.csv
+exit 0

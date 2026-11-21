@@ -9,9 +9,10 @@ this same subprocess pattern earlier.
 Usage: python3 _fullmetrics_nomao_worker.py <seed> <method> <alpha>
   method: Baseline | GaussianCopula | CTGAN | SMOTE
   alpha: 0 for Baseline, else one of 0.1/0.2/0.3/0.5/1.0
-Appends one row to results/fullmetrics_nomao.csv.
+Appends one row to results/fullmetrics_nomao.csv, or to the file named in NOMAO_FULLMETRICS_OUT.
 """
 import sys, warnings
+from pathlib import Path
 warnings.filterwarnings("ignore")
 sys.path.insert(0, '.')
 
@@ -31,7 +32,8 @@ seed = int(sys.argv[1])
 method = sys.argv[2]
 alpha = float(sys.argv[3])
 N_CAP = 10_000
-OUT = RESULTS_DIR / "fullmetrics_nomao.csv"
+import os
+OUT = Path(os.environ["NOMAO_FULLMETRICS_OUT"]) if "NOMAO_FULLMETRICS_OUT" in os.environ else RESULTS_DIR / "fullmetrics_nomao.csv"
 
 df_full, target, task, name = load_nomao()
 n_use = min(N_CAP, len(df_full))

@@ -62,7 +62,7 @@ from transformers import set_seed as _hf_set_seed
 #   meta-llama/Llama-3.1-8B     8B  ← H100 safe (needs HF token + Llama licence)
 #   EleutherAI/gpt-j-6b         6B  ← H100 safe, no token needed
 LLM_MODEL              = os.environ.get("LLMSYNTH_LLM_MODEL", "mistralai/Mistral-7B-v0.1")
-WORK_DIR               = os.environ.get("LLMSYNTH_WORK_DIR", "/Workspace/Users/<your-username>/Temp")
+WORK_DIR               = os.environ.get("LLMSYNTH_WORK_DIR", "./work")
 SEEDS                  = [42, 123, 7, 2024, 999]
 ALPHAS                 = [0.1, 0.2, 0.3, 0.5, 1.0]
 SMALL_NS_SWEEP         = [50, 100, 200]

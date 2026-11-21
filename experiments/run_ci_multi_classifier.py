@@ -1,5 +1,5 @@
 """
-Item #4a from 2026-06 review — CPU, no GPU needed.
+CPU only, no GPU needed.
 
 Extends §6.8 statistical-generator CI results in two dimensions:
   1. SEEDS: 5 -> 10  (existing [42,123,7,2024,999] + new [10,20,30,40,50])
@@ -31,7 +31,7 @@ Generator fit strategy:
 
 Output schema (single CSV per dataset):
   seed, method, condition, alpha, classifier,
-  auc_roc, f1_minority, avg_precision
+  auc_roc, f1_minority, avg_precision, precision, recall, accuracy
 
 Output paths:
   results/ci_multi_classifier_hillstrom.csv
@@ -61,7 +61,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
 from sklearn.neural_network import MLPClassifier
-from sklearn.metrics import roc_auc_score, f1_score, average_precision_score
+from sklearn.metrics import roc_auc_score, f1_score, average_precision_score, precision_score, recall_score, accuracy_score
 
 sys.path.insert(0, ".")
 from experiments.synthetic_data_eval import (
@@ -136,6 +136,9 @@ def evaluate(X_tr, y_tr, X_te, y_te, classifier_name, seed):
         "auc_roc":       roc_auc_score(y_te, proba),
         "f1_minority":   f1_score(y_te, preds, pos_label=1, zero_division=0),
         "avg_precision": average_precision_score(y_te, proba),
+        "precision":     precision_score(y_te, preds, pos_label=1, zero_division=0),
+        "recall":        recall_score(y_te, preds, pos_label=1, zero_division=0),
+        "accuracy":      accuracy_score(y_te, preds),
     }
 
 
@@ -144,7 +147,8 @@ def evaluate(X_tr, y_tr, X_te, y_te, classifier_name, seed):
 def load_resume(out_path):
     """Return (existing rows, done set of (seed, method, classifier)).
 
-    A triple is 'done' only when its α=1.0 row exists with a non-NaN auc_roc.
+    A triple is 'done' only when its α=1.0 row exists with a non-NaN auc_roc;
+    rows of unfinished triples are dropped and regenerated.
     Baseline rows are marked done by (seed, 'Baseline', classifier) regardless
     of alpha (they have alpha=0).
     """
@@ -159,6 +163,8 @@ def load_resume(out_path):
         else:
             if (r["alpha"] == ALPHAS[-1]) and pd.notna(r.get("auc_roc")):
                 done.add((int(r["seed"]), r["method"], r["classifier"]))
+    # Drop rows of triples that did not finish, so that rerunning them does not leave duplicate rows.
+    rows = [r for r in rows if (int(r["seed"]), r["method"], r["classifier"]) in done]
     return rows, done
 
 
@@ -204,7 +210,10 @@ def run_dataset(loader_fn):
                              "classifier": clf_name,
                              "auc_roc": float("nan"),
                              "f1_minority": float("nan"),
-                             "avg_precision": float("nan")})
+                             "avg_precision": float("nan"),
+                             "precision": float("nan"),
+                             "recall": float("nan"),
+                             "accuracy": float("nan")})
                 print(f"    Baseline · {clf_name} FAILED: {str(e)[:140]}", flush=True)
         pd.DataFrame(rows).to_csv(out_path, index=False)
 
@@ -257,7 +266,10 @@ def run_dataset(loader_fn):
                                      "classifier": clf_name,
                                      "auc_roc": float("nan"),
                                      "f1_minority": float("nan"),
-                                     "avg_precision": float("nan")})
+                                     "avg_precision": float("nan"),
+                                     "precision": float("nan"),
+                                     "recall": float("nan"),
+                                     "accuracy": float("nan")})
                 print(f"    {gen_name} FAILED: {err}", flush=True)
                 pd.DataFrame(rows).to_csv(out_path, index=False)
                 continue
@@ -290,7 +302,10 @@ def run_dataset(loader_fn):
                                      "classifier": clf_name,
                                      "auc_roc": float("nan"),
                                      "f1_minority": float("nan"),
-                                     "avg_precision": float("nan")})
+                                     "avg_precision": float("nan"),
+                                     "precision": float("nan"),
+                                     "recall": float("nan"),
+                                     "accuracy": float("nan")})
                         print(f"    {gen_name} α={alpha} · {clf_name} FAILED: {str(e)[:120]}",
                               flush=True)
             pd.DataFrame(rows).to_csv(out_path, index=False)

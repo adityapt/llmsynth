@@ -50,7 +50,7 @@ BATCH_SIZE = 4        # smaller than GReaT/GPT-2 (32) — 7B models need more VR
 EPOCHS_SMALL = 100    # n <= 100
 EPOCHS_LARGE =  50    # n > 100
 
-WORK_DIR  = os.environ.get("LLMSYNTH_WORK_DIR", "/Workspace/Users/<your-username>/Temp")
+WORK_DIR  = os.environ.get("LLMSYNTH_WORK_DIR", "./work")
 DATA_PATH = f"{WORK_DIR}/hillstrom.csv"
 OUT_PATH  = f"{WORK_DIR}/great_modernllm_hillstrom_results.csv"
 

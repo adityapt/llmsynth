@@ -1,0 +1,1615 @@
+  Shape: (64000, 9), positive rate: 0.9%
+
+====================================================================
+Hillstrom Email: (64000, 9), positive rate 0.90%
+====================================================================
+Resume: 0 (seed, method, classifier) triples already complete
+
+  Seed 42:
+    Baseline · GBC: AUC=0.6189
+    Baseline · LR: AUC=0.7597
+    Baseline · RF: AUC=0.5317
+    Baseline · MLP: AUC=0.4728
+    [GaussianCopula] fitting...  (8000 synth rows)
+    GaussianCopula α=0.1 · GBC: AUC=0.5809
+    GaussianCopula α=0.1 · LR: AUC=0.7550
+    GaussianCopula α=0.1 · RF: AUC=0.5237
+    GaussianCopula α=0.1 · MLP: AUC=0.4741
+    GaussianCopula α=0.2 · GBC: AUC=0.5600
+    GaussianCopula α=0.2 · LR: AUC=0.7492
+    GaussianCopula α=0.2 · RF: AUC=0.5524
+    GaussianCopula α=0.2 · MLP: AUC=0.4742
+    GaussianCopula α=0.3 · GBC: AUC=0.5753
+    GaussianCopula α=0.3 · LR: AUC=0.7387
+    GaussianCopula α=0.3 · RF: AUC=0.5127
+    GaussianCopula α=0.3 · MLP: AUC=0.4841
+    GaussianCopula α=0.5 · GBC: AUC=0.5597
+    GaussianCopula α=0.5 · LR: AUC=0.7358
+    GaussianCopula α=0.5 · RF: AUC=0.5813
+    GaussianCopula α=0.5 · MLP: AUC=0.4948
+    GaussianCopula α=1.0 · GBC: AUC=0.5710
+    GaussianCopula α=1.0 · LR: AUC=0.6990
+    GaussianCopula α=1.0 · RF: AUC=0.5284
+    GaussianCopula α=1.0 · MLP: AUC=0.5019
+    [CTGAN] fitting.../opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+  (8000 synth rows)
+    CTGAN α=0.1 · GBC: AUC=0.6225
+    CTGAN α=0.1 · LR: AUC=0.7781
+    CTGAN α=0.1 · RF: AUC=0.5495
+    CTGAN α=0.1 · MLP: AUC=0.4929
+    CTGAN α=0.2 · GBC: AUC=0.6972
+    CTGAN α=0.2 · LR: AUC=0.7657
+    CTGAN α=0.2 · RF: AUC=0.5192
+    CTGAN α=0.2 · MLP: AUC=0.5113
+    CTGAN α=0.3 · GBC: AUC=0.7252
+    CTGAN α=0.3 · LR: AUC=0.7514
+    CTGAN α=0.3 · RF: AUC=0.6168
+    CTGAN α=0.3 · MLP: AUC=0.5403
+    CTGAN α=0.5 · GBC: AUC=0.6884
+    CTGAN α=0.5 · LR: AUC=0.7326
+    CTGAN α=0.5 · RF: AUC=0.5645
+    CTGAN α=0.5 · MLP: AUC=0.5768
+    CTGAN α=1.0 · GBC: AUC=0.6986
+    CTGAN α=1.0 · LR: AUC=0.7192
+    CTGAN α=1.0 · RF: AUC=0.6015
+    CTGAN α=1.0 · MLP: AUC=0.6334
+    SMOTE α=0.1 · GBC: AUC=0.6487
+    SMOTE α=0.1 · LR: AUC=0.3555
+    SMOTE α=0.1 · RF: AUC=0.5706
+    SMOTE α=0.1 · MLP: AUC=0.6269
+    SMOTE α=0.2 · GBC: AUC=0.6831
+    SMOTE α=0.2 · LR: AUC=0.3763
+    SMOTE α=0.2 · RF: AUC=0.6207
+    SMOTE α=0.2 · MLP: AUC=0.6297
+    SMOTE α=0.3 · GBC: AUC=0.6834
+    SMOTE α=0.3 · LR: AUC=0.4042
+    SMOTE α=0.3 · RF: AUC=0.6356
+    SMOTE α=0.3 · MLP: AUC=0.6073
+    SMOTE α=0.5 · GBC: AUC=0.6696
+    SMOTE α=0.5 · LR: AUC=0.4316
+    SMOTE α=0.5 · RF: AUC=0.6698
+    SMOTE α=0.5 · MLP: AUC=0.5825
+    SMOTE α=1.0 · GBC: AUC=0.6754
+    SMOTE α=1.0 · LR: AUC=0.4681
+    SMOTE α=1.0 · RF: AUC=0.5978
+    SMOTE α=1.0 · MLP: AUC=0.5484
+
+  Seed 123:
+    Baseline · GBC: AUC=0.5466
+    Baseline · LR: AUC=0.6573
+    Baseline · RF: AUC=0.6555
+    Baseline · MLP: AUC=0.4609
+    [GaussianCopula] fitting...  (8000 synth rows)
+    GaussianCopula α=0.1 · GBC: AUC=0.6368
+    GaussianCopula α=0.1 · LR: AUC=0.6649
+    GaussianCopula α=0.1 · RF: AUC=0.6788
+    GaussianCopula α=0.1 · MLP: AUC=0.4749
+    GaussianCopula α=0.2 · GBC: AUC=0.6224
+    GaussianCopula α=0.2 · LR: AUC=0.6582
+    GaussianCopula α=0.2 · RF: AUC=0.6315
+    GaussianCopula α=0.2 · MLP: AUC=0.4607
+    GaussianCopula α=0.3 · GBC: AUC=0.5210
+    GaussianCopula α=0.3 · LR: AUC=0.6639
+    GaussianCopula α=0.3 · RF: AUC=0.6613
+    GaussianCopula α=0.3 · MLP: AUC=0.4494
+    GaussianCopula α=0.5 · GBC: AUC=0.5481
+    GaussianCopula α=0.5 · LR: AUC=0.6654
+    GaussianCopula α=0.5 · RF: AUC=0.7000
+    GaussianCopula α=0.5 · MLP: AUC=0.4321
+    GaussianCopula α=1.0 · GBC: AUC=0.5626
+    GaussianCopula α=1.0 · LR: AUC=0.6866
+    GaussianCopula α=1.0 · RF: AUC=0.6761
+    GaussianCopula α=1.0 · MLP: AUC=0.4095
+    [CTGAN] fitting.../opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+  (8000 synth rows)
+    CTGAN α=0.1 · GBC: AUC=0.5714
+    CTGAN α=0.1 · LR: AUC=0.6468
+    CTGAN α=0.1 · RF: AUC=0.6878
+    CTGAN α=0.1 · MLP: AUC=0.4826
+    CTGAN α=0.2 · GBC: AUC=0.5899
+    CTGAN α=0.2 · LR: AUC=0.6564
+    CTGAN α=0.2 · RF: AUC=0.6766
+    CTGAN α=0.2 · MLP: AUC=0.4773
+    CTGAN α=0.3 · GBC: AUC=0.6002
+    CTGAN α=0.3 · LR: AUC=0.6537
+    CTGAN α=0.3 · RF: AUC=0.6794
+    CTGAN α=0.3 · MLP: AUC=0.4689
+    CTGAN α=0.5 · GBC: AUC=0.6167
+    CTGAN α=0.5 · LR: AUC=0.6579
+    CTGAN α=0.5 · RF: AUC=0.6698
+    CTGAN α=0.5 · MLP: AUC=0.4614
+    CTGAN α=1.0 · GBC: AUC=0.5992
+    CTGAN α=1.0 · LR: AUC=0.6526
+    CTGAN α=1.0 · RF: AUC=0.7051
+    CTGAN α=1.0 · MLP: AUC=0.5020
+    SMOTE α=0.1 · GBC: AUC=0.5778
+    SMOTE α=0.1 · LR: AUC=0.5953
+    SMOTE α=0.1 · RF: AUC=0.6927
+    SMOTE α=0.1 · MLP: AUC=0.5761
+    SMOTE α=0.2 · GBC: AUC=0.5615
+    SMOTE α=0.2 · LR: AUC=0.5984
+    SMOTE α=0.2 · RF: AUC=0.6906
+    SMOTE α=0.2 · MLP: AUC=0.5609
+    SMOTE α=0.3 · GBC: AUC=0.5692
+    SMOTE α=0.3 · LR: AUC=0.5948
+    SMOTE α=0.3 · RF: AUC=0.6519
+    SMOTE α=0.3 · MLP: AUC=0.5401
+    SMOTE α=0.5 · GBC: AUC=0.5579
+    SMOTE α=0.5 · LR: AUC=0.5969
+    SMOTE α=0.5 · RF: AUC=0.6443
+    SMOTE α=0.5 · MLP: AUC=0.5417
+    SMOTE α=1.0 · GBC: AUC=0.5440
+    SMOTE α=1.0 · LR: AUC=0.5955
+    SMOTE α=1.0 · RF: AUC=0.6637
+    SMOTE α=1.0 · MLP: AUC=0.5155
+
+  Seed 7:
+    Baseline · GBC: AUC=0.6196
+    Baseline · LR: AUC=0.6614
+    Baseline · RF: AUC=0.4180
+    Baseline · MLP: AUC=0.4582
+    [GaussianCopula] fitting...  (8000 synth rows)
+    GaussianCopula α=0.1 · GBC: AUC=0.6152
+    GaussianCopula α=0.1 · LR: AUC=0.6533
+    GaussianCopula α=0.1 · RF: AUC=0.4705
+    GaussianCopula α=0.1 · MLP: AUC=0.4453
+    GaussianCopula α=0.2 · GBC: AUC=0.5789
+    GaussianCopula α=0.2 · LR: AUC=0.6456
+    GaussianCopula α=0.2 · RF: AUC=0.4505
+    GaussianCopula α=0.2 · MLP: AUC=0.4444
+    GaussianCopula α=0.3 · GBC: AUC=0.6044
+    GaussianCopula α=0.3 · LR: AUC=0.6531
+    GaussianCopula α=0.3 · RF: AUC=0.4284
+    GaussianCopula α=0.3 · MLP: AUC=0.4480
+    GaussianCopula α=0.5 · GBC: AUC=0.5595
+    GaussianCopula α=0.5 · LR: AUC=0.6456
+    GaussianCopula α=0.5 · RF: AUC=0.5224
+    GaussianCopula α=0.5 · MLP: AUC=0.4467
+    GaussianCopula α=1.0 · GBC: AUC=0.5699
+    GaussianCopula α=1.0 · LR: AUC=0.6625
+    GaussianCopula α=1.0 · RF: AUC=0.4431
+    GaussianCopula α=1.0 · MLP: AUC=0.4522
+    [CTGAN] fitting...  (8000 synth rows)
+    CTGAN α=0.1 · GBC: AUC=0.6150
+    CTGAN α=0.1 · LR: AUC=0.6626
+    CTGAN α=0.1 · RF: AUC=0.4578
+    CTGAN α=0.1 · MLP: AUC=0.4440
+    CTGAN α=0.2 · GBC: AUC=0.5702
+    CTGAN α=0.2 · LR: AUC=0.6499
+    CTGAN α=0.2 · RF: AUC=0.4957
+    CTGAN α=0.2 · MLP: AUC=0.4458
+    CTGAN α=0.3 · GBC: AUC=0.5851
+    CTGAN α=0.3 · LR: AUC=0.6346
+    CTGAN α=0.3 · RF: AUC=0.5202
+    CTGAN α=0.3 · MLP: AUC=0.4509
+    CTGAN α=0.5 · GBC: AUC=0.6075
+    CTGAN α=0.5 · LR: AUC=0.6269
+    CTGAN α=0.5 · RF: AUC=0.4967
+    CTGAN α=0.5 · MLP: AUC=0.4596
+    CTGAN α=1.0 · GBC: AUC=0.6106
+    CTGAN α=1.0 · LR: AUC=0.6276
+    CTGAN α=1.0 · RF: AUC=0.5057
+    CTGAN α=1.0 · MLP: AUC=0.5059
+    SMOTE α=0.1 · GBC: AUC=0.6495
+    SMOTE α=0.1 · LR: AUC=0.5684
+    SMOTE α=0.1 · RF: AUC=0.5597
+    SMOTE α=0.1 · MLP: AUC=0.6985
+    SMOTE α=0.2 · GBC: AUC=0.6183
+    SMOTE α=0.2 · LR: AUC=0.5786
+    SMOTE α=0.2 · RF: AUC=0.5495
+    SMOTE α=0.2 · MLP: AUC=0.6730
+    SMOTE α=0.3 · GBC: AUC=0.6178
+    SMOTE α=0.3 · LR: AUC=0.5914
+    SMOTE α=0.3 · RF: AUC=0.5644
+    SMOTE α=0.3 · MLP: AUC=0.6651
+    SMOTE α=0.5 · GBC: AUC=0.6121
+    SMOTE α=0.5 · LR: AUC=0.6020
+    SMOTE α=0.5 · RF: AUC=0.5217
+    SMOTE α=0.5 · MLP: AUC=0.6361
+    SMOTE α=1.0 · GBC: AUC=0.6128
+    SMOTE α=1.0 · LR: AUC=0.6142
+    SMOTE α=1.0 · RF: AUC=0.5313
+    SMOTE α=1.0 · MLP: AUC=0.6266
+
+  Seed 2024:
+    Baseline · GBC: AUC=0.4503
+    Baseline · LR: AUC=0.6302
+    Baseline · RF: AUC=0.5245
+    Baseline · MLP: AUC=0.4739
+    [GaussianCopula] fitting...  (8000 synth rows)
+    GaussianCopula α=0.1 · GBC: AUC=0.4941
+    GaussianCopula α=0.1 · LR: AUC=0.6472
+    GaussianCopula α=0.1 · RF: AUC=0.5516
+    GaussianCopula α=0.1 · MLP: AUC=0.4825
+    GaussianCopula α=0.2 · GBC: AUC=0.4488
+    GaussianCopula α=0.2 · LR: AUC=0.6445
+    GaussianCopula α=0.2 · RF: AUC=0.5478
+    GaussianCopula α=0.2 · MLP: AUC=0.4857
+    GaussianCopula α=0.3 · GBC: AUC=0.4191
+    GaussianCopula α=0.3 · LR: AUC=0.6461
+    GaussianCopula α=0.3 · RF: AUC=0.4947
+    GaussianCopula α=0.3 · MLP: AUC=0.4907
+    GaussianCopula α=0.5 · GBC: AUC=0.4380
+    GaussianCopula α=0.5 · LR: AUC=0.6501
+    GaussianCopula α=0.5 · RF: AUC=0.5168
+    GaussianCopula α=0.5 · MLP: AUC=0.4923
+    GaussianCopula α=1.0 · GBC: AUC=0.4344
+    GaussianCopula α=1.0 · LR: AUC=0.6175
+    GaussianCopula α=1.0 · RF: AUC=0.5249
+    GaussianCopula α=1.0 · MLP: AUC=0.5069
+    [CTGAN] fitting.../opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+  (8000 synth rows)
+    CTGAN α=0.1 · GBC: AUC=0.5488
+    CTGAN α=0.1 · LR: AUC=0.6109
+    CTGAN α=0.1 · RF: AUC=0.5252
+    CTGAN α=0.1 · MLP: AUC=0.4814
+    CTGAN α=0.2 · GBC: AUC=0.4598
+    CTGAN α=0.2 · LR: AUC=0.6025
+    CTGAN α=0.2 · RF: AUC=0.5639
+    CTGAN α=0.2 · MLP: AUC=0.4842
+    CTGAN α=0.3 · GBC: AUC=0.4479
+    CTGAN α=0.3 · LR: AUC=0.5843
+    CTGAN α=0.3 · RF: AUC=0.5425
+    CTGAN α=0.3 · MLP: AUC=0.4938
+    CTGAN α=0.5 · GBC: AUC=0.4294
+    CTGAN α=0.5 · LR: AUC=0.5855
+    CTGAN α=0.5 · RF: AUC=0.5440
+    CTGAN α=0.5 · MLP: AUC=0.5049
+    CTGAN α=1.0 · GBC: AUC=0.4720
+    CTGAN α=1.0 · LR: AUC=0.5876
+    CTGAN α=1.0 · RF: AUC=0.5645
+    CTGAN α=1.0 · MLP: AUC=0.5288
+    SMOTE α=0.1 · GBC: AUC=0.6591
+    SMOTE α=0.1 · LR: AUC=0.5955
+    SMOTE α=0.1 · RF: AUC=0.6698
+    SMOTE α=0.1 · MLP: AUC=0.5952
+    SMOTE α=0.2 · GBC: AUC=0.6221
+    SMOTE α=0.2 · LR: AUC=0.5924
+    SMOTE α=0.2 · RF: AUC=0.5860
+    SMOTE α=0.2 · MLP: AUC=0.5929
+    SMOTE α=0.3 · GBC: AUC=0.6407
+    SMOTE α=0.3 · LR: AUC=0.5928
+    SMOTE α=0.3 · RF: AUC=0.5917
+    SMOTE α=0.3 · MLP: AUC=0.6127
+    SMOTE α=0.5 · GBC: AUC=0.6324
+    SMOTE α=0.5 · LR: AUC=0.5942
+    SMOTE α=0.5 · RF: AUC=0.5945
+    SMOTE α=0.5 · MLP: AUC=0.6124
+    SMOTE α=1.0 · GBC: AUC=0.6263
+    SMOTE α=1.0 · LR: AUC=0.5983
+    SMOTE α=1.0 · RF: AUC=0.5884
+    SMOTE α=1.0 · MLP: AUC=0.6217
+
+  Seed 999:
+    Baseline · GBC: AUC=0.5024
+    Baseline · LR: AUC=0.6083
+    Baseline · RF: AUC=0.4597
+    Baseline · MLP: AUC=0.5169
+    [GaussianCopula] fitting...  (8000 synth rows)
+    GaussianCopula α=0.1 · GBC: AUC=0.4328
+    GaussianCopula α=0.1 · LR: AUC=0.6054
+    GaussianCopula α=0.1 · RF: AUC=0.4514
+    GaussianCopula α=0.1 · MLP: AUC=0.5722
+    GaussianCopula α=0.2 · GBC: AUC=0.4730
+    GaussianCopula α=0.2 · LR: AUC=0.6009
+    GaussianCopula α=0.2 · RF: AUC=0.4593
+    GaussianCopula α=0.2 · MLP: AUC=0.5743
+    GaussianCopula α=0.3 · GBC: AUC=0.4977
+    GaussianCopula α=0.3 · LR: AUC=0.5876
+    GaussianCopula α=0.3 · RF: AUC=0.5026
+    GaussianCopula α=0.3 · MLP: AUC=0.5751
+    GaussianCopula α=0.5 · GBC: AUC=0.4013
+    GaussianCopula α=0.5 · LR: AUC=0.5907
+    GaussianCopula α=0.5 · RF: AUC=0.4758
+    GaussianCopula α=0.5 · MLP: AUC=0.5810
+    GaussianCopula α=1.0 · GBC: AUC=0.4828
+    GaussianCopula α=1.0 · LR: AUC=0.5410
+    GaussianCopula α=1.0 · RF: AUC=0.5641
+    GaussianCopula α=1.0 · MLP: AUC=0.5836
+    [CTGAN] fitting.../opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+  (8000 synth rows)
+    CTGAN α=0.1 · GBC: AUC=0.5161
+    CTGAN α=0.1 · LR: AUC=0.5727
+    CTGAN α=0.1 · RF: AUC=0.4732
+    CTGAN α=0.1 · MLP: AUC=0.5748
+    CTGAN α=0.2 · GBC: AUC=0.5279
+    CTGAN α=0.2 · LR: AUC=0.5865
+    CTGAN α=0.2 · RF: AUC=0.4729
+    CTGAN α=0.2 · MLP: AUC=0.5786
+    CTGAN α=0.3 · GBC: AUC=0.5660
+    CTGAN α=0.3 · LR: AUC=0.5838
+    CTGAN α=0.3 · RF: AUC=0.4689
+    CTGAN α=0.3 · MLP: AUC=0.5842
+    CTGAN α=0.5 · GBC: AUC=0.5512
+    CTGAN α=0.5 · LR: AUC=0.5844
+    CTGAN α=0.5 · RF: AUC=0.5580
+    CTGAN α=0.5 · MLP: AUC=0.5873
+    CTGAN α=1.0 · GBC: AUC=0.5155
+    CTGAN α=1.0 · LR: AUC=0.5751
+    CTGAN α=1.0 · RF: AUC=0.5338
+    CTGAN α=1.0 · MLP: AUC=0.5966
+    SMOTE α=0.1 · GBC: AUC=0.4947
+    SMOTE α=0.1 · LR: AUC=0.5826
+    SMOTE α=0.1 · RF: AUC=0.5115
+    SMOTE α=0.1 · MLP: AUC=0.5536
+    SMOTE α=0.2 · GBC: AUC=0.5168
+    SMOTE α=0.2 · LR: AUC=0.5856
+    SMOTE α=0.2 · RF: AUC=0.5222
+    SMOTE α=0.2 · MLP: AUC=0.5598
+    SMOTE α=0.3 · GBC: AUC=0.5019
+    SMOTE α=0.3 · LR: AUC=0.5899
+    SMOTE α=0.3 · RF: AUC=0.5381
+    SMOTE α=0.3 · MLP: AUC=0.5341
+    SMOTE α=0.5 · GBC: AUC=0.4941
+    SMOTE α=0.5 · LR: AUC=0.5986
+    SMOTE α=0.5 · RF: AUC=0.5201
+    SMOTE α=0.5 · MLP: AUC=0.5383
+    SMOTE α=1.0 · GBC: AUC=0.4975
+    SMOTE α=1.0 · LR: AUC=0.6039
+    SMOTE α=1.0 · RF: AUC=0.5311
+    SMOTE α=1.0 · MLP: AUC=0.5389
+
+  Seed 10:
+    Baseline · GBC: AUC=0.5869
+    Baseline · LR: AUC=0.6926
+    Baseline · RF: AUC=0.4453
+    Baseline · MLP: AUC=0.4349
+    [GaussianCopula] fitting...  (8000 synth rows)
+    GaussianCopula α=0.1 · GBC: AUC=0.5545
+    GaussianCopula α=0.1 · LR: AUC=0.7015
+    GaussianCopula α=0.1 · RF: AUC=0.4497
+    GaussianCopula α=0.1 · MLP: AUC=0.4159
+    GaussianCopula α=0.2 · GBC: AUC=0.5605
+    GaussianCopula α=0.2 · LR: AUC=0.7253
+    GaussianCopula α=0.2 · RF: AUC=0.4777
+    GaussianCopula α=0.2 · MLP: AUC=0.4083
+    GaussianCopula α=0.3 · GBC: AUC=0.6293
+    GaussianCopula α=0.3 · LR: AUC=0.7297
+    GaussianCopula α=0.3 · RF: AUC=0.4990
+    GaussianCopula α=0.3 · MLP: AUC=0.4068
+    GaussianCopula α=0.5 · GBC: AUC=0.6530
+    GaussianCopula α=0.5 · LR: AUC=0.7128
+    GaussianCopula α=0.5 · RF: AUC=0.5059
+    GaussianCopula α=0.5 · MLP: AUC=0.4199
+    GaussianCopula α=1.0 · GBC: AUC=0.5919
+    GaussianCopula α=1.0 · LR: AUC=0.6852
+    GaussianCopula α=1.0 · RF: AUC=0.4710
+    GaussianCopula α=1.0 · MLP: AUC=0.4352
+    [CTGAN] fitting.../opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+  (8000 synth rows)
+    CTGAN α=0.1 · GBC: AUC=0.6431
+    CTGAN α=0.1 · LR: AUC=0.7002
+    CTGAN α=0.1 · RF: AUC=0.4456
+    CTGAN α=0.1 · MLP: AUC=0.4334
+    CTGAN α=0.2 · GBC: AUC=0.6134
+    CTGAN α=0.2 · LR: AUC=0.6848
+    CTGAN α=0.2 · RF: AUC=0.4380
+    CTGAN α=0.2 · MLP: AUC=0.4375
+    CTGAN α=0.3 · GBC: AUC=0.6500
+    CTGAN α=0.3 · LR: AUC=0.6869
+    CTGAN α=0.3 · RF: AUC=0.4652
+    CTGAN α=0.3 · MLP: AUC=0.4505
+    CTGAN α=0.5 · GBC: AUC=0.6551
+    CTGAN α=0.5 · LR: AUC=0.7032
+    CTGAN α=0.5 · RF: AUC=0.4375
+    CTGAN α=0.5 · MLP: AUC=0.4673
+    CTGAN α=1.0 · GBC: AUC=0.5803
+    CTGAN α=1.0 · LR: AUC=0.6907
+    CTGAN α=1.0 · RF: AUC=0.4325
+    CTGAN α=1.0 · MLP: AUC=0.5186
+    SMOTE α=0.1 · GBC: AUC=0.5118
+    SMOTE α=0.1 · LR: AUC=0.5184
+    SMOTE α=0.1 · RF: AUC=0.3906
+    SMOTE α=0.1 · MLP: AUC=0.5282
+    SMOTE α=0.2 · GBC: AUC=0.5287
+    SMOTE α=0.2 · LR: AUC=0.5188
+    SMOTE α=0.2 · RF: AUC=0.4503
+    SMOTE α=0.2 · MLP: AUC=0.5081
+    SMOTE α=0.3 · GBC: AUC=0.5140
+    SMOTE α=0.3 · LR: AUC=0.5192
+    SMOTE α=0.3 · RF: AUC=0.4084
+    SMOTE α=0.3 · MLP: AUC=0.4248
+    SMOTE α=0.5 · GBC: AUC=0.5208
+    SMOTE α=0.5 · LR: AUC=0.5253
+    SMOTE α=0.5 · RF: AUC=0.4188
+    SMOTE α=0.5 · MLP: AUC=0.4384
+    SMOTE α=1.0 · GBC: AUC=0.5325
+    SMOTE α=1.0 · LR: AUC=0.5298
+    SMOTE α=1.0 · RF: AUC=0.3639
+    SMOTE α=1.0 · MLP: AUC=0.4090
+
+  Seed 20:
+    Baseline · GBC: AUC=0.5848
+    Baseline · LR: AUC=0.6054
+    Baseline · RF: AUC=0.5825
+    Baseline · MLP: AUC=0.5319
+    [GaussianCopula] fitting...  (8000 synth rows)
+    GaussianCopula α=0.1 · GBC: AUC=0.6570
+    GaussianCopula α=0.1 · LR: AUC=0.6367
+    GaussianCopula α=0.1 · RF: AUC=0.5478
+    GaussianCopula α=0.1 · MLP: AUC=0.5384
+    GaussianCopula α=0.2 · GBC: AUC=0.5170
+    GaussianCopula α=0.2 · LR: AUC=0.6607
+    GaussianCopula α=0.2 · RF: AUC=0.5434
+    GaussianCopula α=0.2 · MLP: AUC=0.5450
+    GaussianCopula α=0.3 · GBC: AUC=0.6037
+    GaussianCopula α=0.3 · LR: AUC=0.6884
+    GaussianCopula α=0.3 · RF: AUC=0.5466
+    GaussianCopula α=0.3 · MLP: AUC=0.5439
+    GaussianCopula α=0.5 · GBC: AUC=0.5746
+    GaussianCopula α=0.5 · LR: AUC=0.6641
+    GaussianCopula α=0.5 · RF: AUC=0.5726
+    GaussianCopula α=0.5 · MLP: AUC=0.5475
+    GaussianCopula α=1.0 · GBC: AUC=0.5694
+    GaussianCopula α=1.0 · LR: AUC=0.6353
+    GaussianCopula α=1.0 · RF: AUC=0.6298
+    GaussianCopula α=1.0 · MLP: AUC=0.5355
+    [CTGAN] fitting.../opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+  (8000 synth rows)
+    CTGAN α=0.1 · GBC: AUC=0.6297
+    CTGAN α=0.1 · LR: AUC=0.5004
+    CTGAN α=0.1 · RF: AUC=0.6000
+    CTGAN α=0.1 · MLP: AUC=0.5401
+    CTGAN α=0.2 · GBC: AUC=0.5353
+    CTGAN α=0.2 · LR: AUC=0.5027
+    CTGAN α=0.2 · RF: AUC=0.5088
+    CTGAN α=0.2 · MLP: AUC=0.5411
+    CTGAN α=0.3 · GBC: AUC=0.5443
+    CTGAN α=0.3 · LR: AUC=0.4903
+    CTGAN α=0.3 · RF: AUC=0.5711
+    CTGAN α=0.3 · MLP: AUC=0.5538
+    CTGAN α=0.5 · GBC: AUC=0.5294
+    CTGAN α=0.5 · LR: AUC=0.4497
+    CTGAN α=0.5 · RF: AUC=0.6265
+    CTGAN α=0.5 · MLP: AUC=0.5478
+    CTGAN α=1.0 · GBC: AUC=0.5075
+    CTGAN α=1.0 · LR: AUC=0.4317
+    CTGAN α=1.0 · RF: AUC=0.5807
+    CTGAN α=1.0 · MLP: AUC=0.5255
+    SMOTE α=0.1 · GBC: AUC=0.5929
+    SMOTE α=0.1 · LR: AUC=0.6645
+    SMOTE α=0.1 · RF: AUC=0.5554
+    SMOTE α=0.1 · MLP: AUC=0.6359
+    SMOTE α=0.2 · GBC: AUC=0.6150
+    SMOTE α=0.2 · LR: AUC=0.6690
+    SMOTE α=0.2 · RF: AUC=0.6425
+    SMOTE α=0.2 · MLP: AUC=0.6430
+    SMOTE α=0.3 · GBC: AUC=0.5948
+    SMOTE α=0.3 · LR: AUC=0.6641
+    SMOTE α=0.3 · RF: AUC=0.5720
+    SMOTE α=0.3 · MLP: AUC=0.6211
+    SMOTE α=0.5 · GBC: AUC=0.5941
+    SMOTE α=0.5 · LR: AUC=0.6625
+    SMOTE α=0.5 · RF: AUC=0.5239
+    SMOTE α=0.5 · MLP: AUC=0.5657
+    SMOTE α=1.0 · GBC: AUC=0.6184
+    SMOTE α=1.0 · LR: AUC=0.6588
+    SMOTE α=1.0 · RF: AUC=0.5858
+    SMOTE α=1.0 · MLP: AUC=0.5706
+
+  Seed 30:
+    Baseline · GBC: AUC=0.6266
+    Baseline · LR: AUC=0.6906
+    Baseline · RF: AUC=0.4562
+    Baseline · MLP: AUC=0.5400
+    [GaussianCopula] fitting...  (8000 synth rows)
+    GaussianCopula α=0.1 · GBC: AUC=0.6100
+    GaussianCopula α=0.1 · LR: AUC=0.6815
+    GaussianCopula α=0.1 · RF: AUC=0.4783
+    GaussianCopula α=0.1 · MLP: AUC=0.4919
+    GaussianCopula α=0.2 · GBC: AUC=0.6391
+    GaussianCopula α=0.2 · LR: AUC=0.6777
+    GaussianCopula α=0.2 · RF: AUC=0.4753
+    GaussianCopula α=0.2 · MLP: AUC=0.4818
+    GaussianCopula α=0.3 · GBC: AUC=0.5797
+    GaussianCopula α=0.3 · LR: AUC=0.6881
+    GaussianCopula α=0.3 · RF: AUC=0.5604
+    GaussianCopula α=0.3 · MLP: AUC=0.4798
+    GaussianCopula α=0.5 · GBC: AUC=0.6544
+    GaussianCopula α=0.5 · LR: AUC=0.6768
+    GaussianCopula α=0.5 · RF: AUC=0.4571
+    GaussianCopula α=0.5 · MLP: AUC=0.4721
+    GaussianCopula α=1.0 · GBC: AUC=0.6189
+    GaussianCopula α=1.0 · LR: AUC=0.6828
+    GaussianCopula α=1.0 · RF: AUC=0.4878
+    GaussianCopula α=1.0 · MLP: AUC=0.4614
+    [CTGAN] fitting.../opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+  (8000 synth rows)
+    CTGAN α=0.1 · GBC: AUC=0.5984
+    CTGAN α=0.1 · LR: AUC=0.6917
+    CTGAN α=0.1 · RF: AUC=0.4886
+    CTGAN α=0.1 · MLP: AUC=0.4896
+    CTGAN α=0.2 · GBC: AUC=0.6238
+    CTGAN α=0.2 · LR: AUC=0.6893
+    CTGAN α=0.2 · RF: AUC=0.5264
+    CTGAN α=0.2 · MLP: AUC=0.4853
+    CTGAN α=0.3 · GBC: AUC=0.6332
+    CTGAN α=0.3 · LR: AUC=0.6820
+    CTGAN α=0.3 · RF: AUC=0.5716
+    CTGAN α=0.3 · MLP: AUC=0.4825
+    CTGAN α=0.5 · GBC: AUC=0.6320
+    CTGAN α=0.5 · LR: AUC=0.6818
+    CTGAN α=0.5 · RF: AUC=0.5262
+    CTGAN α=0.5 · MLP: AUC=0.4850
+    CTGAN α=1.0 · GBC: AUC=0.6216
+    CTGAN α=1.0 · LR: AUC=0.6694
+    CTGAN α=1.0 · RF: AUC=0.4418
+    CTGAN α=1.0 · MLP: AUC=0.4837
+    SMOTE α=0.1 · GBC: AUC=0.5528
+    SMOTE α=0.1 · LR: AUC=0.5558
+    SMOTE α=0.1 · RF: AUC=0.5194
+    SMOTE α=0.1 · MLP: AUC=0.6588
+    SMOTE α=0.2 · GBC: AUC=0.5778
+    SMOTE α=0.2 · LR: AUC=0.5617
+    SMOTE α=0.2 · RF: AUC=0.5268
+    SMOTE α=0.2 · MLP: AUC=0.5554
+    SMOTE α=0.3 · GBC: AUC=0.5733
+    SMOTE α=0.3 · LR: AUC=0.5734
+    SMOTE α=0.3 · RF: AUC=0.5187
+    SMOTE α=0.3 · MLP: AUC=0.5250
+    SMOTE α=0.5 · GBC: AUC=0.5752
+    SMOTE α=0.5 · LR: AUC=0.5867
+    SMOTE α=0.5 · RF: AUC=0.5577
+    SMOTE α=0.5 · MLP: AUC=0.5153
+    SMOTE α=1.0 · GBC: AUC=0.5584
+    SMOTE α=1.0 · LR: AUC=0.5971
+    SMOTE α=1.0 · RF: AUC=0.5353
+    SMOTE α=1.0 · MLP: AUC=0.5698
+
+  Seed 40:
+    Baseline · GBC: AUC=0.5681
+    Baseline · LR: AUC=0.6789
+    Baseline · RF: AUC=0.5235
+    Baseline · MLP: AUC=0.5798
+    [GaussianCopula] fitting...  (8000 synth rows)
+    GaussianCopula α=0.1 · GBC: AUC=0.5566
+    GaussianCopula α=0.1 · LR: AUC=0.6824
+    GaussianCopula α=0.1 · RF: AUC=0.4736
+    GaussianCopula α=0.1 · MLP: AUC=0.6201
+    GaussianCopula α=0.2 · GBC: AUC=0.5684
+    GaussianCopula α=0.2 · LR: AUC=0.6710
+    GaussianCopula α=0.2 · RF: AUC=0.4775
+    GaussianCopula α=0.2 · MLP: AUC=0.6245
+    GaussianCopula α=0.3 · GBC: AUC=0.4996
+    GaussianCopula α=0.3 · LR: AUC=0.6672
+    GaussianCopula α=0.3 · RF: AUC=0.4767
+    GaussianCopula α=0.3 · MLP: AUC=0.6260
+    GaussianCopula α=0.5 · GBC: AUC=0.5268
+    GaussianCopula α=0.5 · LR: AUC=0.6534
+    GaussianCopula α=0.5 · RF: AUC=0.4985
+    GaussianCopula α=0.5 · MLP: AUC=0.6358
+    GaussianCopula α=1.0 · GBC: AUC=0.5036
+    GaussianCopula α=1.0 · LR: AUC=0.6358
+    GaussianCopula α=1.0 · RF: AUC=0.4934
+    GaussianCopula α=1.0 · MLP: AUC=0.6429
+    [CTGAN] fitting.../opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+  (8000 synth rows)
+    CTGAN α=0.1 · GBC: AUC=0.6029
+    CTGAN α=0.1 · LR: AUC=0.7068
+    CTGAN α=0.1 · RF: AUC=0.5476
+    CTGAN α=0.1 · MLP: AUC=0.6275
+    CTGAN α=0.2 · GBC: AUC=0.6172
+    CTGAN α=0.2 · LR: AUC=0.7217
+    CTGAN α=0.2 · RF: AUC=0.5182
+    CTGAN α=0.2 · MLP: AUC=0.6444
+    CTGAN α=0.3 · GBC: AUC=0.6317
+    CTGAN α=0.3 · LR: AUC=0.7161
+    CTGAN α=0.3 · RF: AUC=0.4860
+    CTGAN α=0.3 · MLP: AUC=0.6480
+    CTGAN α=0.5 · GBC: AUC=0.5863
+    CTGAN α=0.5 · LR: AUC=0.7226
+    CTGAN α=0.5 · RF: AUC=0.5049
+    CTGAN α=0.5 · MLP: AUC=0.6682
+    CTGAN α=1.0 · GBC: AUC=0.5572
+    CTGAN α=1.0 · LR: AUC=0.7128
+    CTGAN α=1.0 · RF: AUC=0.5304
+    CTGAN α=1.0 · MLP: AUC=0.7057
+    SMOTE α=0.1 · GBC: AUC=0.5347
+    SMOTE α=0.1 · LR: AUC=0.4491
+    SMOTE α=0.1 · RF: AUC=0.5297
+    SMOTE α=0.1 · MLP: AUC=0.6207
+    SMOTE α=0.2 · GBC: AUC=0.5135
+    SMOTE α=0.2 · LR: AUC=0.4456
+    SMOTE α=0.2 · RF: AUC=0.6142
+    SMOTE α=0.2 · MLP: AUC=0.6146
+    SMOTE α=0.3 · GBC: AUC=0.5080
+    SMOTE α=0.3 · LR: AUC=0.4470
+    SMOTE α=0.3 · RF: AUC=0.5778
+    SMOTE α=0.3 · MLP: AUC=0.6290
+    SMOTE α=0.5 · GBC: AUC=0.5092
+    SMOTE α=0.5 · LR: AUC=0.4470
+    SMOTE α=0.5 · RF: AUC=0.5873
+    SMOTE α=0.5 · MLP: AUC=0.5781
+    SMOTE α=1.0 · GBC: AUC=0.5095
+    SMOTE α=1.0 · LR: AUC=0.4501
+    SMOTE α=1.0 · RF: AUC=0.5703
+    SMOTE α=1.0 · MLP: AUC=0.5768
+
+  Seed 50:
+    Baseline · GBC: AUC=0.4807
+    Baseline · LR: AUC=0.5386
+    Baseline · RF: AUC=0.4480
+    Baseline · MLP: AUC=0.4538
+    [GaussianCopula] fitting...  (8000 synth rows)
+    GaussianCopula α=0.1 · GBC: AUC=0.4983
+    GaussianCopula α=0.1 · LR: AUC=0.5296
+    GaussianCopula α=0.1 · RF: AUC=0.4740
+    GaussianCopula α=0.1 · MLP: AUC=0.4830
+    GaussianCopula α=0.2 · GBC: AUC=0.5092
+    GaussianCopula α=0.2 · LR: AUC=0.5130
+    GaussianCopula α=0.2 · RF: AUC=0.4726
+    GaussianCopula α=0.2 · MLP: AUC=0.4913
+    GaussianCopula α=0.3 · GBC: AUC=0.4138
+    GaussianCopula α=0.3 · LR: AUC=0.5071
+    GaussianCopula α=0.3 · RF: AUC=0.4746
+    GaussianCopula α=0.3 · MLP: AUC=0.4898
+    GaussianCopula α=0.5 · GBC: AUC=0.4449
+    GaussianCopula α=0.5 · LR: AUC=0.5108
+    GaussianCopula α=0.5 · RF: AUC=0.4419
+    GaussianCopula α=0.5 · MLP: AUC=0.4922
+    GaussianCopula α=1.0 · GBC: AUC=0.4993
+    GaussianCopula α=1.0 · LR: AUC=0.5218
+    GaussianCopula α=1.0 · RF: AUC=0.4914
+    GaussianCopula α=1.0 · MLP: AUC=0.4995
+    [CTGAN] fitting.../opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+  (8000 synth rows)
+    CTGAN α=0.1 · GBC: AUC=0.4796
+    CTGAN α=0.1 · LR: AUC=0.5117
+    CTGAN α=0.1 · RF: AUC=0.4431
+    CTGAN α=0.1 · MLP: AUC=0.4780
+    CTGAN α=0.2 · GBC: AUC=0.4422
+    CTGAN α=0.2 · LR: AUC=0.5045
+    CTGAN α=0.2 · RF: AUC=0.4866
+    CTGAN α=0.2 · MLP: AUC=0.4715
+    CTGAN α=0.3 · GBC: AUC=0.4250
+    CTGAN α=0.3 · LR: AUC=0.4986
+    CTGAN α=0.3 · RF: AUC=0.4378
+    CTGAN α=0.3 · MLP: AUC=0.4707
+    CTGAN α=0.5 · GBC: AUC=0.5015
+    CTGAN α=0.5 · LR: AUC=0.5024
+    CTGAN α=0.5 · RF: AUC=0.4297
+    CTGAN α=0.5 · MLP: AUC=0.4729
+    CTGAN α=1.0 · GBC: AUC=0.4983
+    CTGAN α=1.0 · LR: AUC=0.5215
+    CTGAN α=1.0 · RF: AUC=0.5008
+    CTGAN α=1.0 · MLP: AUC=0.4842
+    SMOTE α=0.1 · GBC: AUC=0.4796
+    SMOTE α=0.1 · LR: AUC=0.4835
+    SMOTE α=0.1 · RF: AUC=0.5511
+    SMOTE α=0.1 · MLP: AUC=0.4781
+    SMOTE α=0.2 · GBC: AUC=0.4696
+    SMOTE α=0.2 · LR: AUC=0.4780
+    SMOTE α=0.2 · RF: AUC=0.4862
+    SMOTE α=0.2 · MLP: AUC=0.4825
+    SMOTE α=0.3 · GBC: AUC=0.4850
+    SMOTE α=0.3 · LR: AUC=0.4767
+    SMOTE α=0.3 · RF: AUC=0.4734
+    SMOTE α=0.3 · MLP: AUC=0.4714
+    SMOTE α=0.5 · GBC: AUC=0.4851
+    SMOTE α=0.5 · LR: AUC=0.4757
+    SMOTE α=0.5 · RF: AUC=0.4999
+    SMOTE α=0.5 · MLP: AUC=0.4828
+    SMOTE α=1.0 · GBC: AUC=0.4692
+    SMOTE α=1.0 · LR: AUC=0.4744
+    SMOTE α=1.0 · RF: AUC=0.5110
+    SMOTE α=1.0 · MLP: AUC=0.4797
+
+  Hillstrom Email — multi-classifier CI summary (mean ± 95% CI, GBC only):
+
+    Classifier = GBC
+              method  alpha              AUC     gain
+      GaussianCopula    0.1  0.5636 ± 0.0509  +0.0051
+      GaussianCopula    0.2  0.5477 ± 0.0436  -0.0107
+      GaussianCopula    0.3  0.5344 ± 0.0549  -0.0241
+      GaussianCopula    0.5  0.5360 ± 0.0615  -0.0224
+      GaussianCopula    1.0  0.5404 ± 0.0410  -0.0181
+               CTGAN    0.1  0.5827 ± 0.0381  +0.0243
+               CTGAN    0.2  0.5677 ± 0.0559  +0.0092
+               CTGAN    0.3  0.5809 ± 0.0652  +0.0224
+               CTGAN    0.5  0.5798 ± 0.0556  +0.0213
+               CTGAN    1.0  0.5661 ± 0.0497  +0.0076
+               SMOTE    0.1  0.5702 ± 0.0476  +0.0117
+               SMOTE    0.2  0.5706 ± 0.0464  +0.0122
+               SMOTE    0.3  0.5688 ± 0.0475  +0.0103
+               SMOTE    0.5  0.5651 ± 0.0447  +0.0066
+               SMOTE    1.0  0.5644 ± 0.0473  +0.0059
+
+    Classifier = LR
+              method  alpha              AUC     gain
+      GaussianCopula    0.1  0.6557 ± 0.0428  +0.0034
+      GaussianCopula    0.2  0.6546 ± 0.0464  +0.0023
+      GaussianCopula    0.3  0.6570 ± 0.0486  +0.0047
+      GaussianCopula    0.5  0.6506 ± 0.0448  -0.0018
+      GaussianCopula    1.0  0.6367 ± 0.0441  -0.0156
+               CTGAN    0.1  0.6382 ± 0.0638  -0.0141
+               CTGAN    0.2  0.6364 ± 0.0625  -0.0159
+               CTGAN    0.3  0.6282 ± 0.0629  -0.0241
+               CTGAN    0.5  0.6247 ± 0.0677  -0.0276
+               CTGAN    1.0  0.6188 ± 0.0654  -0.0335
+               SMOTE    0.1  0.5369 ± 0.0632  -0.1155
+               SMOTE    0.2  0.5404 ± 0.0617  -0.1119
+               SMOTE    0.3  0.5453 ± 0.0578  -0.1070
+               SMOTE    0.5  0.5520 ± 0.0554  -0.1003
+               SMOTE    1.0  0.5590 ± 0.0520  -0.0933
+
+    Classifier = RF
+              method  alpha              AUC     gain
+      GaussianCopula    0.1  0.5099 ± 0.0501  +0.0055
+      GaussianCopula    0.2  0.5088 ± 0.0412  +0.0043
+      GaussianCopula    0.3  0.5157 ± 0.0452  +0.0112
+      GaussianCopula    0.5  0.5272 ± 0.0539  +0.0228
+      GaussianCopula    1.0  0.5310 ± 0.0523  +0.0265
+               CTGAN    0.1  0.5218 ± 0.0558  +0.0174
+               CTGAN    0.2  0.5206 ± 0.0460  +0.0161
+               CTGAN    0.3  0.5359 ± 0.0541  +0.0315
+               CTGAN    0.5  0.5358 ± 0.0539  +0.0313
+               CTGAN    1.0  0.5397 ± 0.0571  +0.0352
+               SMOTE    0.1  0.5551 ± 0.0600  +0.0506
+               SMOTE    0.2  0.5689 ± 0.0536  +0.0644
+               SMOTE    0.3  0.5532 ± 0.0522  +0.0487
+               SMOTE    0.5  0.5538 ± 0.0526  +0.0493
+               SMOTE    1.0  0.5479 ± 0.0561  +0.0434
+
+    Classifier = MLP
+              method  alpha              AUC     gain
+      GaussianCopula    0.1  0.4998 ± 0.0434  +0.0075
+      GaussianCopula    0.2  0.4990 ± 0.0461  +0.0067
+      GaussianCopula    0.3  0.4993 ± 0.0466  +0.0070
+      GaussianCopula    0.5  0.5014 ± 0.0489  +0.0091
+      GaussianCopula    1.0  0.5028 ± 0.0505  +0.0105
+               CTGAN    0.1  0.5044 ± 0.0427  +0.0121
+               CTGAN    0.2  0.5077 ± 0.0458  +0.0154
+               CTGAN    0.3  0.5144 ± 0.0468  +0.0221
+               CTGAN    0.5  0.5231 ± 0.0500  +0.0308
+               CTGAN    1.0  0.5485 ± 0.0524  +0.0562
+               SMOTE    0.1  0.5972 ± 0.0467  +0.1049
+               SMOTE    0.2  0.5820 ± 0.0430  +0.0897
+               SMOTE    0.3  0.5631 ± 0.0548  +0.0708
+               SMOTE    0.5  0.5491 ± 0.0425  +0.0568
+               SMOTE    1.0  0.5457 ± 0.0468  +0.0534
+
+Saved: results/ci_multi_classifier_hillstrom.csv
+  Shape after load: (50000, 13), positive rate: 0.3%
+
+====================================================================
+Criteo Uplift: (50000, 13), positive rate 0.30%
+====================================================================
+Resume: 0 (seed, method, classifier) triples already complete
+
+  Seed 42:
+    Baseline · GBC: AUC=0.7477
+    Baseline · LR: AUC=0.9275
+    Baseline · RF: AUC=0.6593
+    Baseline · MLP: AUC=0.5337
+    [GaussianCopula] fitting...  (8000 synth rows)
+    GaussianCopula α=0.1 · GBC: AUC=0.8775
+    GaussianCopula α=0.1 · LR: AUC=0.9247
+    GaussianCopula α=0.1 · RF: AUC=0.5706
+    GaussianCopula α=0.1 · MLP: AUC=0.5448
+    GaussianCopula α=0.2 · GBC: AUC=0.8822
+    GaussianCopula α=0.2 · LR: AUC=0.9102
+    GaussianCopula α=0.2 · RF: AUC=0.5685
+    GaussianCopula α=0.2 · MLP: AUC=0.5563
+    GaussianCopula α=0.3 · GBC: AUC=0.7404
+    GaussianCopula α=0.3 · LR: AUC=0.9246
+    GaussianCopula α=0.3 · RF: AUC=0.6631
+    GaussianCopula α=0.3 · MLP: AUC=0.5629
+    GaussianCopula α=0.5 · GBC: AUC=0.7515
+    GaussianCopula α=0.5 · LR: AUC=0.9450
+    GaussianCopula α=0.5 · RF: AUC=0.7611
+    GaussianCopula α=0.5 · MLP: AUC=0.5656
+    GaussianCopula α=1.0 · GBC: AUC=0.8607
+    GaussianCopula α=1.0 · LR: AUC=0.9420
+    GaussianCopula α=1.0 · RF: AUC=0.5701
+    GaussianCopula α=1.0 · MLP: AUC=0.9316
+    [CTGAN] fitting...  (8000 synth rows)
+    CTGAN α=0.1 · GBC: AUC=0.8928
+    CTGAN α=0.1 · LR: AUC=0.9249
+    CTGAN α=0.1 · RF: AUC=0.7641
+    CTGAN α=0.1 · MLP: AUC=0.9551
+    CTGAN α=0.2 · GBC: AUC=0.8927
+    CTGAN α=0.2 · LR: AUC=0.9247
+    CTGAN α=0.2 · RF: AUC=0.7498
+    CTGAN α=0.2 · MLP: AUC=0.9545
+    CTGAN α=0.3 · GBC: AUC=0.8921
+    CTGAN α=0.3 · LR: AUC=0.9247
+    CTGAN α=0.3 · RF: AUC=0.8451
+    CTGAN α=0.3 · MLP: AUC=0.9531
+    CTGAN α=0.5 · GBC: AUC=0.9034
+    CTGAN α=0.5 · LR: AUC=0.9254
+    CTGAN α=0.5 · RF: AUC=0.9470
+    CTGAN α=0.5 · MLP: AUC=0.9468
+    CTGAN α=1.0 · GBC: AUC=0.9215
+    CTGAN α=1.0 · LR: AUC=0.9245
+    CTGAN α=1.0 · RF: AUC=0.9474
+    CTGAN α=1.0 · MLP: AUC=0.9412
+    SMOTE α=0.1 · GBC: AUC=0.8985
+    SMOTE α=0.1 · LR: AUC=0.9089
+    SMOTE α=0.1 · RF: AUC=0.9548
+    SMOTE α=0.1 · MLP: AUC=0.8304
+    SMOTE α=0.2 · GBC: AUC=0.9253
+    SMOTE α=0.2 · LR: AUC=0.9009
+    SMOTE α=0.2 · RF: AUC=0.8684
+    SMOTE α=0.2 · MLP: AUC=0.8612
+    SMOTE α=0.3 · GBC: AUC=0.9340
+    SMOTE α=0.3 · LR: AUC=0.8932
+    SMOTE α=0.3 · RF: AUC=0.8577
+    SMOTE α=0.3 · MLP: AUC=0.8449
+    SMOTE α=0.5 · GBC: AUC=0.9324
+    SMOTE α=0.5 · LR: AUC=0.8844
+    SMOTE α=0.5 · RF: AUC=0.8659
+    SMOTE α=0.5 · MLP: AUC=0.8479
+    SMOTE α=1.0 · GBC: AUC=0.9082
+    SMOTE α=1.0 · LR: AUC=0.8746
+    SMOTE α=1.0 · RF: AUC=0.8618
+    SMOTE α=1.0 · MLP: AUC=0.8824
+
+  Seed 123:
+    Baseline · GBC: AUC=0.9790
+    Baseline · LR: AUC=0.9858
+    Baseline · RF: AUC=0.9017
+    Baseline · MLP: AUC=0.0201
+    [GaussianCopula] fitting...  (8000 synth rows)
+    GaussianCopula α=0.1 · GBC: AUC=0.8123
+    GaussianCopula α=0.1 · LR: AUC=0.9859
+    GaussianCopula α=0.1 · RF: AUC=0.9753
+    GaussianCopula α=0.1 · MLP: AUC=0.0195
+    GaussianCopula α=0.2 · GBC: AUC=0.9832
+    GaussianCopula α=0.2 · LR: AUC=0.9855
+    GaussianCopula α=0.2 · RF: AUC=0.9766
+    GaussianCopula α=0.2 · MLP: AUC=0.0181
+    GaussianCopula α=0.3 · GBC: AUC=0.8116
+    GaussianCopula α=0.3 · LR: AUC=0.9850
+    GaussianCopula α=0.3 · RF: AUC=0.9745
+    GaussianCopula α=0.3 · MLP: AUC=0.0198
+    GaussianCopula α=0.5 · GBC: AUC=0.9856
+    GaussianCopula α=0.5 · LR: AUC=0.9837
+    GaussianCopula α=0.5 · RF: AUC=0.9785
+    GaussianCopula α=0.5 · MLP: AUC=0.0257
+    GaussianCopula α=1.0 · GBC: AUC=0.9849
+    GaussianCopula α=1.0 · LR: AUC=0.9840
+    GaussianCopula α=1.0 · RF: AUC=0.8940
+    GaussianCopula α=1.0 · MLP: AUC=0.0303
+    [CTGAN] fitting.../opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+  (8000 synth rows)
+    CTGAN α=0.1 · GBC: AUC=0.9817
+    CTGAN α=0.1 · LR: AUC=0.9858
+    CTGAN α=0.1 · RF: AUC=0.8974
+    CTGAN α=0.1 · MLP: AUC=0.9733
+    CTGAN α=0.2 · GBC: AUC=0.9868
+    CTGAN α=0.2 · LR: AUC=0.9859
+    CTGAN α=0.2 · RF: AUC=0.9724
+    CTGAN α=0.2 · MLP: AUC=0.9774
+    CTGAN α=0.3 · GBC: AUC=0.9869
+    CTGAN α=0.3 · LR: AUC=0.9855
+    CTGAN α=0.3 · RF: AUC=0.8972
+    CTGAN α=0.3 · MLP: AUC=0.9742
+    CTGAN α=0.5 · GBC: AUC=0.9855
+    CTGAN α=0.5 · LR: AUC=0.9857
+    CTGAN α=0.5 · RF: AUC=0.8973
+    CTGAN α=0.5 · MLP: AUC=0.9531
+    CTGAN α=1.0 · GBC: AUC=0.9852
+    CTGAN α=1.0 · LR: AUC=0.9859
+    CTGAN α=1.0 · RF: AUC=0.9651
+    CTGAN α=1.0 · MLP: AUC=0.9579
+    SMOTE α=0.1 · GBC: AUC=0.9807
+    SMOTE α=0.1 · LR: AUC=0.9840
+    SMOTE α=0.1 · RF: AUC=0.8928
+    SMOTE α=0.1 · MLP: AUC=0.9642
+    SMOTE α=0.2 · GBC: AUC=0.9774
+    SMOTE α=0.2 · LR: AUC=0.9829
+    SMOTE α=0.2 · RF: AUC=0.8923
+    SMOTE α=0.2 · MLP: AUC=0.9687
+    SMOTE α=0.3 · GBC: AUC=0.9717
+    SMOTE α=0.3 · LR: AUC=0.9815
+    SMOTE α=0.3 · RF: AUC=0.8958
+    SMOTE α=0.3 · MLP: AUC=0.9732
+    SMOTE α=0.5 · GBC: AUC=0.9828
+    SMOTE α=0.5 · LR: AUC=0.9800
+    SMOTE α=0.5 · RF: AUC=0.8150
+    SMOTE α=0.5 · MLP: AUC=0.9691
+    SMOTE α=1.0 · GBC: AUC=0.9793
+    SMOTE α=1.0 · LR: AUC=0.9781
+    SMOTE α=1.0 · RF: AUC=0.8138
+    SMOTE α=1.0 · MLP: AUC=0.9725
+
+  Seed 7:
+    Baseline · GBC: AUC=0.9654
+    Baseline · LR: AUC=0.9933
+    Baseline · RF: AUC=0.8965
+    Baseline · MLP: AUC=0.0195
+    [GaussianCopula] fitting...  (8000 synth rows)
+    GaussianCopula α=0.1 · GBC: AUC=0.9717
+    GaussianCopula α=0.1 · LR: AUC=0.9935
+    GaussianCopula α=0.1 · RF: AUC=0.9761
+    GaussianCopula α=0.1 · MLP: AUC=0.9717
+    GaussianCopula α=0.2 · GBC: AUC=0.9600
+    GaussianCopula α=0.2 · LR: AUC=0.9938
+    GaussianCopula α=0.2 · RF: AUC=0.9761
+    GaussianCopula α=0.2 · MLP: AUC=0.0195
+    GaussianCopula α=0.3 · GBC: AUC=0.9692
+    GaussianCopula α=0.3 · LR: AUC=0.9937
+    GaussianCopula α=0.3 · RF: AUC=0.9754
+    GaussianCopula α=0.3 · MLP: AUC=0.0208
+    GaussianCopula α=0.5 · GBC: AUC=0.9574
+    GaussianCopula α=0.5 · LR: AUC=0.9940
+    GaussianCopula α=0.5 · RF: AUC=0.9804
+    GaussianCopula α=0.5 · MLP: AUC=0.0304
+    GaussianCopula α=1.0 · GBC: AUC=0.9627
+    GaussianCopula α=1.0 · LR: AUC=0.9935
+    GaussianCopula α=1.0 · RF: AUC=0.9770
+    GaussianCopula α=1.0 · MLP: AUC=0.0569
+    [CTGAN] fitting...  (8000 synth rows)
+    CTGAN α=0.1 · GBC: AUC=0.9862
+    CTGAN α=0.1 · LR: AUC=0.9889
+    CTGAN α=0.1 · RF: AUC=0.9825
+    CTGAN α=0.1 · MLP: AUC=0.9868
+    CTGAN α=0.2 · GBC: AUC=0.9880
+    CTGAN α=0.2 · LR: AUC=0.9858
+    CTGAN α=0.2 · RF: AUC=0.9802
+    CTGAN α=0.2 · MLP: AUC=0.9908
+    CTGAN α=0.3 · GBC: AUC=0.9862
+    CTGAN α=0.3 · LR: AUC=0.9845
+    CTGAN α=0.3 · RF: AUC=0.9871
+    CTGAN α=0.3 · MLP: AUC=0.9903
+    CTGAN α=0.5 · GBC: AUC=0.9852
+    CTGAN α=0.5 · LR: AUC=0.9837
+    CTGAN α=0.5 · RF: AUC=0.9831
+    CTGAN α=0.5 · MLP: AUC=0.9810
+    CTGAN α=1.0 · GBC: AUC=0.9885
+    CTGAN α=1.0 · LR: AUC=0.9812
+    CTGAN α=1.0 · RF: AUC=0.9804
+    CTGAN α=1.0 · MLP: AUC=0.9850
+    SMOTE α=0.1 · GBC: AUC=0.9804
+    SMOTE α=0.1 · LR: AUC=0.9898
+    SMOTE α=0.1 · RF: AUC=0.9851
+    SMOTE α=0.1 · MLP: AUC=0.9146
+    SMOTE α=0.2 · GBC: AUC=0.9849
+    SMOTE α=0.2 · LR: AUC=0.9896
+    SMOTE α=0.2 · RF: AUC=0.9015
+    SMOTE α=0.2 · MLP: AUC=0.9219
+    SMOTE α=0.3 · GBC: AUC=0.9866
+    SMOTE α=0.3 · LR: AUC=0.9901
+    SMOTE α=0.3 · RF: AUC=0.9840
+    SMOTE α=0.3 · MLP: AUC=0.9311
+    SMOTE α=0.5 · GBC: AUC=0.9827
+    SMOTE α=0.5 · LR: AUC=0.9896
+    SMOTE α=0.5 · RF: AUC=0.9814
+    SMOTE α=0.5 · MLP: AUC=0.9547
+    SMOTE α=1.0 · GBC: AUC=0.9835
+    SMOTE α=1.0 · LR: AUC=0.9892
+    SMOTE α=1.0 · RF: AUC=0.9843
+    SMOTE α=1.0 · MLP: AUC=0.9616
+
+  Seed 2024:
+    Baseline · GBC: AUC=0.5670
+    Baseline · LR: AUC=0.9922
+    Baseline · RF: AUC=0.9895
+    Baseline · MLP: AUC=0.0206
+    [GaussianCopula] fitting...  (8000 synth rows)
+    GaussianCopula α=0.1 · GBC: AUC=0.9166
+    GaussianCopula α=0.1 · LR: AUC=0.9921
+    GaussianCopula α=0.1 · RF: AUC=0.9886
+    GaussianCopula α=0.1 · MLP: AUC=0.0131
+    GaussianCopula α=0.2 · GBC: AUC=0.4336
+    GaussianCopula α=0.2 · LR: AUC=0.9924
+    GaussianCopula α=0.2 · RF: AUC=0.9898
+    GaussianCopula α=0.2 · MLP: AUC=0.0213
+    GaussianCopula α=0.3 · GBC: AUC=0.4154
+    GaussianCopula α=0.3 · LR: AUC=0.9922
+    GaussianCopula α=0.3 · RF: AUC=0.9910
+    GaussianCopula α=0.3 · MLP: AUC=0.0172
+    GaussianCopula α=0.5 · GBC: AUC=0.5650
+    GaussianCopula α=0.5 · LR: AUC=0.9913
+    GaussianCopula α=0.5 · RF: AUC=0.9912
+    GaussianCopula α=0.5 · MLP: AUC=0.0249
+    GaussianCopula α=1.0 · GBC: AUC=0.7930
+    GaussianCopula α=1.0 · LR: AUC=0.9930
+    GaussianCopula α=1.0 · RF: AUC=0.9910
+    GaussianCopula α=1.0 · MLP: AUC=0.0330
+    [CTGAN] fitting...  (8000 synth rows)
+    CTGAN α=0.1 · GBC: AUC=0.9919
+    CTGAN α=0.1 · LR: AUC=0.9912
+    CTGAN α=0.1 · RF: AUC=0.9909
+    CTGAN α=0.1 · MLP: AUC=0.9457
+    CTGAN α=0.2 · GBC: AUC=0.9863
+    CTGAN α=0.2 · LR: AUC=0.9935
+    CTGAN α=0.2 · RF: AUC=0.9909
+    CTGAN α=0.2 · MLP: AUC=0.9298
+    CTGAN α=0.3 · GBC: AUC=0.9890
+    CTGAN α=0.3 · LR: AUC=0.9939
+    CTGAN α=0.3 · RF: AUC=0.9906
+    CTGAN α=0.3 · MLP: AUC=0.9115
+    CTGAN α=0.5 · GBC: AUC=0.9783
+    CTGAN α=0.5 · LR: AUC=0.9943
+    CTGAN α=0.5 · RF: AUC=0.9899
+    CTGAN α=0.5 · MLP: AUC=0.8490
+    CTGAN α=1.0 · GBC: AUC=0.9851
+    CTGAN α=1.0 · LR: AUC=0.9946
+    CTGAN α=1.0 · RF: AUC=0.9888
+    CTGAN α=1.0 · MLP: AUC=0.9176
+    SMOTE α=0.1 · GBC: AUC=0.9707
+    SMOTE α=0.1 · LR: AUC=0.9939
+    SMOTE α=0.1 · RF: AUC=0.9834
+    SMOTE α=0.1 · MLP: AUC=0.7959
+    SMOTE α=0.2 · GBC: AUC=0.9810
+    SMOTE α=0.2 · LR: AUC=0.9942
+    SMOTE α=0.2 · RF: AUC=0.9825
+    SMOTE α=0.2 · MLP: AUC=0.8162
+    SMOTE α=0.3 · GBC: AUC=0.9785
+    SMOTE α=0.3 · LR: AUC=0.9942
+    SMOTE α=0.3 · RF: AUC=0.9859
+    SMOTE α=0.3 · MLP: AUC=0.7974
+    SMOTE α=0.5 · GBC: AUC=0.9749
+    SMOTE α=0.5 · LR: AUC=0.9942
+    SMOTE α=0.5 · RF: AUC=0.9811
+    SMOTE α=0.5 · MLP: AUC=0.8867
+    SMOTE α=1.0 · GBC: AUC=0.9607
+    SMOTE α=1.0 · LR: AUC=0.9932
+    SMOTE α=1.0 · RF: AUC=0.9788
+    SMOTE α=1.0 · MLP: AUC=0.9348
+
+  Seed 999:
+    Baseline · GBC: AUC=0.9691
+    Baseline · LR: AUC=0.9869
+    Baseline · RF: AUC=0.9140
+    Baseline · MLP: AUC=0.9753
+    [GaussianCopula] fitting...  (8000 synth rows)
+    GaussianCopula α=0.1 · GBC: AUC=0.9805
+    GaussianCopula α=0.1 · LR: AUC=0.9868
+    GaussianCopula α=0.1 · RF: AUC=0.8683
+    GaussianCopula α=0.1 · MLP: AUC=0.1141
+    GaussianCopula α=0.2 · GBC: AUC=0.9689
+    GaussianCopula α=0.2 · LR: AUC=0.9860
+    GaussianCopula α=0.2 · RF: AUC=0.9223
+    GaussianCopula α=0.2 · MLP: AUC=0.9614
+    GaussianCopula α=0.3 · GBC: AUC=0.9514
+    GaussianCopula α=0.3 · LR: AUC=0.9859
+    GaussianCopula α=0.3 · RF: AUC=0.8688
+    GaussianCopula α=0.3 · MLP: AUC=0.1314
+    GaussianCopula α=0.5 · GBC: AUC=0.9617
+    GaussianCopula α=0.5 · LR: AUC=0.9866
+    GaussianCopula α=0.5 · RF: AUC=0.9197
+    GaussianCopula α=0.5 · MLP: AUC=0.9361
+    GaussianCopula α=1.0 · GBC: AUC=0.8578
+    GaussianCopula α=1.0 · LR: AUC=0.9843
+    GaussianCopula α=1.0 · RF: AUC=0.9208
+    GaussianCopula α=1.0 · MLP: AUC=0.2378
+    [CTGAN] fitting...  (8000 synth rows)
+    CTGAN α=0.1 · GBC: AUC=0.9797
+    CTGAN α=0.1 · LR: AUC=0.8848
+    CTGAN α=0.1 · RF: AUC=0.9215
+    CTGAN α=0.1 · MLP: AUC=0.9343
+    CTGAN α=0.2 · GBC: AUC=0.9829
+    CTGAN α=0.2 · LR: AUC=0.8637
+    CTGAN α=0.2 · RF: AUC=0.9250
+    CTGAN α=0.2 · MLP: AUC=0.9344
+    CTGAN α=0.3 · GBC: AUC=0.9776
+    CTGAN α=0.3 · LR: AUC=0.8623
+    CTGAN α=0.3 · RF: AUC=0.9735
+    CTGAN α=0.3 · MLP: AUC=0.8589
+    CTGAN α=0.5 · GBC: AUC=0.9799
+    CTGAN α=0.5 · LR: AUC=0.8590
+    CTGAN α=0.5 · RF: AUC=0.9781
+    CTGAN α=0.5 · MLP: AUC=0.8830
+    CTGAN α=1.0 · GBC: AUC=0.9754
+    CTGAN α=1.0 · LR: AUC=0.8589
+    CTGAN α=1.0 · RF: AUC=0.9764
+    CTGAN α=1.0 · MLP: AUC=0.8396
+    SMOTE α=0.1 · GBC: AUC=0.9672
+    SMOTE α=0.1 · LR: AUC=0.9872
+    SMOTE α=0.1 · RF: AUC=0.9667
+    SMOTE α=0.1 · MLP: AUC=0.7612
+    SMOTE α=0.2 · GBC: AUC=0.9586
+    SMOTE α=0.2 · LR: AUC=0.9847
+    SMOTE α=0.2 · RF: AUC=0.9592
+    SMOTE α=0.2 · MLP: AUC=0.7486
+    SMOTE α=0.3 · GBC: AUC=0.9569
+    SMOTE α=0.3 · LR: AUC=0.9843
+    SMOTE α=0.3 · RF: AUC=0.9077
+    SMOTE α=0.3 · MLP: AUC=0.7592
+    SMOTE α=0.5 · GBC: AUC=0.9523
+    SMOTE α=0.5 · LR: AUC=0.9834
+    SMOTE α=0.5 · RF: AUC=0.9100
+    SMOTE α=0.5 · MLP: AUC=0.7774
+    SMOTE α=1.0 · GBC: AUC=0.9549
+    SMOTE α=1.0 · LR: AUC=0.9796
+    SMOTE α=1.0 · RF: AUC=0.9144
+    SMOTE α=1.0 · MLP: AUC=0.7936
+
+  Seed 10:
+    Baseline · GBC: AUC=0.9259
+    Baseline · LR: AUC=0.9354
+    Baseline · RF: AUC=0.7723
+    Baseline · MLP: AUC=0.0793
+    [GaussianCopula] fitting...  (8000 synth rows)
+    GaussianCopula α=0.1 · GBC: AUC=0.9191
+    GaussianCopula α=0.1 · LR: AUC=0.9364
+    GaussianCopula α=0.1 · RF: AUC=0.7709
+    GaussianCopula α=0.1 · MLP: AUC=0.6983
+    GaussianCopula α=0.2 · GBC: AUC=0.9496
+    GaussianCopula α=0.2 · LR: AUC=0.9094
+    GaussianCopula α=0.2 · RF: AUC=0.7759
+    GaussianCopula α=0.2 · MLP: AUC=0.0843
+    GaussianCopula α=0.3 · GBC: AUC=0.7359
+    GaussianCopula α=0.3 · LR: AUC=0.9004
+    GaussianCopula α=0.3 · RF: AUC=0.7685
+    GaussianCopula α=0.3 · MLP: AUC=0.4855
+    GaussianCopula α=0.5 · GBC: AUC=0.9147
+    GaussianCopula α=0.5 · LR: AUC=0.8904
+    GaussianCopula α=0.5 · RF: AUC=0.8686
+    GaussianCopula α=0.5 · MLP: AUC=0.0793
+    GaussianCopula α=1.0 · GBC: AUC=0.9415
+    GaussianCopula α=1.0 · LR: AUC=0.9073
+    GaussianCopula α=1.0 · RF: AUC=0.7764
+    GaussianCopula α=1.0 · MLP: AUC=0.5845
+    [CTGAN] fitting...  (8000 synth rows)
+    CTGAN α=0.1 · GBC: AUC=0.7790
+    CTGAN α=0.1 · LR: AUC=0.9337
+    CTGAN α=0.1 · RF: AUC=0.8662
+    CTGAN α=0.1 · MLP: AUC=0.9037
+    CTGAN α=0.2 · GBC: AUC=0.9567
+    CTGAN α=0.2 · LR: AUC=0.8302
+    CTGAN α=0.2 · RF: AUC=0.7700
+    CTGAN α=0.2 · MLP: AUC=0.8951
+    CTGAN α=0.3 · GBC: AUC=0.9320
+    CTGAN α=0.3 · LR: AUC=0.8270
+    CTGAN α=0.3 · RF: AUC=0.7668
+    CTGAN α=0.3 · MLP: AUC=0.8958
+    CTGAN α=0.5 · GBC: AUC=0.9261
+    CTGAN α=0.5 · LR: AUC=0.8231
+    CTGAN α=0.5 · RF: AUC=0.8522
+    CTGAN α=0.5 · MLP: AUC=0.8297
+    CTGAN α=1.0 · GBC: AUC=0.9173
+    CTGAN α=1.0 · LR: AUC=0.8242
+    CTGAN α=1.0 · RF: AUC=0.7631
+    CTGAN α=1.0 · MLP: AUC=0.7993
+    SMOTE α=0.1 · GBC: AUC=0.8804
+    SMOTE α=0.1 · LR: AUC=0.9213
+    SMOTE α=0.1 · RF: AUC=0.7610
+    SMOTE α=0.1 · MLP: AUC=0.8042
+    SMOTE α=0.2 · GBC: AUC=0.8251
+    SMOTE α=0.2 · LR: AUC=0.9279
+    SMOTE α=0.2 · RF: AUC=0.7563
+    SMOTE α=0.2 · MLP: AUC=0.7879
+    SMOTE α=0.3 · GBC: AUC=0.8425
+    SMOTE α=0.3 · LR: AUC=0.9213
+    SMOTE α=0.3 · RF: AUC=0.7493
+    SMOTE α=0.3 · MLP: AUC=0.8109
+    SMOTE α=0.5 · GBC: AUC=0.6672
+    SMOTE α=0.5 · LR: AUC=0.9226
+    SMOTE α=0.5 · RF: AUC=0.6619
+    SMOTE α=0.5 · MLP: AUC=0.8310
+    SMOTE α=1.0 · GBC: AUC=0.6637
+    SMOTE α=1.0 · LR: AUC=0.9170
+    SMOTE α=1.0 · RF: AUC=0.7601
+    SMOTE α=1.0 · MLP: AUC=0.8211
+
+  Seed 20:
+    Baseline · GBC: AUC=0.9781
+    Baseline · LR: AUC=0.9791
+    Baseline · RF: AUC=0.9035
+    Baseline · MLP: AUC=0.1022
+    [GaussianCopula] fitting...  (8000 synth rows)
+    GaussianCopula α=0.1 · GBC: AUC=0.4909
+    GaussianCopula α=0.1 · LR: AUC=0.9824
+    GaussianCopula α=0.1 · RF: AUC=0.9046
+    GaussianCopula α=0.1 · MLP: AUC=0.1018
+    GaussianCopula α=0.2 · GBC: AUC=0.9656
+    GaussianCopula α=0.2 · LR: AUC=0.9830
+    GaussianCopula α=0.2 · RF: AUC=0.9034
+    GaussianCopula α=0.2 · MLP: AUC=0.1010
+    GaussianCopula α=0.3 · GBC: AUC=0.6338
+    GaussianCopula α=0.3 · LR: AUC=0.9818
+    GaussianCopula α=0.3 · RF: AUC=0.9035
+    GaussianCopula α=0.3 · MLP: AUC=0.1102
+    GaussianCopula α=0.5 · GBC: AUC=0.8066
+    GaussianCopula α=0.5 · LR: AUC=0.9825
+    GaussianCopula α=0.5 · RF: AUC=0.9035
+    GaussianCopula α=0.5 · MLP: AUC=0.9423
+    GaussianCopula α=1.0 · GBC: AUC=0.9510
+    GaussianCopula α=1.0 · LR: AUC=0.9851
+    GaussianCopula α=1.0 · RF: AUC=0.9831
+    GaussianCopula α=1.0 · MLP: AUC=0.1275
+    [CTGAN] fitting...  (8000 synth rows)
+    CTGAN α=0.1 · GBC: AUC=0.9832
+    CTGAN α=0.1 · LR: AUC=0.9752
+    CTGAN α=0.1 · RF: AUC=0.9810
+    CTGAN α=0.1 · MLP: AUC=0.9818
+    CTGAN α=0.2 · GBC: AUC=0.9787
+    CTGAN α=0.2 · LR: AUC=0.9779
+    CTGAN α=0.2 · RF: AUC=0.9021
+    CTGAN α=0.2 · MLP: AUC=0.9885
+    CTGAN α=0.3 · GBC: AUC=0.9835
+    CTGAN α=0.3 · LR: AUC=0.9799
+    CTGAN α=0.3 · RF: AUC=0.9011
+    CTGAN α=0.3 · MLP: AUC=0.9847
+    CTGAN α=0.5 · GBC: AUC=0.9804
+    CTGAN α=0.5 · LR: AUC=0.9804
+    CTGAN α=0.5 · RF: AUC=0.9809
+    CTGAN α=0.5 · MLP: AUC=0.9872
+    CTGAN α=1.0 · GBC: AUC=0.9767
+    CTGAN α=1.0 · LR: AUC=0.9831
+    CTGAN α=1.0 · RF: AUC=0.8996
+    CTGAN α=1.0 · MLP: AUC=0.9768
+    SMOTE α=0.1 · GBC: AUC=0.9778
+    SMOTE α=0.1 · LR: AUC=0.9806
+    SMOTE α=0.1 · RF: AUC=0.9888
+    SMOTE α=0.1 · MLP: AUC=0.9870
+    SMOTE α=0.2 · GBC: AUC=0.9775
+    SMOTE α=0.2 · LR: AUC=0.9805
+    SMOTE α=0.2 · RF: AUC=0.9887
+    SMOTE α=0.2 · MLP: AUC=0.9857
+    SMOTE α=0.3 · GBC: AUC=0.9746
+    SMOTE α=0.3 · LR: AUC=0.9808
+    SMOTE α=0.3 · RF: AUC=0.9880
+    SMOTE α=0.3 · MLP: AUC=0.9901
+    SMOTE α=0.5 · GBC: AUC=0.9675
+    SMOTE α=0.5 · LR: AUC=0.9817
+    SMOTE α=0.5 · RF: AUC=0.9815
+    SMOTE α=0.5 · MLP: AUC=0.9833
+    SMOTE α=1.0 · GBC: AUC=0.9765
+    SMOTE α=1.0 · LR: AUC=0.9815
+    SMOTE α=1.0 · RF: AUC=0.9875
+    SMOTE α=1.0 · MLP: AUC=0.9867
+
+  Seed 30:
+    Baseline · GBC: AUC=0.9313
+    Baseline · LR: AUC=0.9550
+    Baseline · RF: AUC=0.8077
+    Baseline · MLP: AUC=0.0654
+    [GaussianCopula] fitting...  (8000 synth rows)
+    GaussianCopula α=0.1 · GBC: AUC=0.7472
+    GaussianCopula α=0.1 · LR: AUC=0.9610
+    GaussianCopula α=0.1 · RF: AUC=0.8877
+    GaussianCopula α=0.1 · MLP: AUC=0.0684
+    GaussianCopula α=0.2 · GBC: AUC=0.8752
+    GaussianCopula α=0.2 · LR: AUC=0.9594
+    GaussianCopula α=0.2 · RF: AUC=0.8029
+    GaussianCopula α=0.2 · MLP: AUC=0.0670
+    GaussianCopula α=0.3 · GBC: AUC=0.7594
+    GaussianCopula α=0.3 · LR: AUC=0.9616
+    GaussianCopula α=0.3 · RF: AUC=0.9701
+    GaussianCopula α=0.3 · MLP: AUC=0.0718
+    GaussianCopula α=0.5 · GBC: AUC=0.8915
+    GaussianCopula α=0.5 · LR: AUC=0.9571
+    GaussianCopula α=0.5 · RF: AUC=0.9690
+    GaussianCopula α=0.5 · MLP: AUC=0.0721
+    GaussianCopula α=1.0 · GBC: AUC=0.7594
+    GaussianCopula α=1.0 · LR: AUC=0.9622
+    GaussianCopula α=1.0 · RF: AUC=0.8863
+    GaussianCopula α=1.0 · MLP: AUC=0.7642
+    [CTGAN] fitting...  (8000 synth rows)
+    CTGAN α=0.1 · GBC: AUC=0.9602
+    CTGAN α=0.1 · LR: AUC=0.9820
+    CTGAN α=0.1 · RF: AUC=0.9794
+    CTGAN α=0.1 · MLP: AUC=0.9704
+    CTGAN α=0.2 · GBC: AUC=0.9736
+    CTGAN α=0.2 · LR: AUC=0.9787
+    CTGAN α=0.2 · RF: AUC=0.9026
+    CTGAN α=0.2 · MLP: AUC=0.9758
+    CTGAN α=0.3 · GBC: AUC=0.9743
+    CTGAN α=0.3 · LR: AUC=0.9813
+    CTGAN α=0.3 · RF: AUC=0.9820
+    CTGAN α=0.3 · MLP: AUC=0.9789
+    CTGAN α=0.5 · GBC: AUC=0.9604
+    CTGAN α=0.5 · LR: AUC=0.9819
+    CTGAN α=0.5 · RF: AUC=0.9850
+    CTGAN α=0.5 · MLP: AUC=0.9743
+    CTGAN α=1.0 · GBC: AUC=0.9686
+    CTGAN α=1.0 · LR: AUC=0.9796
+    CTGAN α=1.0 · RF: AUC=0.9853
+    CTGAN α=1.0 · MLP: AUC=0.9440
+    SMOTE α=0.1 · GBC: AUC=0.9554
+    SMOTE α=0.1 · LR: AUC=0.6292
+    SMOTE α=0.1 · RF: AUC=0.8845
+    SMOTE α=0.1 · MLP: AUC=0.4232
+    SMOTE α=0.2 · GBC: AUC=0.9589
+    SMOTE α=0.2 · LR: AUC=0.5333
+    SMOTE α=0.2 · RF: AUC=0.9732
+    SMOTE α=0.2 · MLP: AUC=0.4229
+    SMOTE α=0.3 · GBC: AUC=0.9664
+    SMOTE α=0.3 · LR: AUC=0.4876
+    SMOTE α=0.3 · RF: AUC=0.8882
+    SMOTE α=0.3 · MLP: AUC=0.4305
+    SMOTE α=0.5 · GBC: AUC=0.9457
+    SMOTE α=0.5 · LR: AUC=0.4512
+    SMOTE α=0.5 · RF: AUC=0.8087
+    SMOTE α=0.5 · MLP: AUC=0.4956
+    SMOTE α=1.0 · GBC: AUC=0.7966
+    SMOTE α=1.0 · LR: AUC=0.3805
+    SMOTE α=1.0 · RF: AUC=0.8068
+    SMOTE α=1.0 · MLP: AUC=0.4965
+
+  Seed 40:
+    Baseline · GBC: AUC=0.8159
+    Baseline · LR: AUC=0.9105
+    Baseline · RF: AUC=0.9167
+    Baseline · MLP: AUC=0.9762
+    [GaussianCopula] fitting...  (8000 synth rows)
+    GaussianCopula α=0.1 · GBC: AUC=0.7539
+    GaussianCopula α=0.1 · LR: AUC=0.9811
+    GaussianCopula α=0.1 · RF: AUC=0.9169
+    GaussianCopula α=0.1 · MLP: AUC=0.9442
+    GaussianCopula α=0.2 · GBC: AUC=0.8123
+    GaussianCopula α=0.2 · LR: AUC=0.9807
+    GaussianCopula α=0.2 · RF: AUC=0.9170
+    GaussianCopula α=0.2 · MLP: AUC=0.1117
+    GaussianCopula α=0.3 · GBC: AUC=0.8284
+    GaussianCopula α=0.3 · LR: AUC=0.9806
+    GaussianCopula α=0.3 · RF: AUC=0.9172
+    GaussianCopula α=0.3 · MLP: AUC=0.9730
+    GaussianCopula α=0.5 · GBC: AUC=0.8198
+    GaussianCopula α=0.5 · LR: AUC=0.9819
+    GaussianCopula α=0.5 · RF: AUC=0.9188
+    GaussianCopula α=0.5 · MLP: AUC=0.1452
+    GaussianCopula α=1.0 · GBC: AUC=0.8340
+    GaussianCopula α=1.0 · LR: AUC=0.9832
+    GaussianCopula α=1.0 · RF: AUC=0.9167
+    GaussianCopula α=1.0 · MLP: AUC=0.1573
+    [CTGAN] fitting...  (8000 synth rows)
+    CTGAN α=0.1 · GBC: AUC=0.9319
+    CTGAN α=0.1 · LR: AUC=0.9751
+    CTGAN α=0.1 · RF: AUC=0.9179
+    CTGAN α=0.1 · MLP: AUC=0.9871
+    CTGAN α=0.2 · GBC: AUC=0.9704
+    CTGAN α=0.2 · LR: AUC=0.9757
+    CTGAN α=0.2 · RF: AUC=0.9173
+    CTGAN α=0.2 · MLP: AUC=0.9789
+    CTGAN α=0.3 · GBC: AUC=0.9729
+    CTGAN α=0.3 · LR: AUC=0.9737
+    CTGAN α=0.3 · RF: AUC=0.9175
+    CTGAN α=0.3 · MLP: AUC=0.9766
+    CTGAN α=0.5 · GBC: AUC=0.9747
+    CTGAN α=0.5 · LR: AUC=0.9733
+    CTGAN α=0.5 · RF: AUC=0.9165
+    CTGAN α=0.5 · MLP: AUC=0.9705
+    CTGAN α=1.0 · GBC: AUC=0.9735
+    CTGAN α=1.0 · LR: AUC=0.9748
+    CTGAN α=1.0 · RF: AUC=0.9146
+    CTGAN α=1.0 · MLP: AUC=0.9683
+    SMOTE α=0.1 · GBC: AUC=0.9574
+    SMOTE α=0.1 · LR: AUC=0.9816
+    SMOTE α=0.1 · RF: AUC=0.9806
+    SMOTE α=0.1 · MLP: AUC=0.8489
+    SMOTE α=0.2 · GBC: AUC=0.9346
+    SMOTE α=0.2 · LR: AUC=0.9813
+    SMOTE α=0.2 · RF: AUC=0.9720
+    SMOTE α=0.2 · MLP: AUC=0.8639
+    SMOTE α=0.3 · GBC: AUC=0.9514
+    SMOTE α=0.3 · LR: AUC=0.9809
+    SMOTE α=0.3 · RF: AUC=0.9040
+    SMOTE α=0.3 · MLP: AUC=0.8705
+    SMOTE α=0.5 · GBC: AUC=0.9654
+    SMOTE α=0.5 · LR: AUC=0.9809
+    SMOTE α=0.5 · RF: AUC=0.9671
+    SMOTE α=0.5 · MLP: AUC=0.8413
+    SMOTE α=1.0 · GBC: AUC=0.8333
+    SMOTE α=1.0 · LR: AUC=0.9807
+    SMOTE α=1.0 · RF: AUC=0.9719
+    SMOTE α=1.0 · MLP: AUC=0.8136
+
+  Seed 50:
+    Baseline · GBC: AUC=0.5756
+    Baseline · LR: AUC=0.9687
+    Baseline · RF: AUC=0.7055
+    Baseline · MLP: AUC=0.0513
+    [GaussianCopula] fitting...  (8000 synth rows)
+    GaussianCopula α=0.1 · GBC: AUC=0.5836
+    GaussianCopula α=0.1 · LR: AUC=0.9712
+    GaussianCopula α=0.1 · RF: AUC=0.7868
+    GaussianCopula α=0.1 · MLP: AUC=0.0488
+    GaussianCopula α=0.2 · GBC: AUC=0.6174
+    GaussianCopula α=0.2 · LR: AUC=0.9692
+    GaussianCopula α=0.2 · RF: AUC=0.7091
+    GaussianCopula α=0.2 · MLP: AUC=0.0506
+    GaussianCopula α=0.3 · GBC: AUC=0.6184
+    GaussianCopula α=0.3 · LR: AUC=0.9629
+    GaussianCopula α=0.3 · RF: AUC=0.7055
+    GaussianCopula α=0.3 · MLP: AUC=0.0511
+    GaussianCopula α=0.5 · GBC: AUC=0.7762
+    GaussianCopula α=0.5 · LR: AUC=0.9601
+    GaussianCopula α=0.5 · RF: AUC=0.7096
+    GaussianCopula α=0.5 · MLP: AUC=0.0529
+    GaussianCopula α=1.0 · GBC: AUC=0.5405
+    GaussianCopula α=1.0 · LR: AUC=0.9639
+    GaussianCopula α=1.0 · RF: AUC=0.7084
+    GaussianCopula α=1.0 · MLP: AUC=0.0551
+    [CTGAN] fitting...  (8000 synth rows)
+    CTGAN α=0.1 · GBC: AUC=0.9267
+    CTGAN α=0.1 · LR: AUC=0.9667
+    CTGAN α=0.1 · RF: AUC=0.7846
+    CTGAN α=0.1 · MLP: AUC=0.9544
+    CTGAN α=0.2 · GBC: AUC=0.9320
+    CTGAN α=0.2 · LR: AUC=0.9672
+    CTGAN α=0.2 · RF: AUC=0.9337
+    CTGAN α=0.2 · MLP: AUC=0.9593
+    CTGAN α=0.3 · GBC: AUC=0.9509
+    CTGAN α=0.3 · LR: AUC=0.9674
+    CTGAN α=0.3 · RF: AUC=0.9356
+    CTGAN α=0.3 · MLP: AUC=0.9688
+    CTGAN α=0.5 · GBC: AUC=0.9493
+    CTGAN α=0.5 · LR: AUC=0.9671
+    CTGAN α=0.5 · RF: AUC=0.9432
+    CTGAN α=0.5 · MLP: AUC=0.9177
+    CTGAN α=1.0 · GBC: AUC=0.9606
+    CTGAN α=1.0 · LR: AUC=0.9669
+    CTGAN α=1.0 · RF: AUC=0.9538
+    CTGAN α=1.0 · MLP: AUC=0.8798
+    SMOTE α=0.1 · GBC: AUC=0.8736
+    SMOTE α=0.1 · LR: AUC=0.9598
+    SMOTE α=0.1 · RF: AUC=0.8627
+    SMOTE α=0.1 · MLP: AUC=0.8644
+    SMOTE α=0.2 · GBC: AUC=0.8672
+    SMOTE α=0.2 · LR: AUC=0.9566
+    SMOTE α=0.2 · RF: AUC=0.9165
+    SMOTE α=0.2 · MLP: AUC=0.8510
+    SMOTE α=0.3 · GBC: AUC=0.8903
+    SMOTE α=0.3 · LR: AUC=0.9544
+    SMOTE α=0.3 · RF: AUC=0.8444
+    SMOTE α=0.3 · MLP: AUC=0.8368
+    SMOTE α=0.5 · GBC: AUC=0.8785
+    SMOTE α=0.5 · LR: AUC=0.9476
+    SMOTE α=0.5 · RF: AUC=0.8478
+    SMOTE α=0.5 · MLP: AUC=0.8399
+    SMOTE α=1.0 · GBC: AUC=0.8991
+    SMOTE α=1.0 · LR: AUC=0.9415
+    SMOTE α=1.0 · RF: AUC=0.8383
+    SMOTE α=1.0 · MLP: AUC=0.8358
+
+  Criteo Uplift — multi-classifier CI summary (mean ± 95% CI, GBC only):
+
+    Classifier = GBC
+              method  alpha              AUC     gain
+      GaussianCopula    0.1  0.8053 ± 0.1175  -0.0402
+      GaussianCopula    0.2  0.8448 ± 0.1301  -0.0007
+      GaussianCopula    0.3  0.7464 ± 0.1172  -0.0991
+      GaussianCopula    0.5  0.8430 ± 0.0914  -0.0025
+      GaussianCopula    1.0  0.8485 ± 0.0945  +0.0030
+               CTGAN    0.1  0.9413 ± 0.0470  +0.0959
+               CTGAN    0.2  0.9648 ± 0.0219  +0.1193
+               CTGAN    0.3  0.9646 ± 0.0223  +0.1191
+               CTGAN    0.5  0.9623 ± 0.0200  +0.1168
+               CTGAN    1.0  0.9652 ± 0.0183  +0.1197
+               SMOTE    0.1  0.9442 ± 0.0306  +0.0987
+               SMOTE    0.2  0.9390 ± 0.0384  +0.0935
+               SMOTE    0.3  0.9453 ± 0.0326  +0.0998
+               SMOTE    0.5  0.9249 ± 0.0685  +0.0794
+               SMOTE    1.0  0.8956 ± 0.0741  +0.0501
+
+    Classifier = LR
+              method  alpha              AUC     gain
+      GaussianCopula    0.1  0.9715 ± 0.0170  +0.0081
+      GaussianCopula    0.2  0.9670 ± 0.0228  +0.0035
+      GaussianCopula    0.3  0.9669 ± 0.0223  +0.0034
+      GaussianCopula    0.5  0.9673 ± 0.0225  +0.0038
+      GaussianCopula    1.0  0.9698 ± 0.0195  +0.0064
+               CTGAN    0.1  0.9608 ± 0.0251  -0.0026
+               CTGAN    0.2  0.9483 ± 0.0409  -0.0151
+               CTGAN    0.3  0.9480 ± 0.0417  -0.0154
+               CTGAN    0.5  0.9474 ± 0.0427  -0.0161
+               CTGAN    1.0  0.9474 ± 0.0425  -0.0161
+               SMOTE    0.1  0.9336 ± 0.0794  -0.0298
+               SMOTE    0.2  0.9232 ± 0.1004  -0.0403
+               SMOTE    0.3  0.9168 ± 0.1104  -0.0466
+               SMOTE    0.5  0.9115 ± 0.1184  -0.0519
+               SMOTE    1.0  0.9016 ± 0.1338  -0.0619
+
+    Classifier = RF
+              method  alpha              AUC     gain
+      GaussianCopula    0.1  0.8646 ± 0.0912  +0.0179
+      GaussianCopula    0.2  0.8541 ± 0.0985  +0.0075
+      GaussianCopula    0.3  0.8738 ± 0.0860  +0.0271
+      GaussianCopula    0.5  0.9000 ± 0.0687  +0.0534
+      GaussianCopula    1.0  0.8624 ± 0.0979  +0.0157
+               CTGAN    0.1  0.9085 ± 0.0589  +0.0619
+               CTGAN    0.2  0.9044 ± 0.0590  +0.0577
+               CTGAN    0.3  0.9196 ± 0.0514  +0.0730
+               CTGAN    0.5  0.9473 ± 0.0330  +0.1006
+               CTGAN    1.0  0.9375 ± 0.0487  +0.0908
+               SMOTE    0.1  0.9260 ± 0.0535  +0.0794
+               SMOTE    0.2  0.9211 ± 0.0513  +0.0744
+               SMOTE    0.3  0.9005 ± 0.0533  +0.0538
+               SMOTE    0.5  0.8820 ± 0.0744  +0.0354
+               SMOTE    1.0  0.8918 ± 0.0615  +0.0451
+
+    Classifier = MLP
+              method  alpha              AUC     gain
+      GaussianCopula    0.1  0.3525 ± 0.2830  +0.0681
+      GaussianCopula    0.2  0.1991 ± 0.2231  -0.0853
+      GaussianCopula    0.3  0.2444 ± 0.2312  -0.0400
+      GaussianCopula    0.5  0.2875 ± 0.2714  +0.0031
+      GaussianCopula    1.0  0.2978 ± 0.2399  +0.0134
+               CTGAN    0.1  0.9593 ± 0.0189  +0.6749
+               CTGAN    0.2  0.9585 ± 0.0219  +0.6741
+               CTGAN    0.3  0.9493 ± 0.0320  +0.6649
+               CTGAN    0.5  0.9292 ± 0.0408  +0.6449
+               CTGAN    1.0  0.9209 ± 0.0445  +0.6366
+               SMOTE    0.1  0.8194 ± 0.1124  +0.5350
+               SMOTE    0.2  0.8228 ± 0.1139  +0.5384
+               SMOTE    0.3  0.8245 ± 0.1128  +0.5401
+               SMOTE    0.5  0.8427 ± 0.0998  +0.5583
+               SMOTE    1.0  0.8498 ± 0.1025  +0.5655
+
+Saved: results/ci_multi_classifier_criteo.csv
+
+Done.
+exit 0

@@ -1,9 +1,11 @@
 #!/bin/bash
 # Driver loop for Nomao full-metrics rerun: one fresh subprocess per
-# (seed, method, alpha), skipping combos already in results/fullmetrics_nomao.csv.
+# (seed, method, alpha), skipping combos already in the output file (default results/fullmetrics_nomao.csv; set NOMAO_SEEDS and NOMAO_FULLMETRICS_OUT to run seeds separately).
 cd "$(dirname "$0")/.."
 
-SEEDS=(42 123 7 2024 999)
+SEEDS=(${NOMAO_SEEDS:-42 123 7 2024 999})
+OUTFILE=${NOMAO_FULLMETRICS_OUT:-results/fullmetrics_nomao.csv}
+export NOMAO_FULLMETRICS_OUT=$OUTFILE
 METHODS=(Baseline GaussianCopula CTGAN SMOTE)
 ALPHAS=(0.1 0.2 0.3 0.5 1.0)
 
@@ -17,7 +19,7 @@ for seed in "${SEEDS[@]}"; do
     for alpha in "${alpha_list[@]}"; do
       done_check=$(python3 -c "
 import pandas as pd, os
-p = 'results/fullmetrics_nomao.csv'
+p = '$OUTFILE'
 if not os.path.exists(p):
     print('no')
 else:

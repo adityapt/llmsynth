@@ -1,0 +1,9 @@
+dataset,generator,alpha,fit,auc_roc
+Hillstrom Email,CTGAN,0.2,1,0.6323228566114933
+Hillstrom Email,CTGAN,0.2,2,0.6519833151784054
+Hillstrom Email,CTGAN,0.2,3,0.6219612635829856
+Hillstrom Email,CTGAN,0.2,4,0.6558091341427774
+Hillstrom Email,CTGAN,0.2,5,0.6261059007943889
+Hillstrom Email,GaussianCopula,0.2,1,0.560030819097213
+Hillstrom Email,GaussianCopula,0.2,2,0.560030819097213
+Hillstrom Email,GaussianCopula,0.2,3,0.560030819097213

@@ -1,6 +1,6 @@
 """
-Adds the cheap baselines flagged as missing by the original review (R1):
-ADASYN, Borderline-SMOTE, and random majority undersampling. class_weight=
+Adds the cheap baselines ADASYN, Borderline-SMOTE, and random majority
+undersampling. class_weight=
 'balanced' (cost-sensitive reweighting) was already evaluated elsewhere
 (§4.4) — this script fills the remaining gap.
 

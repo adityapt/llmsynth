@@ -17,7 +17,7 @@ from sklearn.model_selection import train_test_split
 from synthcity.plugins import Plugins
 from synthcity.plugins.core.dataloader import GenericDataLoader
 
-WORK_DIR  = os.environ.get("LLMSYNTH_WORK_DIR", "/Workspace/Users/<your-username>/Temp")
+WORK_DIR  = os.environ.get("LLMSYNTH_WORK_DIR", "./work")
 TARGET    = "target"
 SEEDS     = [42, 123, 7, 2024, 999]
 N_CAP     = 10_000

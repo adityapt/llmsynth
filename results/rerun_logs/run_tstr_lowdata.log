@@ -1,0 +1,1821 @@
+
+============================================================
+Dataset: Telco Churn  |  Task: classification  |  n=7032
+Target: Churn  |  Positive rate: 26.6%
+============================================================
+  [1/4] Baseline (real only)...
+        {'auc_roc': 0.8370006367415398, 'f1_minority': 0.5706051873198847, 'avg_precision': 0.6498548748471086, 'precision': 0.61875, 'recall': 0.5294117647058824, 'accuracy': 0.7882018479033405}
+
+  [GaussianCopula]
+    Synthetic-only (TSTR)...
+      TSTR: {'auc_roc': 0.8025544724622226, 'f1_minority': 0.38733705772811916, 'avg_precision': 0.5850741934796858, 'precision': 0.6380368098159509, 'recall': 0.27807486631016043, 'accuracy': 0.7661691542288557}
+    α=0.1 (562 synthetic rows)...
+      α=0.1: {'auc_roc': 0.8372555921955159, 'f1_minority': 0.557037037037037, 'avg_precision': 0.6505679734288501, 'precision': 0.6245847176079734, 'recall': 0.5026737967914439, 'accuracy': 0.7874911158493249}
+    α=0.2 (1125 synthetic rows)...
+      α=0.2: {'auc_roc': 0.839365122093896, 'f1_minority': 0.5838150289017341, 'avg_precision': 0.6568728160421944, 'precision': 0.6352201257861635, 'recall': 0.5401069518716578, 'accuracy': 0.7953091684434968}
+    α=0.3 (1687 synthetic rows)...
+      α=0.3: {'auc_roc': 0.8390014546696969, 'f1_minority': 0.5789473684210527, 'avg_precision': 0.6562554117789325, 'precision': 0.6387096774193548, 'recall': 0.5294117647058824, 'accuracy': 0.7953091684434968}
+    α=0.5 (2812 synthetic rows)...
+      α=0.5: {'auc_roc': 0.8351305320156752, 'f1_minority': 0.583941605839416, 'avg_precision': 0.6480018193545647, 'precision': 0.6430868167202572, 'recall': 0.5347593582887701, 'accuracy': 0.7974413646055437}
+    α=1.0 (5625 synthetic rows)...
+      α=1.0: {'auc_roc': 0.8380515191203648, 'f1_minority': 0.5701492537313433, 'avg_precision': 0.6566240493765151, 'precision': 0.6452702702702703, 'recall': 0.5106951871657754, 'accuracy': 0.7953091684434968}
+
+  [CTGAN]
+    Synthetic-only (TSTR)...
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+      TSTR: {'auc_roc': 0.7766965538305439, 'f1_minority': 0.49591280653950953, 'avg_precision': 0.517057461124027, 'precision': 0.5055555555555555, 'recall': 0.48663101604278075, 'accuracy': 0.7370291400142146}
+    α=0.1 (562 synthetic rows)...
+      α=0.1: {'auc_roc': 0.8347979251543969, 'f1_minority': 0.5880640465793304, 'avg_precision': 0.6501854560577995, 'precision': 0.645367412140575, 'recall': 0.5401069518716578, 'accuracy': 0.798862828713575}
+    α=0.2 (1125 synthetic rows)...
+      α=0.2: {'auc_roc': 0.8345144975177434, 'f1_minority': 0.5726872246696035, 'avg_precision': 0.6445456131472491, 'precision': 0.6351791530944625, 'recall': 0.5213903743315508, 'accuracy': 0.7931769722814499}
+    α=0.3 (1687 synthetic rows)...
+      α=0.3: {'auc_roc': 0.8305762769773931, 'f1_minority': 0.5648414985590778, 'avg_precision': 0.642288907477704, 'precision': 0.6125, 'recall': 0.5240641711229946, 'accuracy': 0.7853589196872779}
+    α=0.5 (2812 synthetic rows)...
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+      α=0.5: {'auc_roc': 0.8315184473859948, 'f1_minority': 0.5706134094151213, 'avg_precision': 0.6328886417169637, 'precision': 0.6116207951070336, 'recall': 0.5347593582887701, 'accuracy': 0.7860696517412935}
+    α=1.0 (5625 synthetic rows)...
+      α=1.0: {'auc_roc': 0.8296237530478178, 'f1_minority': 0.5651537335285505, 'avg_precision': 0.6359557630918354, 'precision': 0.6245954692556634, 'recall': 0.516042780748663, 'accuracy': 0.7889125799573561}
+
+  [SMOTE]
+    Synthetic-only (TSTR)...
+      TSTR failed: y contains 1 class after sample_weight trimmed classes with zero weights, while a minimum of 2 classes are required.
+    α=0.1 (562 synthetic rows)...
+      α=0.1: {'auc_roc': 0.829842471178386, 'f1_minority': 0.5752688172043011, 'avg_precision': 0.6361344156231845, 'precision': 0.5783783783783784, 'recall': 0.5721925133689839, 'accuracy': 0.775408670931059}
+    α=0.2 (1125 synthetic rows)...
+      α=0.2: {'auc_roc': 0.8284848657407169, 'f1_minority': 0.5754838709677419, 'avg_precision': 0.6406034566573531, 'precision': 0.5561097256857855, 'recall': 0.5962566844919787, 'accuracy': 0.7661691542288557}
+    α=0.3 (1687 synthetic rows)...
+      α=0.3: {'auc_roc': 0.8243473399216238, 'f1_minority': 0.5732323232323232, 'avg_precision': 0.6351887855189569, 'precision': 0.5430622009569378, 'recall': 0.606951871657754, 'accuracy': 0.759772565742715}
+    α=0.5 (2812 synthetic rows)...
+      α=0.5: {'auc_roc': 0.8220268570334055, 'f1_minority': 0.594859241126071, 'avg_precision': 0.6216057292000728, 'precision': 0.5485327313769752, 'recall': 0.6497326203208557, 'accuracy': 0.7647476901208244}
+    α=1.0 (5625 synthetic rows)...
+      α=1.0: {'auc_roc': 0.8143044245771881, 'f1_minority': 0.591812865497076, 'avg_precision': 0.6079762109336869, 'precision': 0.525987525987526, 'recall': 0.6764705882352942, 'accuracy': 0.751954513148543}
+
+  [Low-data regime experiment: Telco Churn]
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+  Capped to 15000 rows
+
+============================================================
+Dataset: Bank Marketing  |  Task: classification  |  n=15000
+Target: subscribed  |  Positive rate: 11.7%
+============================================================
+  [1/4] Baseline (real only)...
+        {'auc_roc': 0.9085022676944158, 'f1_minority': 0.4710017574692443, 'avg_precision': 0.5478157711455964, 'precision': 0.6146788990825688, 'recall': 0.3817663817663818, 'accuracy': 0.8996666666666666}
+
+  [GaussianCopula]
+    Synthetic-only (TSTR)...
+      TSTR: {'auc_roc': 0.7504804801898044, 'f1_minority': 0.15845070422535212, 'avg_precision': 0.23189345880124515, 'precision': 0.2073732718894009, 'recall': 0.1282051282051282, 'accuracy': 0.8406666666666667}
+    α=0.1 (1200 synthetic rows)...
+      α=0.1: {'auc_roc': 0.9072600637342049, 'f1_minority': 0.4842105263157895, 'avg_precision': 0.5608999607200613, 'precision': 0.6301369863013698, 'recall': 0.39316239316239315, 'accuracy': 0.902}
+    α=0.2 (2400 synthetic rows)...
+      α=0.2: {'auc_roc': 0.9103714888916852, 'f1_minority': 0.46153846153846156, 'avg_precision': 0.5659559769667102, 'precision': 0.6461538461538462, 'recall': 0.358974358974359, 'accuracy': 0.902}
+    α=0.3 (3600 synthetic rows)...
+      α=0.3: {'auc_roc': 0.9082419963884667, 'f1_minority': 0.4575645756457565, 'avg_precision': 0.5616867529531748, 'precision': 0.6492146596858639, 'recall': 0.35327635327635326, 'accuracy': 0.902}
+    α=0.5 (6000 synthetic rows)...
+      α=0.5: {'auc_roc': 0.9022159628048642, 'f1_minority': 0.448210922787194, 'avg_precision': 0.5587938887530759, 'precision': 0.6611111111111111, 'recall': 0.33903133903133903, 'accuracy': 0.9023333333333333}
+    α=1.0 (12000 synthetic rows)...
+      α=1.0: {'auc_roc': 0.9014555834110383, 'f1_minority': 0.4375, 'avg_precision': 0.5582396373350816, 'precision': 0.6956521739130435, 'recall': 0.3190883190883191, 'accuracy': 0.904}
+
+  [CTGAN]
+    Synthetic-only (TSTR)...
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+      TSTR: {'auc_roc': 0.7737446480368337, 'f1_minority': 0.18660287081339713, 'avg_precision': 0.34536075509853864, 'precision': 0.582089552238806, 'recall': 0.1111111111111111, 'accuracy': 0.8866666666666667}
+    α=0.1 (1200 synthetic rows)...
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+      α=0.1: {'auc_roc': 0.9057973820148225, 'f1_minority': 0.4484629294755877, 'avg_precision': 0.5417122231008499, 'precision': 0.6138613861386139, 'recall': 0.35327635327635326, 'accuracy': 0.8983333333333333}
+    α=0.2 (2400 synthetic rows)...
+      α=0.2: {'auc_roc': 0.9038781500087654, 'f1_minority': 0.42722117202268434, 'avg_precision': 0.5457150450875147, 'precision': 0.6348314606741573, 'recall': 0.32193732193732194, 'accuracy': 0.899}
+    α=0.3 (3600 synthetic rows)...
+      α=0.3: {'auc_roc': 0.9008317926777722, 'f1_minority': 0.3807615230460922, 'avg_precision': 0.5466607411124557, 'precision': 0.6418918918918919, 'recall': 0.2706552706552707, 'accuracy': 0.897}
+    α=0.5 (6000 synthetic rows)...
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+      α=0.5: {'auc_roc': 0.8930102097335015, 'f1_minority': 0.4007936507936508, 'avg_precision': 0.5303922110797049, 'precision': 0.6601307189542484, 'recall': 0.28774928774928776, 'accuracy': 0.8993333333333333}
+    α=1.0 (12000 synthetic rows)...
+      α=1.0: {'auc_roc': 0.8884183570857789, 'f1_minority': 0.33402922755741127, 'avg_precision': 0.5260128122949256, 'precision': 0.625, 'recall': 0.22792022792022792, 'accuracy': 0.8936666666666667}
+
+  [SMOTE]
+    Synthetic-only (TSTR)...
+      TSTR failed: y contains 1 class after sample_weight trimmed classes with zero weights, while a minimum of 2 classes are required.
+    α=0.1 (1200 synthetic rows)...
+      α=0.1: {'auc_roc': 0.9078333059080511, 'f1_minority': 0.5333333333333333, 'avg_precision': 0.5495518971820788, 'precision': 0.5427728613569321, 'recall': 0.5242165242165242, 'accuracy': 0.8926666666666667}
+    α=0.2 (2400 synthetic rows)...
+      α=0.2: {'auc_roc': 0.9051870350473595, 'f1_minority': 0.5510752688172043, 'avg_precision': 0.5350427250528166, 'precision': 0.5216284987277354, 'recall': 0.584045584045584, 'accuracy': 0.8886666666666667}
+    α=0.3 (3600 synthetic rows)...
+      α=0.3: {'auc_roc': 0.9045212997647878, 'f1_minority': 0.5468549422336328, 'avg_precision': 0.5219656044788974, 'precision': 0.4976635514018692, 'recall': 0.6068376068376068, 'accuracy': 0.8823333333333333}
+    α=0.5 (6000 synthetic rows)...
+      α=0.5: {'auc_roc': 0.8993481386837371, 'f1_minority': 0.548502994011976, 'avg_precision': 0.5142860304043856, 'precision': 0.4731404958677686, 'recall': 0.6524216524216524, 'accuracy': 0.8743333333333333}
+    α=1.0 (12000 synthetic rows)...
+      α=1.0: {'auc_roc': 0.8920960336588877, 'f1_minority': 0.5343347639484979, 'avg_precision': 0.4871726070586869, 'precision': 0.42857142857142855, 'recall': 0.7094017094017094, 'accuracy': 0.8553333333333333}
+
+  [Low-data regime experiment: Bank Marketing]
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+
+============================================================
+Dataset: German Credit  |  Task: classification  |  n=1000
+Target: target  |  Positive rate: 30.0%
+============================================================
+  [1/4] Baseline (real only)...
+        {'auc_roc': 0.7982142857142858, 'f1_minority': 0.5740740740740741, 'avg_precision': 0.6456353448044582, 'precision': 0.6458333333333334, 'recall': 0.5166666666666667, 'accuracy': 0.77}
+
+  [GaussianCopula]
+    Synthetic-only (TSTR)...
+      TSTR: {'auc_roc': 0.6408333333333334, 'f1_minority': 0.30612244897959184, 'avg_precision': 0.43232501173362436, 'precision': 0.39473684210526316, 'recall': 0.25, 'accuracy': 0.66}
+    α=0.1 (80 synthetic rows)...
+      α=0.1: {'auc_roc': 0.7883333333333333, 'f1_minority': 0.5714285714285714, 'avg_precision': 0.6357693304631404, 'precision': 0.6666666666666666, 'recall': 0.5, 'accuracy': 0.775}
+    α=0.2 (160 synthetic rows)...
+      α=0.2: {'auc_roc': 0.7796428571428571, 'f1_minority': 0.6019417475728155, 'avg_precision': 0.6396919024477832, 'precision': 0.7209302325581395, 'recall': 0.5166666666666667, 'accuracy': 0.795}
+    α=0.3 (240 synthetic rows)...
+      α=0.3: {'auc_roc': 0.7753571428571429, 'f1_minority': 0.5242718446601942, 'avg_precision': 0.6117821070945968, 'precision': 0.627906976744186, 'recall': 0.45, 'accuracy': 0.755}
+    α=0.5 (400 synthetic rows)...
+      α=0.5: {'auc_roc': 0.7744047619047619, 'f1_minority': 0.52, 'avg_precision': 0.6232683725606051, 'precision': 0.65, 'recall': 0.43333333333333335, 'accuracy': 0.76}
+    α=1.0 (800 synthetic rows)...
+      α=1.0: {'auc_roc': 0.7544047619047619, 'f1_minority': 0.4948453608247423, 'avg_precision': 0.5648347737473441, 'precision': 0.6486486486486487, 'recall': 0.4, 'accuracy': 0.755}
+
+  [CTGAN]
+    Synthetic-only (TSTR)...
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+      TSTR: {'auc_roc': 0.47404761904761905, 'f1_minority': 0.08333333333333333, 'avg_precision': 0.30504027208361784, 'precision': 0.25, 'recall': 0.05, 'accuracy': 0.67}
+    α=0.1 (80 synthetic rows)...
+      α=0.1: {'auc_roc': 0.7905952380952382, 'f1_minority': 0.5818181818181818, 'avg_precision': 0.6265354554052887, 'precision': 0.64, 'recall': 0.5333333333333333, 'accuracy': 0.77}
+    α=0.2 (160 synthetic rows)...
+      α=0.2: {'auc_roc': 0.8082142857142858, 'f1_minority': 0.5925925925925926, 'avg_precision': 0.6904289536837926, 'precision': 0.6666666666666666, 'recall': 0.5333333333333333, 'accuracy': 0.78}
+    α=0.3 (240 synthetic rows)...
+      α=0.3: {'auc_roc': 0.7822619047619049, 'f1_minority': 0.56, 'avg_precision': 0.6414135910555419, 'precision': 0.7, 'recall': 0.4666666666666667, 'accuracy': 0.78}
+    α=0.5 (400 synthetic rows)...
+      α=0.5: {'auc_roc': 0.7855952380952381, 'f1_minority': 0.5436893203883495, 'avg_precision': 0.6692999128994592, 'precision': 0.6511627906976745, 'recall': 0.4666666666666667, 'accuracy': 0.765}
+    α=1.0 (800 synthetic rows)...
+      α=1.0: {'auc_roc': 0.7814285714285715, 'f1_minority': 0.5192307692307693, 'avg_precision': 0.6725064007538065, 'precision': 0.6136363636363636, 'recall': 0.45, 'accuracy': 0.75}
+
+  [SMOTE]
+    Synthetic-only (TSTR)...
+      TSTR failed: y contains 1 class after sample_weight trimmed classes with zero weights, while a minimum of 2 classes are required.
+    α=0.1 (80 synthetic rows)...
+      α=0.1: {'auc_roc': 0.7925, 'f1_minority': 0.5818181818181818, 'avg_precision': 0.6603402691014549, 'precision': 0.64, 'recall': 0.5333333333333333, 'accuracy': 0.77}
+    α=0.2 (160 synthetic rows)...
+      α=0.2: {'auc_roc': 0.7948809523809524, 'f1_minority': 0.5982905982905983, 'avg_precision': 0.6574677444434216, 'precision': 0.6140350877192983, 'recall': 0.5833333333333334, 'accuracy': 0.765}
+    α=0.3 (240 synthetic rows)...
+      α=0.3: {'auc_roc': 0.8072619047619047, 'f1_minority': 0.5789473684210527, 'avg_precision': 0.6436227261537029, 'precision': 0.6111111111111112, 'recall': 0.55, 'accuracy': 0.76}
+    α=0.5 (400 synthetic rows)...
+      α=0.5: {'auc_roc': 0.7827380952380952, 'f1_minority': 0.5714285714285714, 'avg_precision': 0.5839156318894202, 'precision': 0.576271186440678, 'recall': 0.5666666666666667, 'accuracy': 0.745}
+    α=1.0 (800 synthetic rows)...
+      α=1.0: {'auc_roc': 0.776904761904762, 'f1_minority': 0.5785123966942148, 'avg_precision': 0.5755698920180206, 'precision': 0.5737704918032787, 'recall': 0.5833333333333334, 'accuracy': 0.745}
+
+  [Low-data regime experiment: German Credit]
+  Capped to 10000 rows
+
+============================================================
+Dataset: Nomao Lead  |  Task: classification  |  n=10000
+Target: target  |  Positive rate: 28.3%
+============================================================
+  [1/4] Baseline (real only)...
+        {'auc_roc': 0.991721740073234, 'f1_minority': 0.9255605381165919, 'avg_precision': 0.9812928493438589, 'precision': 0.9398907103825137, 'recall': 0.911660777385159, 'accuracy': 0.9585}
+
+  [GaussianCopula]
+    Synthetic-only (TSTR)...
+      TSTR: {'auc_roc': 0.9149701100482477, 'f1_minority': 0.6019007391763463, 'avg_precision': 0.7422925347512397, 'precision': 0.7480314960629921, 'recall': 0.5035335689045937, 'accuracy': 0.8115}
+    α=0.1 (800 synthetic rows)...
+      α=0.1: {'auc_roc': 0.9914931915963157, 'f1_minority': 0.9228007181328546, 'avg_precision': 0.9814232375931832, 'precision': 0.9379562043795621, 'recall': 0.9081272084805654, 'accuracy': 0.957}
+    α=0.2 (1600 synthetic rows)...
+      α=0.2: {'auc_roc': 0.9904576390634319, 'f1_minority': 0.9256938227394808, 'avg_precision': 0.9794341331834676, 'precision': 0.9382940108892922, 'recall': 0.9134275618374559, 'accuracy': 0.9585}
+    α=0.3 (2400 synthetic rows)...
+      α=0.3: {'auc_roc': 0.9905931664621435, 'f1_minority': 0.926829268292683, 'avg_precision': 0.9800332936540141, 'precision': 0.9482439926062847, 'recall': 0.9063604240282686, 'accuracy': 0.9595}
+    α=0.5 (4000 synthetic rows)...
+      α=0.5: {'auc_roc': 0.9899832931679406, 'f1_minority': 0.9204647006255585, 'avg_precision': 0.978182990444501, 'precision': 0.9312839059674503, 'recall': 0.9098939929328622, 'accuracy': 0.9555}
+    α=1.0 (8000 synthetic rows)...
+      α=1.0: {'auc_roc': 0.989771377599046, 'f1_minority': 0.9177101967799642, 'avg_precision': 0.9774817589850704, 'precision': 0.9293478260869565, 'recall': 0.9063604240282686, 'accuracy': 0.954}
+
+  [CTGAN]
+    Synthetic-only (TSTR)...
+PerformanceAlert: Using the CTGANSynthesizer on this data is not recommended. To model this data, CTGAN will generate a large number of columns.
+
+Original Column Name   Est # of Columns (CTGAN)
+V1                     11
+V2                     11
+V3                     11
+V4                     11
+V5                     11
+V6                     11
+V7                     2
+V8                     2
+V9                     11
+V10                    11
+V11                    11
+V12                    11
+V13                    11
+V14                    11
+V15                    3
+V16                    3
+V17                    11
+V18                    11
+V19                    11
+V20                    11
+V21                    11
+V22                    11
+V23                    3
+V24                    3
+V25                    11
+V26                    11
+V27                    11
+V28                    11
+V29                    11
+V30                    11
+V31                    3
+V32                    3
+V33                    11
+V34                    11
+V35                    11
+V36                    11
+V37                    11
+V38                    11
+V39                    3
+V40                    3
+V41                    11
+V42                    11
+V43                    11
+V44                    11
+V45                    11
+V46                    11
+V47                    3
+V48                    3
+V49                    11
+V50                    11
+V51                    11
+V52                    11
+V53                    11
+V54                    11
+V55                    3
+V56                    3
+V57                    11
+V58                    11
+V59                    11
+V60                    11
+V61                    11
+V62                    11
+V63                    3
+V64                    3
+V65                    11
+V66                    11
+V67                    11
+V68                    11
+V69                    11
+V70                    11
+V71                    3
+V72                    3
+V73                    11
+V74                    11
+V75                    11
+V76                    11
+V77                    11
+V78                    11
+V79                    3
+V80                    3
+V81                    11
+V82                    11
+V83                    11
+V84                    11
+V85                    11
+V86                    11
+V87                    3
+V88                    3
+V89                    11
+V90                    11
+V91                    11
+V92                    3
+V93                    11
+V94                    11
+V95                    11
+V96                    3
+V97                    11
+V98                    11
+V99                    11
+V100                   3
+V101                   11
+V102                   11
+V103                   11
+V104                   3
+V105                   11
+V106                   11
+V107                   11
+V108                   3
+V109                   11
+V110                   11
+V111                   11
+V112                   3
+V113                   11
+V114                   11
+V115                   11
+V116                   3
+V117                   11
+V118                   11
+target                 2
+
+We recommend preprocessing discrete columns that can have many values, using 'update_transformers'. Or you may drop columns that are not necessary to model. (Exit this script using ctrl-C)
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+      TSTR: {'auc_roc': 0.8831932472857558, 'f1_minority': 0.6583493282149712, 'avg_precision': 0.7399013056547391, 'precision': 0.7205882352941176, 'recall': 0.6060070671378092, 'accuracy': 0.822}
+    α=0.1 (800 synthetic rows)...
+PerformanceAlert: Using the CTGANSynthesizer on this data is not recommended. To model this data, CTGAN will generate a large number of columns.
+
+Original Column Name   Est # of Columns (CTGAN)
+V1                     11
+V2                     11
+V3                     11
+V4                     11
+V5                     11
+V6                     11
+V7                     2
+V8                     2
+V9                     11
+V10                    11
+V11                    11
+V12                    11
+V13                    11
+V14                    11
+V15                    3
+V16                    3
+V17                    11
+V18                    11
+V19                    11
+V20                    11
+V21                    11
+V22                    11
+V23                    3
+V24                    3
+V25                    11
+V26                    11
+V27                    11
+V28                    11
+V29                    11
+V30                    11
+V31                    3
+V32                    3
+V33                    11
+V34                    11
+V35                    11
+V36                    11
+V37                    11
+V38                    11
+V39                    3
+V40                    3
+V41                    11
+V42                    11
+V43                    11
+V44                    11
+V45                    11
+V46                    11
+V47                    3
+V48                    3
+V49                    11
+V50                    11
+V51                    11
+V52                    11
+V53                    11
+V54                    11
+V55                    3
+V56                    3
+V57                    11
+V58                    11
+V59                    11
+V60                    11
+V61                    11
+V62                    11
+V63                    3
+V64                    3
+V65                    11
+V66                    11
+V67                    11
+V68                    11
+V69                    11
+V70                    11
+V71                    3
+V72                    3
+V73                    11
+V74                    11
+V75                    11
+V76                    11
+V77                    11
+V78                    11
+V79                    3
+V80                    3
+V81                    11
+V82                    11
+V83                    11
+V84                    11
+V85                    11
+V86                    11
+V87                    3
+V88                    3
+V89                    11
+V90                    11
+V91                    11
+V92                    3
+V93                    11
+V94                    11
+V95                    11
+V96                    3
+V97                    11
+V98                    11
+V99                    11
+V100                   3
+V101                   11
+V102                   11
+V103                   11
+V104                   3
+V105                   11
+V106                   11
+V107                   11
+V108                   3
+V109                   11
+V110                   11
+V111                   11
+V112                   3
+V113                   11
+V114                   11
+V115                   11
+V116                   3
+V117                   11
+V118                   11
+target                 2
+
+We recommend preprocessing discrete columns that can have many values, using 'update_transformers'. Or you may drop columns that are not necessary to model. (Exit this script using ctrl-C)
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+      α=0.1: {'auc_roc': 0.9916170143560478, 'f1_minority': 0.9279279279279279, 'avg_precision': 0.9815930611636823, 'precision': 0.9466911764705882, 'recall': 0.9098939929328622, 'accuracy': 0.96}
+    α=0.2 (1600 synthetic rows)...
+PerformanceAlert: Using the CTGANSynthesizer on this data is not recommended. To model this data, CTGAN will generate a large number of columns.
+
+Original Column Name   Est # of Columns (CTGAN)
+V1                     11
+V2                     11
+V3                     11
+V4                     11
+V5                     11
+V6                     11
+V7                     2
+V8                     2
+V9                     11
+V10                    11
+V11                    11
+V12                    11
+V13                    11
+V14                    11
+V15                    3
+V16                    3
+V17                    11
+V18                    11
+V19                    11
+V20                    11
+V21                    11
+V22                    11
+V23                    3
+V24                    3
+V25                    11
+V26                    11
+V27                    11
+V28                    11
+V29                    11
+V30                    11
+V31                    3
+V32                    3
+V33                    11
+V34                    11
+V35                    11
+V36                    11
+V37                    11
+V38                    11
+V39                    3
+V40                    3
+V41                    11
+V42                    11
+V43                    11
+V44                    11
+V45                    11
+V46                    11
+V47                    3
+V48                    3
+V49                    11
+V50                    11
+V51                    11
+V52                    11
+V53                    11
+V54                    11
+V55                    3
+V56                    3
+V57                    11
+V58                    11
+V59                    11
+V60                    11
+V61                    11
+V62                    11
+V63                    3
+V64                    3
+V65                    11
+V66                    11
+V67                    11
+V68                    11
+V69                    11
+V70                    11
+V71                    3
+V72                    3
+V73                    11
+V74                    11
+V75                    11
+V76                    11
+V77                    11
+V78                    11
+V79                    3
+V80                    3
+V81                    11
+V82                    11
+V83                    11
+V84                    11
+V85                    11
+V86                    11
+V87                    3
+V88                    3
+V89                    11
+V90                    11
+V91                    11
+V92                    3
+V93                    11
+V94                    11
+V95                    11
+V96                    3
+V97                    11
+V98                    11
+V99                    11
+V100                   3
+V101                   11
+V102                   11
+V103                   11
+V104                   3
+V105                   11
+V106                   11
+V107                   11
+V108                   3
+V109                   11
+V110                   11
+V111                   11
+V112                   3
+V113                   11
+V114                   11
+V115                   11
+V116                   3
+V117                   11
+V118                   11
+target                 2
+
+We recommend preprocessing discrete columns that can have many values, using 'update_transformers'. Or you may drop columns that are not necessary to model. (Exit this script using ctrl-C)
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+      α=0.2: {'auc_roc': 0.990827875275367, 'f1_minority': 0.926391382405745, 'avg_precision': 0.980001844333081, 'precision': 0.9416058394160584, 'recall': 0.911660777385159, 'accuracy': 0.959}
+    α=0.3 (2400 synthetic rows)...
+PerformanceAlert: Using the CTGANSynthesizer on this data is not recommended. To model this data, CTGAN will generate a large number of columns.
+
+Original Column Name   Est # of Columns (CTGAN)
+V1                     11
+V2                     11
+V3                     11
+V4                     11
+V5                     11
+V6                     11
+V7                     2
+V8                     2
+V9                     11
+V10                    11
+V11                    11
+V12                    11
+V13                    11
+V14                    11
+V15                    3
+V16                    3
+V17                    11
+V18                    11
+V19                    11
+V20                    11
+V21                    11
+V22                    11
+V23                    3
+V24                    3
+V25                    11
+V26                    11
+V27                    11
+V28                    11
+V29                    11
+V30                    11
+V31                    3
+V32                    3
+V33                    11
+V34                    11
+V35                    11
+V36                    11
+V37                    11
+V38                    11
+V39                    3
+V40                    3
+V41                    11
+V42                    11
+V43                    11
+V44                    11
+V45                    11
+V46                    11
+V47                    3
+V48                    3
+V49                    11
+V50                    11
+V51                    11
+V52                    11
+V53                    11
+V54                    11
+V55                    3
+V56                    3
+V57                    11
+V58                    11
+V59                    11
+V60                    11
+V61                    11
+V62                    11
+V63                    3
+V64                    3
+V65                    11
+V66                    11
+V67                    11
+V68                    11
+V69                    11
+V70                    11
+V71                    3
+V72                    3
+V73                    11
+V74                    11
+V75                    11
+V76                    11
+V77                    11
+V78                    11
+V79                    3
+V80                    3
+V81                    11
+V82                    11
+V83                    11
+V84                    11
+V85                    11
+V86                    11
+V87                    3
+V88                    3
+V89                    11
+V90                    11
+V91                    11
+V92                    3
+V93                    11
+V94                    11
+V95                    11
+V96                    3
+V97                    11
+V98                    11
+V99                    11
+V100                   3
+V101                   11
+V102                   11
+V103                   11
+V104                   3
+V105                   11
+V106                   11
+V107                   11
+V108                   3
+V109                   11
+V110                   11
+V111                   11
+V112                   3
+V113                   11
+V114                   11
+V115                   11
+V116                   3
+V117                   11
+V118                   11
+target                 2
+
+We recommend preprocessing discrete columns that can have many values, using 'update_transformers'. Or you may drop columns that are not necessary to model. (Exit this script using ctrl-C)
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+      α=0.3: {'auc_roc': 0.990173031526137, 'f1_minority': 0.9216921692169217, 'avg_precision': 0.9781604421534787, 'precision': 0.9394495412844037, 'recall': 0.9045936395759717, 'accuracy': 0.9565}
+    α=0.5 (4000 synthetic rows)...
+PerformanceAlert: Using the CTGANSynthesizer on this data is not recommended. To model this data, CTGAN will generate a large number of columns.
+
+Original Column Name   Est # of Columns (CTGAN)
+V1                     11
+V2                     11
+V3                     11
+V4                     11
+V5                     11
+V6                     11
+V7                     2
+V8                     2
+V9                     11
+V10                    11
+V11                    11
+V12                    11
+V13                    11
+V14                    11
+V15                    3
+V16                    3
+V17                    11
+V18                    11
+V19                    11
+V20                    11
+V21                    11
+V22                    11
+V23                    3
+V24                    3
+V25                    11
+V26                    11
+V27                    11
+V28                    11
+V29                    11
+V30                    11
+V31                    3
+V32                    3
+V33                    11
+V34                    11
+V35                    11
+V36                    11
+V37                    11
+V38                    11
+V39                    3
+V40                    3
+V41                    11
+V42                    11
+V43                    11
+V44                    11
+V45                    11
+V46                    11
+V47                    3
+V48                    3
+V49                    11
+V50                    11
+V51                    11
+V52                    11
+V53                    11
+V54                    11
+V55                    3
+V56                    3
+V57                    11
+V58                    11
+V59                    11
+V60                    11
+V61                    11
+V62                    11
+V63                    3
+V64                    3
+V65                    11
+V66                    11
+V67                    11
+V68                    11
+V69                    11
+V70                    11
+V71                    3
+V72                    3
+V73                    11
+V74                    11
+V75                    11
+V76                    11
+V77                    11
+V78                    11
+V79                    3
+V80                    3
+V81                    11
+V82                    11
+V83                    11
+V84                    11
+V85                    11
+V86                    11
+V87                    3
+V88                    3
+V89                    11
+V90                    11
+V91                    11
+V92                    3
+V93                    11
+V94                    11
+V95                    11
+V96                    3
+V97                    11
+V98                    11
+V99                    11
+V100                   3
+V101                   11
+V102                   11
+V103                   11
+V104                   3
+V105                   11
+V106                   11
+V107                   11
+V108                   3
+V109                   11
+V110                   11
+V111                   11
+V112                   3
+V113                   11
+V114                   11
+V115                   11
+V116                   3
+V117                   11
+V118                   11
+target                 2
+
+We recommend preprocessing discrete columns that can have many values, using 'update_transformers'. Or you may drop columns that are not necessary to model. (Exit this script using ctrl-C)
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+      α=0.5: {'auc_roc': 0.9894528882120732, 'f1_minority': 0.9205776173285198, 'avg_precision': 0.9769406297756739, 'precision': 0.940959409594096, 'recall': 0.901060070671378, 'accuracy': 0.956}
+    α=1.0 (8000 synthetic rows)...
+PerformanceAlert: Using the CTGANSynthesizer on this data is not recommended. To model this data, CTGAN will generate a large number of columns.
+
+Original Column Name   Est # of Columns (CTGAN)
+V1                     11
+V2                     11
+V3                     11
+V4                     11
+V5                     11
+V6                     11
+V7                     2
+V8                     2
+V9                     11
+V10                    11
+V11                    11
+V12                    11
+V13                    11
+V14                    11
+V15                    3
+V16                    3
+V17                    11
+V18                    11
+V19                    11
+V20                    11
+V21                    11
+V22                    11
+V23                    3
+V24                    3
+V25                    11
+V26                    11
+V27                    11
+V28                    11
+V29                    11
+V30                    11
+V31                    3
+V32                    3
+V33                    11
+V34                    11
+V35                    11
+V36                    11
+V37                    11
+V38                    11
+V39                    3
+V40                    3
+V41                    11
+V42                    11
+V43                    11
+V44                    11
+V45                    11
+V46                    11
+V47                    3
+V48                    3
+V49                    11
+V50                    11
+V51                    11
+V52                    11
+V53                    11
+V54                    11
+V55                    3
+V56                    3
+V57                    11
+V58                    11
+V59                    11
+V60                    11
+V61                    11
+V62                    11
+V63                    3
+V64                    3
+V65                    11
+V66                    11
+V67                    11
+V68                    11
+V69                    11
+V70                    11
+V71                    3
+V72                    3
+V73                    11
+V74                    11
+V75                    11
+V76                    11
+V77                    11
+V78                    11
+V79                    3
+V80                    3
+V81                    11
+V82                    11
+V83                    11
+V84                    11
+V85                    11
+V86                    11
+V87                    3
+V88                    3
+V89                    11
+V90                    11
+V91                    11
+V92                    3
+V93                    11
+V94                    11
+V95                    11
+V96                    3
+V97                    11
+V98                    11
+V99                    11
+V100                   3
+V101                   11
+V102                   11
+V103                   11
+V104                   3
+V105                   11
+V106                   11
+V107                   11
+V108                   3
+V109                   11
+V110                   11
+V111                   11
+V112                   3
+V113                   11
+V114                   11
+V115                   11
+V116                   3
+V117                   11
+V118                   11
+target                 2
+
+We recommend preprocessing discrete columns that can have many values, using 'update_transformers'. Or you may drop columns that are not necessary to model. (Exit this script using ctrl-C)
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+      α=1.0: {'auc_roc': 0.9884321204863217, 'f1_minority': 0.9153153153153153, 'avg_precision': 0.9743856577781876, 'precision': 0.9338235294117647, 'recall': 0.8975265017667845, 'accuracy': 0.953}
+
+  [SMOTE]
+    Synthetic-only (TSTR)...
+      TSTR failed: y contains 1 class after sample_weight trimmed classes with zero weights, while a minimum of 2 classes are required.
+    α=0.1 (800 synthetic rows)...
+      α=0.1: {'auc_roc': 0.9919804741980475, 'f1_minority': 0.93048128342246, 'avg_precision': 0.9824651086173727, 'precision': 0.9388489208633094, 'recall': 0.9222614840989399, 'accuracy': 0.961}
+    α=0.2 (1600 synthetic rows)...
+      α=0.2: {'auc_roc': 0.9919459763147389, 'f1_minority': 0.9273049645390071, 'avg_precision': 0.9823522397239854, 'precision': 0.9306049822064056, 'recall': 0.9240282685512368, 'accuracy': 0.959}
+    α=0.3 (2400 synthetic rows)...
+      α=0.3: {'auc_roc': 0.9917611662255866, 'f1_minority': 0.9293286219081273, 'avg_precision': 0.9819463696299547, 'precision': 0.9293286219081273, 'recall': 0.9293286219081273, 'accuracy': 0.96}
+    α=0.5 (4000 synthetic rows)...
+      α=0.5: {'auc_roc': 0.9916256388268748, 'f1_minority': 0.9264448336252189, 'avg_precision': 0.9816051227538499, 'precision': 0.9184027777777778, 'recall': 0.9346289752650176, 'accuracy': 0.958}
+    α=1.0 (8000 synthetic rows)...
+      α=1.0: {'auc_roc': 0.9915831325063698, 'f1_minority': 0.9193825042881647, 'avg_precision': 0.9806432821951426, 'precision': 0.8933333333333333, 'recall': 0.9469964664310954, 'accuracy': 0.953}
+
+  [Low-data regime experiment: Nomao Lead]
+PerformanceAlert: Using the CTGANSynthesizer on this data is not recommended. To model this data, CTGAN will generate a large number of columns.
+
+Original Column Name   Est # of Columns (CTGAN)
+V1                     11
+V2                     11
+V3                     11
+V4                     11
+V5                     11
+V6                     11
+V7                     2
+V8                     2
+V9                     11
+V10                    11
+V11                    11
+V12                    11
+V13                    11
+V14                    11
+V15                    3
+V16                    3
+V17                    11
+V18                    11
+V19                    11
+V20                    11
+V21                    11
+V22                    11
+V23                    3
+V24                    3
+V25                    11
+V26                    11
+V27                    11
+V28                    11
+V29                    11
+V30                    11
+V31                    3
+V32                    3
+V33                    11
+V34                    11
+V35                    11
+V36                    11
+V37                    11
+V38                    11
+V39                    3
+V40                    3
+V41                    11
+V42                    11
+V43                    11
+V44                    11
+V45                    11
+V46                    11
+V47                    3
+V48                    3
+V49                    11
+V50                    11
+V51                    11
+V52                    11
+V53                    11
+V54                    11
+V55                    3
+V56                    3
+V57                    11
+V58                    11
+V59                    11
+V60                    11
+V61                    11
+V62                    11
+V63                    2
+V64                    2
+V65                    11
+V66                    11
+V67                    11
+V68                    11
+V69                    11
+V70                    11
+V71                    2
+V72                    2
+V73                    11
+V74                    11
+V75                    11
+V76                    11
+V77                    11
+V78                    11
+V79                    3
+V80                    3
+V81                    11
+V82                    11
+V83                    11
+V84                    11
+V85                    11
+V86                    11
+V87                    2
+V88                    2
+V89                    11
+V90                    11
+V91                    11
+V92                    3
+V93                    11
+V94                    11
+V95                    11
+V96                    3
+V97                    11
+V98                    11
+V99                    11
+V100                   3
+V101                   11
+V102                   11
+V103                   11
+V104                   2
+V105                   11
+V106                   11
+V107                   11
+V108                   2
+V109                   11
+V110                   11
+V111                   11
+V112                   3
+V113                   11
+V114                   11
+V115                   11
+V116                   3
+V117                   11
+V118                   11
+target                 2
+
+We recommend preprocessing discrete columns that can have many values, using 'update_transformers'. Or you may drop columns that are not necessary to model. (Exit this script using ctrl-C)
+PerformanceAlert: Using the CTGANSynthesizer on this data is not recommended. To model this data, CTGAN will generate a large number of columns.
+
+Original Column Name   Est # of Columns (CTGAN)
+V1                     11
+V2                     11
+V3                     11
+V4                     11
+V5                     11
+V6                     11
+V7                     2
+V8                     2
+V9                     11
+V10                    11
+V11                    11
+V12                    11
+V13                    11
+V14                    11
+V15                    3
+V16                    3
+V17                    11
+V18                    11
+V19                    11
+V20                    11
+V21                    11
+V22                    11
+V23                    3
+V24                    3
+V25                    11
+V26                    11
+V27                    11
+V28                    11
+V29                    11
+V30                    11
+V31                    3
+V32                    3
+V33                    11
+V34                    11
+V35                    11
+V36                    11
+V37                    11
+V38                    11
+V39                    3
+V40                    3
+V41                    11
+V42                    11
+V43                    11
+V44                    11
+V45                    11
+V46                    11
+V47                    3
+V48                    3
+V49                    11
+V50                    11
+V51                    11
+V52                    11
+V53                    11
+V54                    11
+V55                    3
+V56                    3
+V57                    11
+V58                    11
+V59                    11
+V60                    11
+V61                    11
+V62                    11
+V63                    2
+V64                    2
+V65                    11
+V66                    11
+V67                    11
+V68                    11
+V69                    11
+V70                    11
+V71                    2
+V72                    2
+V73                    11
+V74                    11
+V75                    11
+V76                    11
+V77                    11
+V78                    11
+V79                    3
+V80                    3
+V81                    11
+V82                    11
+V83                    11
+V84                    11
+V85                    11
+V86                    11
+V87                    2
+V88                    2
+V89                    11
+V90                    11
+V91                    11
+V92                    3
+V93                    11
+V94                    11
+V95                    11
+V96                    3
+V97                    11
+V98                    11
+V99                    11
+V100                   3
+V101                   11
+V102                   11
+V103                   11
+V104                   2
+V105                   11
+V106                   11
+V107                   11
+V108                   2
+V109                   11
+V110                   11
+V111                   11
+V112                   3
+V113                   11
+V114                   11
+V115                   11
+V116                   3
+V117                   11
+V118                   11
+target                 2
+
+We recommend preprocessing discrete columns that can have many values, using 'update_transformers'. Or you may drop columns that are not necessary to model. (Exit this script using ctrl-C)
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+PerformanceAlert: Using the CTGANSynthesizer on this data is not recommended. To model this data, CTGAN will generate a large number of columns.
+
+Original Column Name   Est # of Columns (CTGAN)
+V1                     11
+V2                     11
+V3                     11
+V4                     11
+V5                     11
+V6                     11
+V7                     2
+V8                     2
+V9                     11
+V10                    11
+V11                    11
+V12                    11
+V13                    11
+V14                    11
+V15                    3
+V16                    3
+V17                    11
+V18                    11
+V19                    11
+V20                    11
+V21                    11
+V22                    11
+V23                    3
+V24                    3
+V25                    11
+V26                    11
+V27                    11
+V28                    11
+V29                    11
+V30                    11
+V31                    3
+V32                    3
+V33                    11
+V34                    11
+V35                    11
+V36                    11
+V37                    11
+V38                    11
+V39                    3
+V40                    3
+V41                    11
+V42                    11
+V43                    11
+V44                    11
+V45                    11
+V46                    11
+V47                    3
+V48                    3
+V49                    11
+V50                    11
+V51                    11
+V52                    11
+V53                    11
+V54                    11
+V55                    3
+V56                    3
+V57                    11
+V58                    11
+V59                    11
+V60                    11
+V61                    11
+V62                    11
+V63                    3
+V64                    3
+V65                    11
+V66                    11
+V67                    11
+V68                    11
+V69                    11
+V70                    11
+V71                    3
+V72                    3
+V73                    11
+V74                    11
+V75                    11
+V76                    11
+V77                    11
+V78                    11
+V79                    3
+V80                    3
+V81                    11
+V82                    11
+V83                    11
+V84                    11
+V85                    11
+V86                    11
+V87                    2
+V88                    2
+V89                    11
+V90                    11
+V91                    11
+V92                    3
+V93                    11
+V94                    11
+V95                    11
+V96                    3
+V97                    11
+V98                    11
+V99                    11
+V100                   3
+V101                   11
+V102                   11
+V103                   11
+V104                   2
+V105                   11
+V106                   11
+V107                   11
+V108                   2
+V109                   11
+V110                   11
+V111                   11
+V112                   3
+V113                   11
+V114                   11
+V115                   11
+V116                   3
+V117                   11
+V118                   11
+target                 2
+
+We recommend preprocessing discrete columns that can have many values, using 'update_transformers'. Or you may drop columns that are not necessary to model. (Exit this script using ctrl-C)
+PerformanceAlert: Using the CTGANSynthesizer on this data is not recommended. To model this data, CTGAN will generate a large number of columns.
+
+Original Column Name   Est # of Columns (CTGAN)
+V1                     11
+V2                     11
+V3                     11
+V4                     11
+V5                     11
+V6                     11
+V7                     2
+V8                     2
+V9                     11
+V10                    11
+V11                    11
+V12                    11
+V13                    11
+V14                    11
+V15                    3
+V16                    3
+V17                    11
+V18                    11
+V19                    11
+V20                    11
+V21                    11
+V22                    11
+V23                    3
+V24                    3
+V25                    11
+V26                    11
+V27                    11
+V28                    11
+V29                    11
+V30                    11
+V31                    3
+V32                    3
+V33                    11
+V34                    11
+V35                    11
+V36                    11
+V37                    11
+V38                    11
+V39                    3
+V40                    3
+V41                    11
+V42                    11
+V43                    11
+V44                    11
+V45                    11
+V46                    11
+V47                    3
+V48                    3
+V49                    11
+V50                    11
+V51                    11
+V52                    11
+V53                    11
+V54                    11
+V55                    3
+V56                    3
+V57                    11
+V58                    11
+V59                    11
+V60                    11
+V61                    11
+V62                    11
+V63                    3
+V64                    3
+V65                    11
+V66                    11
+V67                    11
+V68                    11
+V69                    11
+V70                    11
+V71                    3
+V72                    3
+V73                    11
+V74                    11
+V75                    11
+V76                    11
+V77                    11
+V78                    11
+V79                    3
+V80                    3
+V81                    11
+V82                    11
+V83                    11
+V84                    11
+V85                    11
+V86                    11
+V87                    2
+V88                    2
+V89                    11
+V90                    11
+V91                    11
+V92                    3
+V93                    11
+V94                    11
+V95                    11
+V96                    3
+V97                    11
+V98                    11
+V99                    11
+V100                   3
+V101                   11
+V102                   11
+V103                   11
+V104                   2
+V105                   11
+V106                   11
+V107                   11
+V108                   2
+V109                   11
+V110                   11
+V111                   11
+V112                   3
+V113                   11
+V114                   11
+V115                   11
+V116                   3
+V117                   11
+V118                   11
+target                 2
+
+We recommend preprocessing discrete columns that can have many values, using 'update_transformers'. Or you may drop columns that are not necessary to model. (Exit this script using ctrl-C)
+
+Done.
+exit 0

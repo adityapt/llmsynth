@@ -51,8 +51,11 @@ def ci95(v):
     return float(np.mean(v)), float(se * stats.t.ppf(0.975, df=len(v)-1))
 
 # ── Load data ─────────────────────────────────────────────────────────────────
-dh  = pd.read_csv(RESULTS / "ci_hillstrom.csv")
-dc  = pd.read_csv(RESULTS / "ci_criteo.csv")
+# Marketing datasets use the latest 5-seed rerun (all metrics saved). The first AUC-only run is kept for the regression only.
+dh  = pd.read_csv(RESULTS / "ci_hillstrom_fullmetrics.csv")
+dc  = pd.read_csv(RESULTS / "ci_criteo_fullmetrics.csv")
+_dh_old = pd.read_csv(RESULTS / "ci_hillstrom.csv")
+_dc_old = pd.read_csv(RESULTS / "ci_criteo.csv")
 dth = pd.read_csv(RESULTS / "ci_tabddpm_hillstrom.csv")
 dtc = pd.read_csv(RESULTS / "ci_tabddpm_criteo.csv")
 dth10 = pd.read_csv(RESULTS / "ci_tabddpm_hillstrom_10000.csv")
@@ -61,9 +64,14 @@ dmch  = pd.read_csv(RESULTS / "ci_multi_classifier_hillstrom.csv")
 dmcc  = pd.read_csv(RESULTS / "ci_multi_classifier_criteo.csv")
 dg    = pd.read_csv(RESULTS / "ci_great_hillstrom.csv")
 
+# Control datasets use the latest 5-seed rerun that saved all metrics (fullmetrics_*.csv).
+# The sparse stress test only exists as ci_nomao_sparse.csv.
+LATEST = {"telco_churn": "fullmetrics_telco.csv", "bank_marketing": "fullmetrics_bank_marketing.csv",
+          "credit_default": "fullmetrics_german_credit.csv", "nomao_lead": "fullmetrics_nomao.csv",
+          "nomao_sparse": "ci_nomao_sparse.csv"}
 benchmark_ci = {}
-for ds in ["telco_churn", "bank_marketing", "credit_default", "nomao_lead", "nomao_sparse"]:
-    p = RESULTS / f"ci_{ds}.csv"
+for ds, fname in LATEST.items():
+    p = RESULTS / fname
     if p.exists():
         benchmark_ci[ds] = pd.read_csv(p)
 
@@ -111,7 +119,7 @@ for bar, val in zip(bars, gains):
             f"{val:+.1f}", ha="center",
             va="bottom" if val >= 0 else "top", fontsize=9.5, fontweight="bold")
 ax.axhline(0, color="#555", linewidth=0.8)
-ax.set_ylabel("Best augmentation gain (AUC pts)", fontsize=11)
+ax.set_ylabel("Best augmentation gain (AUC points)", fontsize=11)
 ax.grid(axis="y", alpha=0.3)
 blue_patch  = mpatches.Patch(color="#90CAF9", label="Control datasets (positive rate ≥ 10%)")
 red_patch   = mpatches.Patch(color="#FF5722", label="Marketing datasets (positive rate < 1%)")
@@ -175,8 +183,9 @@ if df_sp is not None:
     ax.axhline(bm, linestyle="--", color=C["Baseline"], linewidth=1.5,
                label=f"Baseline (sparse) {bm:.3f} ± {bh:.3f}")
     ax.axhspan(bm-bh, bm+bh, color=C["Baseline"], alpha=0.08)
-    ax.axhline(0.992, linestyle=":", color="#888", linewidth=1.2,
-               label="Dense baseline 0.992 (reference)")
+    dense_m, dense_h = ci95(df_sp[df_sp["method"]=="DenseBaseline"][col].values)   # same 500 rows, all features present
+    ax.axhline(dense_m, linestyle=":", color="#888", linewidth=1.2,
+               label=f"Dense reference (same 500 rows) {dense_m:.3f} ± {dense_h:.3f}")
     for gen in ["GaussianCopula","CTGAN","SMOTE"]:
         means, lows, highs = [], [], []
         for alpha in ALPHAS:
@@ -231,7 +240,7 @@ if existing:
 fig, axes = plt.subplots(1, 2, figsize=(14, 5.5))
 for ax, (df, label, pos_rate) in zip(axes, [
     (dh, "Hillstrom Email Marketing", "0.9%"),
-    (dc, "Criteo Display Advertising", "0.3%"),
+    (dc, "Criteo Uplift (conversion)", "0.3%"),
 ]):
     base_vals = df[df["method"]=="Baseline"]["auc_roc"].values
     bm, bh = ci95(base_vals)
@@ -263,13 +272,16 @@ print("Saved fig5_marketing_ci.png")
 # ─────────────────────────────────────────────────────────────────────────────
 # Fig 6 — Cross-dataset regression: CTGAN gain vs log(positive rate)  [NEW]
 # ─────────────────────────────────────────────────────────────────────────────
+# NOTE: this regression (used only by paper2-empirical.md) keeps the first AUC-only run of the
+# control datasets (ci_*.csv) so that the numbers in that document stay reproducible.
+_old = {k: pd.read_csv(RESULTS / f"ci_{k}.csv") for k in ["telco_churn", "bank_marketing", "credit_default", "nomao_lead"]}
 datasets_regression = {
-    "Telco Churn\n26.6%":    (0.266, 0.0021, benchmark_ci.get("telco_churn"), "auc"),
-    "Bank Mktg\n11.7%":      (0.117, None,   benchmark_ci.get("bank_marketing"), "auc"),
-    "German Credit\n30.0%":  (0.300, None,   benchmark_ci.get("credit_default"), "auc"),
-    "Nomao Lead\n28.3%":     (0.283, None,   benchmark_ci.get("nomao_lead"), "auc"),
-    "Hillstrom\n0.9%":       (0.009, None,   dh, "auc_roc"),
-    "Criteo\n0.3%":          (0.00298, None,   dc, "auc_roc"),
+    "Telco Churn\n26.6%":    (0.266, 0.0021, _old["telco_churn"], "auc"),
+    "Bank Mktg\n11.7%":      (0.117, None,   _old["bank_marketing"], "auc"),
+    "German Credit\n30.0%":  (0.300, None,   _old["credit_default"], "auc"),
+    "Nomao Lead\n28.3%":     (0.283, None,   _old["nomao_lead"], "auc"),
+    "Hillstrom\n0.9%":       (0.009, None,   _dh_old, "auc_roc"),
+    "Criteo\n0.3%":          (0.00298, None,   _dc_old, "auc_roc"),
 }
 
 reg_x, reg_y, reg_labels = [], [], []
@@ -296,7 +308,7 @@ y_line = slope * x_line + intercept
 fig, ax = plt.subplots(figsize=(8, 6))
 scatter = ax.scatter(reg_x, reg_y, s=100, zorder=3,
                      c=reg_y, cmap="RdYlGn", edgecolors="#333", linewidths=0.8)
-plt.colorbar(scatter, ax=ax, label="CTGAN gain (AUC pts)", shrink=0.8)
+plt.colorbar(scatter, ax=ax, label="CTGAN gain (AUC points)", shrink=0.8)
 ax.plot(x_line, y_line, "--", color="#333", linewidth=1.8,
         label=f"Fit: slope={slope:.2f}, R²={r**2:.2f}, p={p_val:.4f}")
 _offsets = {"German Credit": (-10, 85), "Nomao Lead": (50, -28),
@@ -307,7 +319,7 @@ for xi, yi, lab in zip(reg_x, reg_y, reg_labels):
                 fontsize=8.5, color="#333",
                 arrowprops=dict(arrowstyle="-", color="#999", lw=0.6) if lab.split("\n")[0] in _offsets else None)
 ax.set_xlabel("log₁₀(Positive rate %)", fontsize=12)
-ax.set_ylabel("Best CTGAN gain (AUC pts)", fontsize=12)
+ax.set_ylabel("Best CTGAN gain (AUC points)", fontsize=12)
 ax.legend(fontsize=9)
 ax.grid(alpha=0.3)
 ax.axhline(0, color="#aaa", linewidth=0.8, linestyle=":")
@@ -474,7 +486,7 @@ for j, gen in enumerate(generators):
                      va="bottom" if val >= 0 else "top", fontsize=7.5)
 ax2.axhline(0, color="#555", linewidth=0.8)
 ax2.set_xticks(x); ax2.set_xticklabels(clf_labels, fontsize=10)
-ax2.set_ylabel("Best CTGAN gain (AUC pts)", fontsize=11)
+ax2.set_ylabel("Best augmentation gain (AUC points)", fontsize=11)
 ax2.set_title("Best augmentation gain per classifier", fontsize=10, fontweight="bold")
 ax2.legend(fontsize=9)
 ax2.grid(axis="y", alpha=0.3)

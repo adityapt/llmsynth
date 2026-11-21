@@ -1,0 +1,99 @@
+  Shape: (64000, 9), positive rate: 0.9%
+  Shape after load: (50000, 13), positive rate: 0.3%
+
+============================================================
+Hillstrom Email: real positive rate = 0.90%
+============================================================
+  seed=42: GC=0.96%/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+  CTGAN=6.71%  SMOTE=100.00%
+  seed=123: GC=0.96%/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+  CTGAN=6.88%  SMOTE=100.00%
+  seed=7: GC=1.16%  CTGAN=6.46%  SMOTE=100.00%
+  seed=2024: GC=0.89%  CTGAN=5.95%  SMOTE=100.00%
+  seed=999: GC=0.81%  CTGAN=6.88%  SMOTE=100.00%
+
+============================================================
+Criteo Display: real positive rate = 0.30%
+============================================================
+  seed=42: GC=0.25%/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+  CTGAN=25.45%  SMOTE=100.00%
+  seed=123: GC=0.31%/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/computation/expressions.py:21: UserWarning: Pandas requires version '2.8.4' or newer of 'numexpr' (version '2.8.3' currently installed).
+  from pandas.core.computation.check import NUMEXPR_INSTALLED
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/pandas/core/arrays/masked.py:61: UserWarning: Pandas requires version '1.3.6' or newer of 'bottleneck' (version '1.3.5' currently installed).
+  from pandas.core import (
+  CTGAN=26.96%  SMOTE=100.00%
+  seed=7: GC=0.43%  CTGAN=26.96%  SMOTE=100.00%
+  seed=2024: GC=0.26%  CTGAN=25.72%  SMOTE=100.00%
+  seed=999: GC=0.35%  CTGAN=28.78%  SMOTE=100.00%
+
+Saved: results/synthetic_class_distribution_5seed.csv
+        dataset  real_positive_rate  GaussianCopula_mean  GaussianCopula_std  GaussianCopula_n_seeds  CTGAN_mean  CTGAN_std  CTGAN_n_seeds  SMOTE_mean  SMOTE_std  SMOTE_n_seeds
+Hillstrom Email              0.9031               0.9575              0.1166                       5       6.575     0.3470              5       100.0        0.0              5
+ Criteo Display              0.2980               0.3200              0.0635                       5      26.775     1.1772              5       100.0        0.0              5
+r: {name}: {e!r}")
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/joblib/externals/loky/backend/resource_tracker.py:315: UserWarning: resource_tracker: /var/folders/yd/lby68ngs697dh0mq13pg1b4h0000gq/T/joblib_memmapping_folder_65142_d318e148c8ec4e6286eb32b7394f9b21_36fe594ea0154866861cb0da40f8f667: FileNotFoundError(2, 'No such file or directory')
+  warnings.warn(f"resource_tracker: {name}: {e!r}")
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/joblib/externals/loky/backend/resource_tracker.py:315: UserWarning: resource_tracker: /var/folders/yd/lby68ngs697dh0mq13pg1b4h0000gq/T/joblib_memmapping_folder_65142_67e3e015aaf4406987f25dd1f536d8f4_135116bdeade4ceb862c9f8941128266: FileNotFoundError(2, 'No such file or directory')
+  warnings.warn(f"resource_tracker: {name}: {e!r}")
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/joblib/externals/loky/backend/resource_tracker.py:315: UserWarning: resource_tracker: /var/folders/yd/lby68ngs697dh0mq13pg1b4h0000gq/T/joblib_memmapping_folder_65142_d318e148c8ec4e6286eb32b7394f9b21_f7619ecba352426ab56c19d9a4580a34: FileNotFoundError(2, 'No such file or directory')
+  warnings.warn(f"resource_tracker: {name}: {e!r}")
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/joblib/externals/loky/backend/resource_tracker.py:315: UserWarning: resource_tracker: /var/folders/yd/lby68ngs697dh0mq13pg1b4h0000gq/T/joblib_memmapping_folder_65142_6654ef1b81cd400bbb926bbfee88f927_b396b2db7049401ca36bc27089821676: FileNotFoundError(2, 'No such file or directory')
+  warnings.warn(f"resource_tracker: {name}: {e!r}")
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/joblib/externals/loky/backend/resource_tracker.py:315: UserWarning: resource_tracker: /var/folders/yd/lby68ngs697dh0mq13pg1b4h0000gq/T/joblib_memmapping_folder_65142_d318e148c8ec4e6286eb32b7394f9b21_5296078bc0ab4cd5a6cbe589c9fe7e38: FileNotFoundError(2, 'No such file or directory')
+  warnings.warn(f"resource_tracker: {name}: {e!r}")
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/joblib/externals/loky/backend/resource_tracker.py:315: UserWarning: resource_tracker: /var/folders/yd/lby68ngs697dh0mq13pg1b4h0000gq/T/joblib_memmapping_folder_65142_3d2d2e2c52f349b2bd9d072c50ce9238_bfeafb29e2fd4d3da6fca8f35f83b5a1: FileNotFoundError(2, 'No such file or directory')
+  warnings.warn(f"resource_tracker: {name}: {e!r}")
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/joblib/externals/loky/backend/resource_tracker.py:315: UserWarning: resource_tracker: /var/folders/yd/lby68ngs697dh0mq13pg1b4h0000gq/T/joblib_memmapping_folder_65142_d318e148c8ec4e6286eb32b7394f9b21_4cb853ddbfdd4533a468c1ab9a732104: FileNotFoundError(2, 'No such file or directory')
+  warnings.warn(f"resource_tracker: {name}: {e!r}")
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/joblib/externals/loky/backend/resource_tracker.py:315: UserWarning: resource_tracker: /var/folders/yd/lby68ngs697dh0mq13pg1b4h0000gq/T/joblib_memmapping_folder_65142_8a4d2f8230cb4ffea9365934ad8db96f_e93ef8deb46d41f6b57e8d514e4e2692: FileNotFoundError(2, 'No such file or directory')
+  warnings.warn(f"resource_tracker: {name}: {e!r}")
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/joblib/externals/loky/backend/resource_tracker.py:315: UserWarning: resource_tracker: /var/folders/yd/lby68ngs697dh0mq13pg1b4h0000gq/T/joblib_memmapping_folder_65142_d318e148c8ec4e6286eb32b7394f9b21_c5db998178844131b567ea19732d54a5: FileNotFoundError(2, 'No such file or directory')
+  warnings.warn(f"resource_tracker: {name}: {e!r}")
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/joblib/externals/loky/backend/resource_tracker.py:315: UserWarning: resource_tracker: /var/folders/yd/lby68ngs697dh0mq13pg1b4h0000gq/T/joblib_memmapping_folder_65142_f4094c38daf041f4a56389a99c25665f_c55bfe287a4540fd9c815884c92532a8: FileNotFoundError(2, 'No such file or directory')
+  warnings.warn(f"resource_tracker: {name}: {e!r}")
+/opt/homebrew/anaconda3/lib/python3.9/site-packages/joblib/externals/loky/backend/resource_tracker.py:315: UserWarning: resource_tracker: /var/folders/yd/lby68ngs697dh0mq13pg1b4h0000gq/T/joblib_memmapping_folder_65142_d318e148c8ec4e6286eb32b7394f9b21_5ab9094f055b4d14b2e08580c62db95b: FileNotFoundError(2, 'No such file or directory')
+  warnings.warn(f"resource_tracker: {name}: {e!r}")
+/opt/homebrew/anaconda3/lib/python3.9/multiprocessing/resource_tracker.py:216: UserWarning: resource_tracker: There appear to be 1 leaked semaphore objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '
+exit 0

@@ -44,8 +44,8 @@ def best_gain(df, method, alpha_col="alpha"):
 fig, axes = plt.subplots(1, 2, figsize=(13, 5.5))
 
 for ax, (label, ci_path, mb_path) in zip(axes, [
-    ("Hillstrom", "results/ci_hillstrom.csv", "results/missing_baselines_hillstrom.csv"),
-    ("Criteo", "results/ci_criteo.csv", "results/missing_baselines_criteo.csv"),
+    ("Hillstrom", "results/ci_hillstrom_fullmetrics.csv", "results/missing_baselines_hillstrom.csv"),
+    ("Criteo", "results/ci_criteo_fullmetrics.csv", "results/missing_baselines_criteo.csv"),
 ]):
     df_ci = pd.read_csv(ci_path)
     df_mb = pd.read_csv(mb_path)
