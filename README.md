@@ -67,6 +67,8 @@ see `results/RUN_MANIFEST.md`.
    not have under that name, so nothing is removed. `results/bank_duration_check.csv` gives the baseline AUC with and without V12.
 2. **Earlier runs.** GReaT (GPT-2 and Mistral-7B), TabDDPM, class weighting, and ADASYN, Borderline-SMOTE and random
    undersampling were run before October 2026 and were not rerun, because no CTGAN is involved.
+   The GPT-2 GReaT runs (April and May 2026) predate the PyTorch seeding routine, which was added to those scripts on
+   2026-05-18, and seeded NumPy only. The TabDDPM and Mistral-7B scripts call `seed_everything()`.
 3. **Unseeded CTGAN runs.** The April and September runs did not seed PyTorch; their outputs are kept in `results/unseeded_runs/`
    for the comparison in Section 4.5. They were added to the history in commits `3fe90ca` (2026-04-14, April run) and
    `9c88aef` (2026-09-26, September run); the code as of those commits is what produced them. The PyTorch seeding
