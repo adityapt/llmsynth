@@ -1,4 +1,4 @@
-# LLMSynth: code and results for "Synthetic Data Augmentation in the Extreme Imbalance Regime"
+# LLMSynth: code and results for "When Does Synthetic Data Augmentation Help? Evidence from Marketing and Product Datasets"
 
 This repository contains the code, raw per-seed result files, and figures for the paper.
 Every table, figure and number in the paper is mapped to the result files and scripts that
