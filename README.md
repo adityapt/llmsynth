@@ -48,6 +48,7 @@ The dose-response experiments use a total of 10,000 training rows for both Bank 
 | TSTR (Section 3.1) | `run_tstr_lowdata.py` | `tstr_summary.csv` |
 | CTGAN run-to-run variance (Section 4.5) | `run_ctgan_refit_variance.py`, `run_ctgan_seed_check.py` | `ctgan_refit_variance.csv`, `ctgan_seed_check.csv` |
 | Statistics (FDR family, Table 3 correction, power) | `compute_statistics.py` | `stats_*.csv`, `fdr_family_14.csv` |
+| Tables with 95% confidence intervals (3, 5a to 5f, 6) | `make_ci_tables.py` | `results/tables/*.csv` |
 | Figures | `make_plots_paper2.py`, `make_plot_*.py` | `results/plots/` |
 
 The October 2026 seeded CTGAN reruns can be relaunched with `bash experiments/launch_ctgan_reruns.sh`.

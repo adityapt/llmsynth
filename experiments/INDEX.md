@@ -91,6 +91,7 @@ Earlier or exploratory scripts. They are kept for history. None of them produces
 | Script | Purpose |
 |---|---|
 | `finish_seed999_criteo.py` | Finishes the last few missing rows for Criteo seed 999 (CTGAN alpha>0.1, all SMOTE). |
+| `make_ci_tables.py` | Build the 95% confidence-interval versions of Tables 3, 5a-5f and 6. |
 | `make_plots.py` | Publication-quality comparison plots for the MarSynth paper. |
 | `resume_criteo_fullmetrics.py` | Resumes run_full_metrics_hillstrom_criteo.py for Criteo only — the original background run was OOM-killed partway through seed 7 (seeds 42 and 123 completed cleanly and are kept; seed 7 is redone from scratch since it was only par... |
 | `rigorous_analysis.py` | Phase 1 rigorous re-analysis of §6.6 GReaT-vs-Baseline experiments. |
